@@ -2,14 +2,25 @@ import React from "react";
 
 import {Route,Switch} from 'react-router-dom';
 import Navbar from "../../layouts/frontend/Navbar";
+import SideBar from "./Sidebar";
 import PublicRouteList from "../../routes/PublicRouteList";
 const FrontendLayout= ()=>{
-
+    const MySideBar = () => {
+        if (localStorage.getItem('auth_token')) {
+            return <SideBar />
+        }else {
+            return null;
+        }
+    }
     return(
-        <div>
+        <div className="sb-nav-fixed">
            <Navbar /> 
-           
-                <div>
+           <div id="layoutSidenav">
+                <div id="layoutSidenav_nav">
+                    <MySideBar />
+                </div>
+                <div id="layoutSidenav_content">
+                    <main>
                         <Switch>
                             {PublicRouteList.map((routeData,idx)=>{
                                 return (
@@ -24,9 +35,10 @@ const FrontendLayout= ()=>{
                                         />))
                                  })}
                         </Switch>
-                    
-                </div>
+                    </main>
+                </div>                    
             </div>
+        </div>
 
     );
 

@@ -17,7 +17,7 @@ class Product extends Model
         'slug',
         'description',
         'meta_title','meta_keyword','meta_decription',
-        'selling_price','original_price','quantity','brand','featured','popular','status',
+        'status',
         'image'
     ];
 

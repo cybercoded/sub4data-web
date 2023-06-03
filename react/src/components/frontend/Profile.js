@@ -1,13 +1,13 @@
 import React from "react";
 
-function Contact(){
+function Profile(){
     return (
         <div>
-            <h1> I'm Contact</h1>
+            <h1> I'm Profile</h1>
         </div>
 
     );
 }
 
 
-export default Contact;
+export default Profile;

@@ -21,10 +21,9 @@ class ProductController extends Controller
         
         $validator=Validator::make($request->all(),[
             'name'=>'required|string',
+            'category_id'=>'required|number',
             'slug'=>'required|string',
             'meta_title'=>'required',
-            'quantity'=>'required',
-            'brand'=>'required'
         ]);
 
         if($validator->fails()){
@@ -41,12 +40,6 @@ class ProductController extends Controller
             $product->meta_title= $request->input('meta_title');
             $product->meta_keyword= $request->input('meta_keyword');
             $product->meta_description= $request->input('meta_description');
-            $product->selling_price= $request->input('selling_price');
-            $product->original_price= $request->input('original_price');
-            $product->quantity= $request->input('quantity');
-            $product->brand= $request->input('brand');
-            $product->featured= $request->input('featured') ==true? 1:0;
-            $product->popular= $request->input('popular') ==true? 1:0;
             $product->status= $request->input('status') ==true? 1:0;
             
 
@@ -72,11 +65,10 @@ class ProductController extends Controller
     public function update(Request $request ,$id)
     {
         $validator=Validator::make($request->all(),[
+            'category_id'=>'required|number',
             'name'=>'required|string',
             'slug'=>'required|string',
             'meta_title'=>'required',
-            'quantity'=>'required',
-            'brand'=>'required'
         ]);
 
         if($validator->fails()){
@@ -95,12 +87,6 @@ class ProductController extends Controller
                 $product->meta_title= $request->input('meta_title');
                 $product->meta_keyword= $request->input('meta_keyword');
                 $product->meta_description= $request->input('meta_description');
-                $product->selling_price= $request->input('selling_price');
-                $product->original_price= $request->input('original_price');
-                $product->quantity= $request->input('quantity');
-                $product->brand= $request->input('brand');
-                $product->featured= $request->input('featured') ==true? 1:0;
-                $product->popular= $request->input('popular') ==true? 1:0;
                 $product->status= $request->input('status') ==true? 1:0;
                 
 

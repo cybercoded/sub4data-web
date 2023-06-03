@@ -37,7 +37,7 @@ const loginSubmit= (e)=>{
                 if(res.data.role==='admin'){
                     history.push("/admin/dashboard");
                 }else{
-                    history.push("/");
+                    history.push("/dashboard");
                 }
             }else if(res.data.status === 401) {
                  swal('Warning', res.data.message,'warning');

@@ -1,6 +1,6 @@
 import Home from "../components/frontend/Home";
 import About from '../components/frontend/About';
-import Contact from '../components/frontend/Contact';
+import Contact from '../components/frontend/Profile';
 import Page403 from "../components/errors/Page403";
 import Page404 from "../components/errors/Page404";
 import Login from "../components/frontend/auth/Login";
@@ -9,11 +9,14 @@ import ViewCategory from '../components/frontend/collections/ViewCategory';
 import ViewProduct from '../components/frontend/collections/ViewProduct';
 import ProductDetail from '../components/frontend/collections/ProductDetail';
 import Cart from '../components/frontend/Cart';
-import Checkout from '../components/frontend/Checkout';
 import ThankYou from '../components/frontend/Thankyou';
+import Dashboard from '../components/frontend/Dashoard';
+import Profile from '../components/frontend/Profile';
+import Data from '../components/frontend/Data';
 
 const PublicRouteList =[
-    { path: '/', exact: true, name: 'Home', component: Home },
+    { path: '/index', exact: true, name: 'Home', component: Home },
+    { path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
     { path: '/about', exact: true, name: 'About', component: About },
     { path: '/contact', exact: true, name: 'Contact', component: Contact },
     { path: '/403', exact: true, name: 'Page403', component: Page403 },
@@ -24,8 +27,9 @@ const PublicRouteList =[
     { path: '/collections/:slug', exact: true, name: 'ViewProduct', component: ViewProduct },
     { path: '/collections/:category/:product', exact: true, name: 'ProductDetail', component: ProductDetail },
     { path: '/cart', exact: true, name: 'Cart', component: Cart },
-    { path: '/checkout', exact: true, name: 'Checkout', component: Checkout },
     { path: '/thank-you', exact: true, name: 'ThankYou', component: ThankYou },
+    { path: '/profile', exact: true, name: 'Profile', component: Profile },
+    { path: '/data', exact: true, name: 'Data', component: Data },
 
 ];
 

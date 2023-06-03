@@ -47,7 +47,6 @@ function ViewProduct(){
                     <td>{item.id}</td>
                     <td>{item.category.name}</td>
                     <td>{item.name}</td>
-                    <td>{item.selling_price}</td>
                     <td><img src={`http://localhost:8000/${item.image}`} width="100px" height="100" alt={item.name}/></td>
                     <td>
                         <Link to={`/admin/edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
@@ -64,7 +63,7 @@ function ViewProduct(){
         <div className="card px-3">
             <div className="card-header">
                 <h4>View product | 
-                    <Link to="admin/add-product" className="btn btn-primary btn-sm float-end">Add product</Link>
+                    <Link to="add-product" className="btn btn-primary btn-sm float-end">Add product</Link>
                 </h4>
             </div>
             <div className="card-body">
@@ -75,7 +74,6 @@ function ViewProduct(){
                                 <th>ID</th>
                                 <th>Category Name</th>
                                 <th>Product Name</th>
-                                <th>Selling Price</th>
                                 <th>Image</th>
                                 <th>Edit</th>
                                 <th>Status</th>

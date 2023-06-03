@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import swal from "sweetalert";
 
 
-function Checkout(){
+function Data(){
  
     const [loading,setLoading]=useState(true);
     const history= useHistory();
@@ -25,7 +25,7 @@ function Checkout(){
 
     if(!localStorage.getItem("auth_token")){
         history.push('/');
-        swal("Warning","Login first to view cart details","error");
+        swal("Warning","Login first to view our data services","error");
     }
 
    
@@ -368,4 +368,4 @@ function Checkout(){
 
 }
 
-export default Checkout;
+export default Data;
