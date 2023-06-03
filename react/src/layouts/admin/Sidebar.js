@@ -91,11 +91,11 @@ const SideBar = () => {
                     </Link>
                     <div className="collapse" id="collapseServices" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav className="sb-sidenav-menu-nested nav">
-                            <Link className="nav-link" to="/admin/view-product">
-                                View product
+                            <Link className="nav-link" to="/admin/view-services">
+                                View Services
                             </Link>
-                            <Link className="nav-link" to="/admin/add-product">
-                                Add product
+                            <Link className="nav-link" to="/admin/add-services">
+                                Add Services
                             </Link>
                         </nav>
                     </div>

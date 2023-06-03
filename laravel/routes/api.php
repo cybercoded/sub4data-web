@@ -7,6 +7,7 @@ use App\Http\Controllers\API\CheckoutController;
 use App\Http\Controllers\API\FrontendController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\ServicesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,7 @@ Route::post('login',[AuthController::class,'login']);
 Route::get('getCategory',[FrontendController::class,'category']);
 Route::get('fetchProducts/{prodcut_slug}',[FrontendController::class,'product']);
 Route::get('view-product-normal-user/{category_slug}/{product_slug}',[FrontendController::class,'show']);
+
 
 Route::post('add-to-cart',[CartController::class,'addToCart']);
 Route::get('cart',[CartController::class,'getCartDetails']);
@@ -62,6 +64,9 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function(){
     Route::get('edit-product/{id}',[ProductController::class,'edit']);
 
     Route::post('update-product/{id}',[ProductController::class,'update']);
+
+    //Services
+    Route::post('view-services',[ServicesController::class,'index']);
 
     //Orders
     Route::get('admin/orders',[OrderController::class,'index']);
