@@ -40,7 +40,7 @@ function EditCategory(props){
         e.preventDefault();
         const category_id=props.match.params.id;
         const data=categoryInput;
-        axios.put(`api/update-categort/${category_id}`,data).then(res=>{
+        axios.put(`api/update-category/${category_id}`,data).then(res=>{
             if(res.data.status===200){
                 swal("Success",res.data.message,"success");
                 setError([]);
@@ -97,7 +97,7 @@ function EditCategory(props){
                             </div>
                             <div className="form-group mb-3">
                                 <label>Status</label>
-                                <input type="checkbox" name="status" onChange={handleInput} value={categoryInput.status}/> Status 0=shown/ 1=hidden
+                                <input type="checkbox" name="status" onChange={handleInput} defaultChecked={categoryInput.status == '1' } /> Status 0=shown/ 1=hidden
                             </div>
                         </div>
                         <div className="tab-pane card-body border fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">
@@ -109,10 +109,12 @@ function EditCategory(props){
                             <div className="form-group mb-3">
                                 <label>Meta Keywords</label>
                                 <textarea name="meta_keyword"  onChange={handleInput} value={categoryInput.meta_keyword} className="form-control" />
+                                <small className="text-danger">{error?.meta_keyword}</small>
                             </div>
                             <div className="form-group mb-3">
                                 <label>Meta Description</label>
                                 <textarea name="meta_description"  onChange={handleInput} value={categoryInput.meta_description} className="form-control" />
+                                <small className="text-danger">{error?.meta_description}</small>
                             </div>
                             
                         </div>  

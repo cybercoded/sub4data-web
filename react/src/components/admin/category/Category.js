@@ -40,7 +40,7 @@ function Category(){
                 swal('Success',res.data.message,"success");
                 document.getElementById('CATEGORY_FORM').reset();
             }else if(res.data.status===400){
-                setCategory({...categoryInput,error_list: res.data.errors})
+                setCategory({...categoryInput,error_list: res.data.errors});
             }
         });
     };
@@ -58,9 +58,9 @@ function Category(){
     return (
         <div className="container-fluid px-4">
             {
-                display_errors.map((item)=>{
+                display_errors.map((item, index)=>{
                     return(
-                        <p className="mb-1" key={item}>{item}</p>
+                        <p className="mb-1 text-danger" key={index}>{item}</p>
                     )
                 })
             }
@@ -68,7 +68,7 @@ function Category(){
             <div className="card mt-4">
                 <div className="card-header">
                     <h4>Add Category | 
-                        <Link to="/admin/view-category" classname="beb ben-primary btn-sm float-end">View Categories</Link>
+                        <Link to="/admin/view-category" className="beb ben-primary btn-sm float-end">View Categories</Link>
                     </h4>
                 </div>
                 <div className="card-body">
@@ -86,19 +86,19 @@ function Category(){
                             <div className="form-group mb-3">
                                 <label>Slug</label>
                                 <input type="text" name="slug" onChange={handleInput} value={categoryInput.slug} className="form-control" />
-                                <span>{categoryInput?.error_list.slug}</span>
+                                <small className="text-danger">{categoryInput?.error_list.slug}</small>
                             </div>
                             <div className="form-group mb-3">
                                 <label>Name</label>
                                 <input type="text" name="name" onChange={handleInput} value={categoryInput.name} className="form-control" />
-                                <span>{categoryInput?.error_list.name}</span>
+                                <small className="text-danger">{categoryInput?.error_list.name}</small>
                             </div>
                             <div className="form-group mb-3">
-                                <label>Description</label>
+                                <label>Description (Optional)</label>
                                 <textarea name="description" onChange={handleInput} value={categoryInput.description} className="form-control" />
                             </div>
                             <div className="form-group mb-3">
-                                <label>Status</label>
+                                <label>Status (Optional)</label>
                                 <input type="checkbox" name="status" onChange={handleInput} value={categoryInput.status}/> Status 0=shown/ 1=hidden
                             </div>
                         </div>
@@ -106,15 +106,17 @@ function Category(){
                             <div className="form-group mb-3">
                                 <label>Meta Title</label>
                                 <input type="text" name="meta_title"  onChange={handleInput} value={categoryInput.meta_title} className="form-control" />
-                                <span>{categoryInput?.error_list.meta_title}</span>
+                                <small className="text-danger">{categoryInput?.error_list.meta_title}</small>
                             </div>
                             <div className="form-group mb-3">
-                                <label>Meta Keywords</label>
+                                <label>Meta Keywords (Optional)</label>
                                 <textarea name="meta_keyword"  onChange={handleInput} value={categoryInput.meta_keyword} className="form-control" />
+                                <small className="text-danger">{categoryInput?.error_list.meta_keyword}</small>
                             </div>
                             <div className="form-group mb-3">
-                                <label>Meta Description</label>
+                                <label>Meta Description (Optional)</label>
                                 <textarea name="meta_description"  onChange={handleInput} value={categoryInput.meta_description} className="form-control" />
+                                <small className="text-danger">{categoryInput?.error_list.meta_description}</small>
                             </div>
                             
                         </div>  
