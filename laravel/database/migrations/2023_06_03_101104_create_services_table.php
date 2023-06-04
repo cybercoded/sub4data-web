@@ -17,10 +17,10 @@ class CreateServicesTable extends Migration
             $table->id();
             $table->integer('product_id');
             $table->string('name');
-            $table->string('slug');
-            $table->string('description')->nullable();
+            $table->string('description');
             $table->string('price');
-            $table->integer('available')->default(1);
+            $table->string('api_servie_id');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

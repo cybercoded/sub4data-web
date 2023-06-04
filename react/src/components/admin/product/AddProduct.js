@@ -5,9 +5,7 @@ import swal from 'sweetalert';
 
 function AddProduct() {
     const [categoryList, setCategoryList] = useState([]);
-
     const [errorList, setError] = useState([]);
-
     const [productInput, setProduct] = useState({
         category_id: '',
         slug: '',
@@ -57,19 +55,10 @@ function AddProduct() {
 
         axios.post(`api/store-product`, formData).then((res) => {
             if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success');
-                setError([]);
-                setProduct({
-                    ...productInput,
-                    category_id: '',
-                    slug: '',
-                    name: '',
-                    description: '',
-                    meta_title: '',
-                    meta_keyword: '',
-                    meta_description: '',
-                    status: ''
+                swal('Success', res.data.message, 'success').then(() =>{
+                    window.location.reload();
                 });
+                
             } else if (res.data.status === 422) {
                 swal('All fields are mandatory', '', 'error');
                 setError(res.data.errors);
@@ -83,7 +72,7 @@ function AddProduct() {
                 <div className="card-header">
                     <h4>
                         Add product |
-                        <Link to="/admin/view-product" className="btn btn-primary btn-sm float-end">
+                        <Link to={"/admin/view-product"} className="btn btn-primary btn-sm float-end">
                             View product
                         </Link>
                     </h4>
@@ -147,7 +136,7 @@ function AddProduct() {
                                         name="category_id"
                                         onChange={handleInput}
                                         value={productInput.category_id}
-                                        className="form-control"
+                                        className="form-select"
                                     >
                                         <option>Select Category</option>
                                         {categoryList.map((item) => {
@@ -242,7 +231,6 @@ function AddProduct() {
                                             name="status"
                                             onChange={handleInput}
                                             value={productInput.status}
-                                            className="w-50 h-50"
                                         />
                                     </div>
                                 </div>

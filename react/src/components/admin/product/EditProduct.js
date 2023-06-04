@@ -6,12 +6,9 @@ import swal from "sweetalert";
 function EditProduct(props){
 
     const history= useHistory();
-    const [categoryList, setCategoryList] = useState([])
-
-    const [errorList, setError] = useState([])
-
-    const [loading, setLoading] = useState(true)
-
+    const [categoryList, setCategoryList] = useState([]);
+    const [errorList, setError] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [productInput, setProduct] = useState({
         category_id:'',
         slug:'',
@@ -27,14 +24,12 @@ function EditProduct(props){
        
     });
 
-    const [picture, setPicture] = useState([]);
-
-
     const handleInput =(e)=>{
         e.persist();
         setProduct({...productInput,[e.target.name]: e.target.value});
     }
-
+    
+    const [picture, setPicture] = useState([]);
     const handleImage =(e)=>{
         setPicture({image: e.target.files[0]});
     }
@@ -94,8 +89,9 @@ function EditProduct(props){
 
         axios.post(`api/update-product/${product_id}`,formData).then(res=>{
             if(res.data.status===200){
-                swal('Success',res.data.message,'success');
-                setError([]);
+                swal('Success',res.data.message,'success').then(() =>{
+                    window.location.reload();
+                });
                
             }
             else if(res.data.status===422)
@@ -142,7 +138,7 @@ function EditProduct(props){
                         <div className="tab-pane card-body border fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div className="form-group mb-3">
                                 <label>Select Category</label>
-                                <select name="category_id" onChange={handleInput} value={productInput.category_id} className="form-control">
+                                <select name="category_id" onChange={handleInput} value={productInput.category_id} className="form-select">
                                     <option>Select Category</option>
                                     {
                                         categoryList.map((item)=>{
@@ -186,43 +182,11 @@ function EditProduct(props){
                         </div>
                         <div className="tab-pane card-body border fade" id="otherdetails" role="tabpanel" aria-labelledby="otherdetails-tab">
                             <div className="row">
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Selling price</label>
-                                    <input type="text" onChange={handleInput} value={productInput.selling_price} name="selling_price" className="form-control" />
-                                    <small className="text-danger">{errorList?.selling_price}</small>
-                                </div>
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Orginial price</label>
-                                    <input type="text" onChange={handleInput} value={productInput.original_price} name="original_price" className="form-control" />
-                                    <small className="text-danger">{errorList?.original_price}</small>
-                                </div>
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Quality</label>
-                                    <input type="text" onChange={handleInput} value={productInput.quantity} name="quantity" className="form-control" />
-                                    <small className="text-danger">{errorList?.quantity}</small>
-                                </div>
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Brand</label>
-                                    <input type="text" onChange={handleInput} value={productInput.brand} name="brand" className="form-control" />
-                                    <small className="text-danger">{errorList?.brand}</small>
-                                </div>
                                 <div className="col-md-8 form-group mb-3">
                                     <label>Image</label>
                                     <input type="file" onChange={handleImage}  name="image" className="form-control" />
                                     <img src={`http://localhost:8000/${productInput.image}`} width="50" height="50" />
                                     <small className="text-danger">{errorList?.image}</small>
-                                </div>
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Featured (Checked-shown)</label>
-                                    <input type="checkbox" onChange={handleCheckBox} defaultChecked={allCheckBox.featured ===1? true:false } name="featured" className="w-50 h-50" />
-                                </div>
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Popular (Checked-shown)</label>
-                                    <input type="checkbox" name="popular" onChange={handleCheckBox} defaultChecked={allCheckBox.popular===1? true:false} className="w-50 h-50" />
-                                </div>
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Status (Checked-hidden)</label>
-                                    <input type="checkbox" name="status" onChange={handleCheckBox} defaultChecked={allCheckBox.status===1? true:false} className="w-50 h-50" />
                                 </div>
                             </div>
                             

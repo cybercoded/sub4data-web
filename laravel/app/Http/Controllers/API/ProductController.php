@@ -21,7 +21,7 @@ class ProductController extends Controller
         
         $validator=Validator::make($request->all(),[
             'name'=>'required|string',
-            'category_id'=>'required|number',
+            'category_id'=>'required|integer',
             'slug'=>'required|string',
             'meta_title'=>'required',
         ]);
@@ -62,10 +62,10 @@ class ProductController extends Controller
 
     }
 
-    public function update(Request $request ,$id)
+    public function update(Request $request, $id)
     {
         $validator=Validator::make($request->all(),[
-            'category_id'=>'required|number',
+            'category_id'=>'required|integer',
             'name'=>'required|string',
             'slug'=>'required|string',
             'meta_title'=>'required',
@@ -137,6 +137,44 @@ class ProductController extends Controller
             return response()->json([
                 'status'=>404,
                 'message'=>'No product found'
+            ]);
+        }
+    }
+
+    public function view($id)
+    {
+        $products=Product::where('category_id', $id)->get();
+
+        if($products)
+        {            
+            return response()->json([
+                'status'=>200,
+                'product'=>$products
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No product found'
+            ]);
+        }
+    }
+
+    public function destory($id)
+    {
+        $product = Product::find($id);
+
+        if ($product) {
+            $product->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product deleted successfully'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Product not found'
             ]);
         }
     }

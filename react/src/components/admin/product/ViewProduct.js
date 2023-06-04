@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
 function ViewProduct(){
 
@@ -24,6 +25,25 @@ function ViewProduct(){
           isMounted = false;
       }
     }, []);
+
+    const deleteProduct = (e,id)=>{
+        e.preventDefault();
+
+        const thisClicked=e.currentTarget;
+        thisClicked.innerText="Deleting";
+
+        axios.delete(`api/delete-product/${id}`).then(res=>{
+            if(res.data.status===200)
+            {
+                swal("Success",res.data.message,"success");
+                thisClicked.closest("tr").remove();
+            }
+            else if(res.data.status=== 404){
+                swal("Warning",res.data.message,"warning");
+                thisClicked.innerText="Delete";
+            }
+        })
+    }
     
     var view_products='';
     if(loading)
@@ -35,24 +55,18 @@ function ViewProduct(){
         var productStatus='';
         view_products=
         productList.map((item)=>{
-            if(item.status ===0 )
-            {
-                productStatus="Shown"
-            }
-            else if(item.status===1){
-                productStatus="Hidden"
-            }
             return (
                 <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.category.name}</td>
                     <td>{item.name}</td>
-                    <td><img src={`http://localhost:8000/${item.image}`} width="100px" height="100" alt={item.name}/></td>
+                    <td>{item.status ===0 ? 'Shown' : 'Hidden'}</td>
+                    <td><img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name}/></td>
                     <td>
                         <Link to={`/admin/edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
-                    </td>
+                    </td>                    
                     <td>
-                        {productStatus}
+                        <button type="button" onClick={(e)=>deleteProduct(e,item.id)} className="btn btn-danger btn-sm">Delete</button>
                     </td>
                 </tr>
             )
@@ -75,8 +89,9 @@ function ViewProduct(){
                                 <th>Category Name</th>
                                 <th>Product Name</th>
                                 <th>Image</th>
-                                <th>Edit</th>
                                 <th>Status</th>
+                                <th>Edit</th>
+                                <th>Delete</th>                                
                             </tr>
                         </thead>
                         <tbody>

@@ -1,20 +1,18 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory} from 'react-router-dom';
 import swal from 'sweetalert';
 
 function AddServices() {
+    const history = useHistory();
     const [productList, setproductList] = useState([]);
-
     const [errorList, setError] = useState([]);
-
     const [servicesInput, setservices] = useState({
-        product_id: '',
-        slug: '',
+        product_id: '1',
         name: '',
         description: '',
         price: '',
-        status: ''
+        status: true
     });
 
 
@@ -24,7 +22,7 @@ function AddServices() {
     };
 
     useEffect(() => {
-        axios.get(`api/view-services`).then((res) => {
+        axios.get(`api/view-product`).then((res) => {
             if (res.data.status === 200) {
                 setproductList(res.data.product);
             }
@@ -38,12 +36,20 @@ function AddServices() {
 
         axios.post(`api/store-services`, servicesInput).then((res) => {
             if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success');
-                setError([]);
-                setservices([]);
-            } else if (res.data.status === 422) {
+                swal('Success', res.data.message, 'success').then(() =>{
+                    window.location.reload();
+                });
+            } else if (res.data.status === 422 ) {
                 swal('All fields are mandatory', '', 'error');
                 setError(res.data.errors);
+            }
+            else if (res.data.status === 409 ) {
+                swal('Error', res.data.message, 'warning');
+                setError(res.data.message);
+            }else {
+                setError([]);
+                swal('Error', res.data.message, 'error');
+                history.push('admin/view-services');
             }
         });
     };
@@ -79,20 +85,6 @@ function AddServices() {
                             <li className="nav-item" role="presentation">
                                 <button
                                     className="nav-link"
-                                    id="seotags-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#seotags"
-                                    type="button"
-                                    role="tab"
-                                    aria-controls="seotags"
-                                    aria-selected="false"
-                                >
-                                    SEO Tags
-                                </button>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                                <button
-                                    className="nav-link"
                                     id="otherdetails-tab"
                                     data-bs-toggle="tab"
                                     data-bs-target="#otherdetails"
@@ -118,7 +110,8 @@ function AddServices() {
                                         name="product_id"
                                         onChange={handleInput}
                                         value={servicesInput.product_id}
-                                        className="form-control"
+                                        defaultValue={servicesInput.product_id}
+                                        className="form-select"
                                     >
                                         <option>Select product</option>
                                         {productList.map((item) => {
@@ -130,17 +123,6 @@ function AddServices() {
                                         })}
                                     </select>
                                     <small className="text-danger">{errorList?.product_id}</small>
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Slug</label>
-                                    <input
-                                        type="text"
-                                        name="slug"
-                                        onChange={handleInput}
-                                        value={servicesInput.slug}
-                                        className="form-control"
-                                    />
-                                    <small className="text-danger">{errorList?.slug}</small>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>Name</label>
@@ -163,37 +145,6 @@ function AddServices() {
                                     ></textarea>
                                 </div>
                             </div>
-                            <div className="tab-pane card-body border fade" id="seotags" role="tabpanel" aria-labelledby="seotags-tab">
-                                <div className="form-group mb-3">
-                                    <label>Meta Title</label>
-                                    <input
-                                        type="text"
-                                        name="meta_title"
-                                        onChange={handleInput}
-                                        value={servicesInput.meta_title}
-                                        className="form-control"
-                                    />
-                                    <small className="text-danger">{errorList?.meta_title}</small>
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Meta Keywords (Optional)</label>
-                                    <textarea
-                                        name="meta_keyword"
-                                        onChange={handleInput}
-                                        value={servicesInput.meta_keyword}
-                                        className="form-control"
-                                    />
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Meta Description (Optional)</label>
-                                    <textarea
-                                        name="meta_description"
-                                        onChange={handleInput}
-                                        value={servicesInput.meta_description}
-                                        className="form-control"
-                                    />
-                                </div>
-                            </div>
                             <div
                                 className="tab-pane card-body border fade"
                                 id="otherdetails"
@@ -202,8 +153,13 @@ function AddServices() {
                             >
                                 <div className="row">
                                     <div className="col-md-4 form-group mb-3">
-                                        <label>Image</label>
-                                        <input type="number" onChange={handleInput} name="price" className="form-control" />
+                                        <label>API service id</label>
+                                        <input type="text" onChange={handleInput} name="api_servie_id" className="form-control" />
+                                        <small className="text-info">Copy this from the API server's end</small>
+                                    </div>
+                                    <div className="col-md-4 form-group mb-3">
+                                        <label>Price</label>
+                                        <input type="float" onChange={handleInput} name="price" className="form-control" />
                                         <small className="text-danger">{errorList?.price}</small>
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
@@ -213,17 +169,18 @@ function AddServices() {
                                             name="status"
                                             onChange={handleInput}
                                             value={servicesInput.status}
-                                            className="w-50 h-50"
+                                            defaultChecked={true}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button className="btn btn-primary px-4 mt-2 float-end" type="submit">
-                        {' '}
-                        Submit
-                    </button>
+                    <div className="card-footer">
+                        <button className="btn btn-primary" type="submit">
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

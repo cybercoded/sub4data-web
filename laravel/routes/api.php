@@ -1,13 +1,12 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\CheckoutController;
-use App\Http\Controllers\API\FrontendController;
 use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\API\PinController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ServicesController;
+use App\Http\Controllers\API\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,19 +24,6 @@ Route::post('register',[AuthController::class,'register']);
 
 Route::post('login',[AuthController::class,'login']);
 
-Route::get('getCategory',[FrontendController::class,'category']);
-Route::get('fetchProducts/{prodcut_slug}',[FrontendController::class,'product']);
-Route::get('view-product-normal-user/{category_slug}/{product_slug}',[FrontendController::class,'show']);
-
-
-Route::post('add-to-cart',[CartController::class,'addToCart']);
-Route::get('cart',[CartController::class,'getCartDetails']);
-Route::put('cart-updatequantity/{cart_id}/{scope}',[CartController::class,'updateCartQuantity']);
-Route::delete('delet-cartitem/{cart_id}',[CartController::class,'deleteCartItem']);
-
-Route::post('place-order',[CheckoutController::class,'placeOrder']);
-Route::post('validate-order',[CheckoutController::class,'validateOrder']);
-
 Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function(){
 
     Route::get('/checkingAuthenticated',function(){
@@ -50,7 +36,7 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function(){
 
     Route::get('edit-category/{id}',[CategoryController::class,'edit']);
 
-    Route::put('update-category/{id}',[CategoryController::class,'update']);
+    Route::post('update-category/{id}',[CategoryController::class,'update']);
 
     Route::delete('delete-category/{id}',[CategoryController::class,'destory']);
 
@@ -65,8 +51,18 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function(){
 
     Route::post('update-product/{id}',[ProductController::class,'update']);
 
+    Route::delete('delete-product/{id}',[ProductController::class,'destory']);
+
     //Services
-    Route::post('view-services',[ServicesController::class,'index']);
+    Route::get('view-services',[ServicesController::class,'index']);
+
+    Route::post('store-services',[ServicesController::class,'store']);
+
+    Route::get('edit-services/{id}',[ServicesController::class,'edit']);
+
+    Route::put('update-services/{id}',[ServicesController::class,'update']);
+
+    Route::delete('delete-services/{id}',[ServicesController::class,'destory']);
 
     //Orders
     Route::get('admin/orders',[OrderController::class,'index']);
@@ -75,6 +71,18 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function(){
 Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::post('logout',[AuthController::class,'logout']);
+
+    Route::get('view-category',[CategoryController::class,'index']);
+
+    Route::get('view-product/{id}', [ProductController::class,'view']);
+
+    Route::get('view-services/{id}', [ServicesController::class,'view']);
+
+    Route::get('verify-pin/{pin}', [PinController::class,'verify']);
+
+    Route::post('smartcard-verification', [VerificationController::class,'smartnumber']);
+
+    Route::post('meternumber-verification', [VerificationController::class,'meternumber']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

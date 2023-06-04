@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,15 +14,15 @@ class Services extends Model
     protected $fillable = [
         'product_id',
         'name',
-        'slug',
+        'api_servie_id',
         'description',
         'price',
         'available'
     ];
 
-    protected $with = ['products'];
+    protected $with = ['product'];
     public function product()
     {
-        return $this->belongsTo(Category::class, 'product_id', 'id');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

@@ -50,7 +50,8 @@ function ViewCategory(){
                     <td>{item.id}</td>
                     <td>{item.name}</td>
                     <td>{item.slug}</td>
-                    <td>{item.status}</td>
+                    <td><img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name}/></td>
+                    <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
                     <td>
                         <Link to={`edit-category/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
                     </td>
@@ -74,7 +75,8 @@ function ViewCategory(){
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Slug</th>
+                                <th>Slug</th>                                
+                                <th>Image</th>
                                 <th>Status</th>
                                 <th>Edit</th>
                                 <th>Delete</th>

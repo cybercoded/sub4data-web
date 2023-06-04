@@ -4,8 +4,6 @@ import Login from './components/frontend/auth/Login';
 import Register from './components/frontend/auth/Register';
 import axios from 'axios';
 import AdminPrivateRoute from './AdminPrivateRoute';
-import Page403 from './components/errors/Page403';
-import Page404 from './components/errors/Page404';
 import PublicRoute from './PublicRoute';
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.headers.post['Content-Type'] = 'application/json';

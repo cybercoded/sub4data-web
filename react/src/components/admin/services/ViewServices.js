@@ -1,21 +1,23 @@
 import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
+import swal from "sweetalert";
+
 
 function ViewServices(){
 
-    const [productList, setProduct] = useState([]);
+    const [serviceList, setservice] = useState([]);
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         let isMounted= true;
-        document.title="View product";
-        axios.get(`api/view-product`).then(res=>{
+        document.title="View service";
+        axios.get(`api/view-services`).then(res=>{
             if(isMounted)
             {
                 if(res.data.status===200)
                 {
-                    setProduct(res.data.product);
+                    setservice(res.data.service);
                     setLoading(false);
                 }
             }
@@ -24,35 +26,47 @@ function ViewServices(){
           isMounted = false;
       }
     }, []);
+
+    const deleteService = (e,id)=>{
+        e.preventDefault();
+
+        const thisClicked=e.currentTarget;
+        thisClicked.innerText="Deleting";
+
+        axios.delete(`api/delete-services/${id}`).then(res=>{
+            if(res.data.status===200)
+            {
+                swal("Success",res.data.message,"success");
+                thisClicked.closest("tr").remove();
+            }
+            else if(res.data.status=== 404){
+                swal("Warning",res.data.message,"warning");
+                thisClicked.innerText="Delete";
+            }
+        })
+    }
     
-    var view_products='';
+    var view_services='';
     if(loading)
     {
-        return <h4>Loading products...</h4>
+        return <h4>Loading services...</h4>
     }
     else
     {
-        var productStatus='';
-        view_products=
-        productList.map((item)=>{
-            if(item.status ===0 )
-            {
-                productStatus="Shown"
-            }
-            else if(item.status===1){
-                productStatus="Hidden"
-            }
+        var serviceStatus='';
+        view_services=
+        serviceList.map((item)=>{
             return (
                 <tr key={item.id}>
                     <td>{item.id}</td>
-                    <td>{item.category.name}</td>
-                    <td>{item.name}</td>
-                    <td><img src={`http://localhost:8000/${item.image}`} width="100px" height="100" alt={item.name}/></td>
+                    <td>{item.product.name}</td>
+                    <td>{item.name}</td>                    
+                    <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
                     <td>
-                        <Link to={`/admin/edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
+                        <Link to={`/admin/edit-services/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
                     </td>
                     <td>
-                        {productStatus}
+                        <button type="button" onClick={(e)=>deleteService(e,item.id)} className="btn btn-danger btn-sm">Delete</button>
                     </td>
                 </tr>
             )
@@ -62,8 +76,8 @@ function ViewServices(){
     return(
         <div className="card px-3">
             <div className="card-header">
-                <h4>View product | 
-                    <Link to="add-product" className="btn btn-primary btn-sm float-end">Add product</Link>
+                <h4>View service | 
+                    <Link to="/admin/add-services" className="btn btn-primary btn-sm float-end">Add service</Link>
                 </h4>
             </div>
             <div className="card-body">
@@ -72,15 +86,15 @@ function ViewServices(){
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Category Name</th>
                                 <th>Product Name</th>
-                                <th>Image</th>
-                                <th>Edit</th>
+                                <th>Service Name</th>
                                 <th>Status</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {view_products}
+                            {view_services}
                         </tbody>
 
                     </table>

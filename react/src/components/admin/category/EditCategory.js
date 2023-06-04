@@ -36,16 +36,30 @@ function EditCategory(props){
         setCategory({...categoryInput,[e.target.name]:e.target.value});
     }
 
+    const [picture, setPicture] = useState([]);
+    const handleImage =(e)=>{
+        setPicture({image: e.target.files[0]});
+    }
+
     const updateCategory= (e)=>{
         e.preventDefault();
+        const formData=new FormData();
+
+        formData.append('image', picture.image);
+        formData.append('slug', categoryInput.slug);
+        formData.append('name', categoryInput.name);
+        formData.append('description', categoryInput.description);
+        formData.append('status',  categoryInput.status);
+        formData.append('meta_title', categoryInput.meta_title);
+        formData.append('meta_description', categoryInput.meta_description);
+        formData.append('meta_keyword', categoryInput.meta_keyword);
+
         const category_id=props.match.params.id;
-        const data=categoryInput;
-        axios.put(`api/update-category/${category_id}`,data).then(res=>{
+        axios.post(`api/update-category/${category_id}`, formData).then(res=>{
             if(res.data.status===200){
-                swal("Success",res.data.message,"success");
-                setError([]);
-                document.getElementById("EDIT_CATEGORY_FORM").reset();
-                history.push('/admin/view-category');
+                swal("Success",res.data.message,"success").then(() =>{
+                    window.location.reload();
+                });
             }else if(res.data.status===422){
                 setError(res.data.errors);
                 swal("Error",res.data.errors,'warning');
@@ -66,7 +80,7 @@ function EditCategory(props){
              <div className="card mt-4">
                 <div className="card-header">
                     <h4>Edit Category | 
-                        <Link to="/admin/view-category" classname="beb ben-primary btn-sm float-end">Back</Link>
+                        <Link to="/admin/view-category" className="btn btn-primary btn-sm float-end">Back</Link>
                     </h4>
                 </div>
                 <div className="card-body">
@@ -93,7 +107,7 @@ function EditCategory(props){
                              </div>
                             <div className="form-group mb-3">
                                 <label>Description</label>
-                                <textarea name="description" onChange={handleInput} value={categoryInput.description} className="form-control" />
+                                <input name="description" onChange={handleInput} value={categoryInput.description} className="form-control" />
                             </div>
                             <div className="form-group mb-3">
                                 <label>Status</label>
@@ -108,15 +122,20 @@ function EditCategory(props){
                             </div>
                             <div className="form-group mb-3">
                                 <label>Meta Keywords</label>
-                                <textarea name="meta_keyword"  onChange={handleInput} value={categoryInput.meta_keyword} className="form-control" />
+                                <input name="meta_keyword"  onChange={handleInput} value={categoryInput.meta_keyword} className="form-control" />
                                 <small className="text-danger">{error?.meta_keyword}</small>
                             </div>
                             <div className="form-group mb-3">
                                 <label>Meta Description</label>
-                                <textarea name="meta_description"  onChange={handleInput} value={categoryInput.meta_description} className="form-control" />
+                                <input name="meta_description"  onChange={handleInput} value={categoryInput.meta_description} className="form-control" />
                                 <small className="text-danger">{error?.meta_description}</small>
                             </div>
-                            
+                            <div className="form-group mb-3">
+                                <label>Image</label>
+                                <input type="file" onChange={handleImage}  name="image" className="form-control" />
+                                <img src={`http://localhost:8000/${categoryInput.image}`} width="50" height="50" />
+                                <small className="text-danger">{error?.image}</small>
+                            </div>                            
                         </div>  
                     </div>
 

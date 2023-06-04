@@ -1,18 +1,48 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link, useHistory} from 'react-router-dom';
+import swal from 'sweetalert';
 const SideBar = () => {
+
+    const history = useHistory();
+
+    const [categoryList, setCategoryList] = useState([]);
+
+    useEffect(()=>{
+        axios.get(`api/view-category`).then(res=>{
+            if(res.status===200){
+                setCategoryList(res.data.category);
+            }
+        })
+    },[]);
+
+    const logoutSubmit = (e) => {
+        e.preventDefault();
+        axios.get('/sanctum/csrf-cookie').then((response) => {
+            axios.post(`api/logout`).then((res) => {
+                if (res.data.status === 200) {
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('auth_name');
+                    swal('Success', res.data.message, 'success');
+                    history.push('/login');
+                } else {
+                }
+            });
+        });
+    };
+
     return (
-        <nav className="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <nav className="sb-sidenav d-visible navbar-collapse accordion border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="navbarSupportedContent">
             <div className="sb-sidenav-menu">
                 <div className="nav">
                     <div className="sb-sidenav-menu-heading">Menu</div>
-                    <Link className="nav-link" to="/dashboard">
+                    <Link className={`nav-link ${ 'dashboard' === window.location.href.split('/')[3] && 'active' }`} to="/dashboard">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-tachometer-alt"></i>
                         </div>
                         Dashboard
                     </Link>
-                    <Link className="nav-link" to="/profile">
+                    <Link className={`nav-link ${ 'profile' === window.location.href.split('/')[3] && 'active' }`} to="/profile">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-tachometer-alt"></i>
                         </div>
@@ -20,37 +50,28 @@ const SideBar = () => {
                     </Link>
 
                     <div className="sb-sidenav-menu-heading">Our Services</div>
-                    <Link
-                        className="nav-link collapsed"
-                        to="#"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseLayouts"
-                        aria-expanded="false"
-                        aria-controls="collapseLayouts"
-                    >
-                        <div className="sb-nav-link-icon">
-                            <i className="fas fa-columns"></i>
-                        </div>
-                        Services
-                        <div className="sb-sidenav-collapse-arrow">
-                            <i className="fas fa-angle-down"></i>
-                        </div>
-                    </Link>
-                    <div className="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav className="sb-sidenav-menu-nested nav">
-                            <Link className="nav-link" to="/airtime">
-                               Airtime
+                    {   categoryList.map((item, index) => (
+                        <div className="nav-item" key={index}>
+                            <Link className={`nav-link ${ item.slug === window.location.href.split('/')[4] && 'active' }`}to={`/services/${item.slug}/${item.id}`} >
+                                <div className="sb-nav-link-icon">
+                                    <img src={`http://localhost:8000/${item.image}`} width="20" height="20" alt={item.name}/>
+                                </div>
+                                {item.name}
                             </Link>
-                            <Link className="nav-link" to="/data">
-                                Data
-                            </Link>
-                        </nav>
-                    </div>
+                        </div>
+                        ))
+                    }
                 </div>
             </div>
-            <div className="sb-sidenav-footer">
-                {/* <div className="small">Logged in as:</div>
-                        Start Bootstrap */}
+            <div className="sb-sidenav-footer bg-light">
+                <div className='nav'>
+                    <Link className="nav-link" onClick={logoutSubmit}>
+                        <div className="sb-nav-link-icon float-start">
+                            <i className="fas fa-power-off"></i>
+                        </div>
+                        Logout
+                    </Link>
+                </div>
             </div>
         </nav>
     );

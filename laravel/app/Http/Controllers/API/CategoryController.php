@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
@@ -72,6 +73,20 @@ class CategoryController extends Controller
                 $category->description = $request->input('description');
                 $category->status = $request->input('status') == true ? 1 : 0;
 
+                if($request->hasFile('image')){
+                    $path=$category->image;
+                    if(File::exists($path))
+                    {
+                        File::delete($path);
+                    }
+                    $file=$request->file('image');
+                    $extenstion=$file->getClientOriginalExtension();
+                    $fileName=time().'.'.$extenstion;
+                    $new_path='uploads/categories/';
+                    $file->move($new_path,$fileName);
+                    $category->image=$new_path.$fileName;
+                }
+
                 $category->save();
 
                 return response()->json([
@@ -111,6 +126,20 @@ class CategoryController extends Controller
             $category->name = $request->input('name');
             $category->description = $request->input('description');
             $category->status = $request->input('status') == true ? 1 : 0;
+
+            if($request->hasFile('image')){
+                $path=$category->image;
+                if(File::exists($path))
+                {
+                    File::delete($path);
+                }
+                $file=$request->file('image');
+                $extenstion=$file->getClientOriginalExtension();
+                $fileName=time().'.'.$extenstion;
+                $new_path='uploads/categories/';
+                $file->move($new_path,$fileName);
+                $category->image=$new_path.$fileName;
+            }
 
             $category->save();
 

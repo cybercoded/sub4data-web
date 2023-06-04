@@ -12,7 +12,10 @@ import Cart from '../components/frontend/Cart';
 import ThankYou from '../components/frontend/Thankyou';
 import Dashboard from '../components/frontend/Dashoard';
 import Profile from '../components/frontend/Profile';
-import Data from '../components/frontend/Data';
+import Data from '../components/frontend/services/Data';
+import Airtime from '../components/frontend/services/Airtime';
+import Bill from '../components/frontend/services/Bill';
+import Electricity from '../components/frontend/services/Electricity';
 
 const PublicRouteList =[
     { path: '/index', exact: true, name: 'Home', component: Home },
@@ -29,7 +32,11 @@ const PublicRouteList =[
     { path: '/cart', exact: true, name: 'Cart', component: Cart },
     { path: '/thank-you', exact: true, name: 'ThankYou', component: ThankYou },
     { path: '/profile', exact: true, name: 'Profile', component: Profile },
-    { path: '/data', exact: true, name: 'Data', component: Data },
+    
+    { path: '/services/data/:id', exact: true, name: 'Data', component: Data },
+    { path: '/services/airtime/:id', exact: true, name: 'Airtime', component: Airtime },
+    { path: '/services/bill/:id', exact: true, name: 'Bill', component: Bill },
+    { path: '/services/electricity/:id', exact: true, name: 'Electricity', component: Electricity },
 
 ];
 
