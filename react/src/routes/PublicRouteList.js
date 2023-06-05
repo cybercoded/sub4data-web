@@ -32,7 +32,8 @@ const PublicRouteList =[
     { path: '/services/electricity/:id', exact: true, name: 'Electricity', component: Electricity },
 
     { path: '/update-pin', exact: true, name: 'UpdatePin', component: UpdatePin },
-    { path: '/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword },
+    { path: '/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword }
+
 
 ];
 

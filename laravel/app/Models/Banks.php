@@ -5,13 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Levels extends Model
+class Banks extends Model
 {
     use HasFactory;
 
-    protected $table='levels';
+    protected $table='banks';
+
     protected $fillable=[
         'id',
-        'level',
+        'bank_name',
+        'account_name',
+        'account_number',
+        'reference'
     ];
 }

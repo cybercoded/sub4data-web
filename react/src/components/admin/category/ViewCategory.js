@@ -2,7 +2,7 @@ import axios from "axios";
 import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
-
+import $ from "jquery";
 
 function ViewCategory(){
 
@@ -15,6 +15,8 @@ function ViewCategory(){
         axios.get(`api/view-category`).then(res=>{
             if(res.status===200){
                 setCategoryList(res.data.category);
+
+                $('#example').DataTable();
             }
             setLoading(false);
         })

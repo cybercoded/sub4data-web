@@ -8,6 +8,7 @@ use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ServicesController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VerificationController;
+use App\Http\Controllers\BackupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -92,6 +93,8 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::put('update-password', [UserController::class,'updatePassword']);
 
     Route::get('verify-password/{password}', [UserController::class,'verifyPassword']);
+
+    Route::get('database-backup', [BackupController::class,'backup']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
