@@ -6,12 +6,9 @@ import swal from "sweetalert";
 function Profile(){
 
     const [loading, setLoading] = useState(true);
-    const [profileList, setProfileList] = useState([]);
     const [textInput, setTextIput] = useState({
-        product: '',
-        serviceId: '',
-        smartcard_number: '7023687567',
-        amount: ''
+        name: '',
+        email: ''
     });
 
     const handleInput = (e) => {
@@ -20,12 +17,15 @@ function Profile(){
     };
 
     const handleProfileUpdate = (e) => {        
-        e.persist();
+        e.preventDefault();
 
         setLoading(true);
-        axios.post(`api/smartcard-verification`, {smartcard_number: textInput.smartcard_number, product_code: textInput.serviceId}).then((res) => {
-            if (res.data.status === 200) {                    
+        axios.post(`api/update-user`, {name: textInput.name}).then((res) => {
+            if (res.data.status === 200) {
+
                 swal('Sucess!', 'Profile data successfully updated', 'success');
+                window.location.reload();
+
             }else {
                 swal('Unable to update!', 'Something went wrong, try again', 'error');
             }
@@ -34,9 +34,9 @@ function Profile(){
     };
 
     useEffect(() => {
-        axios.get(`api/view-user/`).then((res) => {
+        axios.get(`api/user/`).then((res) => {
             if (res.status === 200) {
-                setProfileList(res.data.product);
+                setTextIput(res.data);
             }
             setLoading(false);
         });
@@ -46,7 +46,7 @@ function Profile(){
     return (
         <div className="container mt-5">
             <div className="text-muted h5 mb-4 pb-4 border-bottom">
-                <b>Bill</b> Payment /
+                <b>Profile</b> Update /
             </div>
             <div className="bg-light card card-body col-md-6">
                 <ReactjsOverlayLoader isActive={loading} 
@@ -54,24 +54,21 @@ function Profile(){
                 />
 
                 <form onSubmit={handleProfileUpdate}>
-                    <div className='form-group mb-3'>
-                        <label>Full Name</label>
-                        <input type='' name="name" onChange={handleInput} value={profileList.name} className='form-control' ></input>
-                        <span>{profileList.error_list?.name}</span>
-                    </div>
+
                     <div className='form-group mb-3'>
                         <label>Email ID</label>
-                        <input type='' name="email" onChange={handleInput} value={profileList.email} className='form-control' ></input>
-                        <span>{profileList.error_list?.email}</span>
+                        <input type='text' name="email"  value={textInput.email} disabled className='form-control' ></input>
+                        <small className="text-info">Your email cannot be changed</small>
                     </div>
+
                     <div className='form-group mb-3'>
-                        <label>Password</label>
-                        <input type='password' name="password" onChange={handleInput} value={profileList.password} className='form-control' ></input>
-                        <span>{profileList.error_list?.password}</span>
+                        <label>Full Name</label>
+                        <input type='text' name="name" onChange={handleInput} value={textInput.name} className='form-control' ></input>
+                        <small className="text-danger">{textInput.error_list?.name}</small>
                     </div>
-                    
+
                     <div className='form-group mb-3'>
-                        <button type='submit' className='btn btn-primary w-100'>Register</button>
+                        <button type='submit' className='btn btn-primary w-100'>Update profile</button>
                     </div>
                 </form>
             </div>

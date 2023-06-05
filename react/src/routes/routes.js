@@ -1,5 +1,4 @@
 import Dashboard from '../components/admin/Dashboard';
-import Profile from '../components/admin/Profile';
 
 import Category from '../components/admin/category/Category';
 import ViewCategory from '../components/admin/category/ViewCategory';
@@ -13,10 +12,11 @@ import AddServices from '../components/admin/services/AddServices';
 import ViewServices from '../components/admin/services/ViewServices';
 import EditServices from '../components/admin/services/EditServices';
 
+import Profile from '../components/admin/Profile';
+
 const routes =[
     { path: '/admin', exact: true, name: 'Admin' },
-    { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
-    { path: '/admin/profile', exact: true, name: 'Profile', component: Profile },
+    { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },    
 
     { path: '/admin/add-category', exact: true, name: 'Category', component: Category },
     { path: '/admin/edit-category/:id', exact: true, name: 'EditCategory', component: EditCategory },
@@ -28,7 +28,9 @@ const routes =[
 
     { path: '/admin/add-services', exact: true, name: 'AddServices', component: AddServices },
     { path: '/admin/view-services', exact: true, name: 'ViewServices', component: ViewServices },
-    { path: '/admin/edit-services/:id', exact: true, name: 'EditServices', component: EditServices }
+    { path: '/admin/edit-services/:id', exact: true, name: 'EditServices', component: EditServices },
+    
+    { path: '/admin/profile', exact: true, name: 'Profile', component: Profile },
 
 ];
 

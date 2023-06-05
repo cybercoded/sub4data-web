@@ -6,6 +6,7 @@ use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\PinController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ServicesController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -80,9 +81,17 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::get('verify-pin/{pin}', [PinController::class,'verify']);
 
+    Route::put('update-pin', [PinController::class,'update']);
+
     Route::post('smartcard-verification', [VerificationController::class,'smartnumber']);
 
     Route::post('meternumber-verification', [VerificationController::class,'meternumber']);
+
+    Route::post('update-user', [UserController::class,'update']);
+
+    Route::put('update-password', [UserController::class,'updatePassword']);
+
+    Route::get('verify-password/{password}', [UserController::class,'verifyPassword']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

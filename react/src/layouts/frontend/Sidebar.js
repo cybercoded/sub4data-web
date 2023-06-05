@@ -17,23 +17,14 @@ const SideBar = () => {
     },[]);
 
     return (
-        <nav className="sb-sidenav d-visible navbar-collapse accordion border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="sidenavAccordion" data-bs-target="#navbarDropdown">
+        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="sidenavAccordion" data-bs-target="#navbarDropdown">
             <div className="sb-sidenav-menu">
                 <div className="nav">
-                    <div className="sb-sidenav-menu-heading">
-                        Menu
-                    </div>
                     <Link className={`nav-link ${ 'dashboard' === window.location.href.split('/')[3] && 'active' }`} to="/dashboard">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-tachometer-alt"></i>
                         </div>
                         Dashboard
-                    </Link>
-                    <Link className={`nav-link ${ 'profile' === window.location.href.split('/')[3] && 'active' }`} to="/profile">
-                        <div className="sb-nav-link-icon">
-                            <i className="far fa-user"></i>
-                        </div>
-                        Profile
                     </Link>
 
                     <div className="sb-sidenav-menu-heading">
@@ -51,7 +42,9 @@ const SideBar = () => {
                         ))
                     }
 
-                    <div className="sb-sidenav-menu-heading">Menu</div>
+                    <div className="sb-sidenav-menu-heading">
+                        Menu
+                    </div>
                     <Link className={`nav-link ${ 'dashboard' === window.location.href.split('/')[3] && 'active' }`} to="/dashboard">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-bank"></i>
@@ -71,6 +64,39 @@ const SideBar = () => {
                         </div>
                         Transfer Funds
                     </Link>
+
+                    <div className="sb-sidenav-menu-heading">
+                        Others
+                    </div>
+                    <Link
+                        className="nav-link collapsed"
+                        to="#"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseSettings"
+                        aria-expanded="false"
+                        aria-controls="collapseSettings"
+                    >
+                        <div className="sb-nav-link-icon">
+                            <i className="fas fa-cog"></i>
+                        </div>
+                            Settings
+                        <div className="sb-sidenav-collapse-arrow">
+                            <i className="fas fa-angle-down"></i>
+                        </div>
+                    </Link>
+                    <div className="collapse" id="collapseSettings" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/profile">
+                                Update Profile
+                            </Link>
+                            <Link className="nav-link" to="/update-pin">
+                                Update Transaction PIN
+                            </Link>
+                            <Link className="nav-link" to="/update-password">
+                                Update Password
+                            </Link>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </nav>
