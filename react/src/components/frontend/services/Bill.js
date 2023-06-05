@@ -129,10 +129,10 @@ function Bill(props) {
 
     return (
         
-        <div className="container">
-            
-
-            <h4  className="alert alert-secondary"><b>Bill</b> Payment </h4>
+        <div className="container mt-5">
+            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+                <b>Bill</b> Payment /
+            </div>
             <div className="bg-light card card-body col-md-6">
                 <ReactOverlayLoader isActive={loading} 
                     icon={<img alt='loader' width={50} src={'http://localhost/sub4data-web/react/src/assets/admin/assets/img/loading.gif' }/>} 

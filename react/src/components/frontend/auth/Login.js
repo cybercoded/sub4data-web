@@ -1,11 +1,12 @@
-
-
 import React, {useState} from 'react';
 import Navbar from "../../../layouts/frontend/Navbar";
 import swal from 'sweetalert';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+
 function Login() {
+
+    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
 
     const history=useHistory();
     const [loginInput, setLogin] = useState({
@@ -49,33 +50,36 @@ function Login() {
     }
 
     return(
-            <div>
-                <div className='container py-5'>
-                    <div className='row justify-content-center'>
-                        <div className='col-md-6'>
-                            <div className='card'>
-                            <div className='card-header'>
-                                <h4>Login</h4>
-                                <div className='card-body'>
-                                    <form onSubmit={loginSubmit}>
-                                        <div className='form-group mb-3'>
-                                            <label>Email ID</label>
-                                            <input type='email' name="email" onChange={handleInput} value={loginInput.email} className='form-control' ></input>
-                                            <span>{loginInput.error_list?.email}</span>
-                                        </div>
-                                        <div className='form-group mb-3'>
-                                            <label>Password</label>
-                                            <input type='password' name="password" onChange={handleInput} value={loginInput.password} className='form-control' ></input>
-                                            <span>{loginInput.error_list?.password}</span>
-                                        </div>
-                                        
-                                        <div className='form-group mb-3'>
-                                            <button type='submit' className='btn btn-primary'>Login</button>
-                                        </div>
-                                    </form>
+            <div className='my-bg-primary'>
+                <div class="d-flex align-items-center justify-content-center vh-100">                    
+                    <div className='card col-md-3'>
+                        <Link to="/index" className='card-header text-center text-decoration-none'>                            
+                            <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
+                            <h4>Login your account</h4>
+                        </Link>
+                        <div className='card-body'>
+                            <form onSubmit={loginSubmit}>
+                                <div className='form-group mb-3'>
+                                    <label>Email ID</label>
+                                    <input type='email' name="email" onChange={handleInput} value={loginInput.email} className='form-control' ></input>
+                                    <span>{loginInput.error_list?.email}</span>
                                 </div>
+                                <div className='form-group mb-3'>
+                                    <label>Password</label>
+                                    <input type='password' name="password" onChange={handleInput} value={loginInput.password} className='form-control' ></input>
+                                    <span>{loginInput.error_list?.password}</span>
                                 </div>
-                            </div>
+                                
+                                <div className='form-group mb-3'>
+                                    <button type='submit' className='btn btn-primary w-100'>Login</button>
+                                </div>
+                                
+                                <div className='form-group mb-3'>
+                                    <div className="text-center mb-0">
+                                        <div>Don't have an account? <Link to="/register">Register</Link> or </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

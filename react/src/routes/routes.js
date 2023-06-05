@@ -13,8 +13,6 @@ import AddServices from '../components/admin/services/AddServices';
 import ViewServices from '../components/admin/services/ViewServices';
 import EditServices from '../components/admin/services/EditServices';
 
-import Order from '../components/admin/order/Order';
-
 const routes =[
     { path: '/admin', exact: true, name: 'Admin' },
     { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
@@ -30,11 +28,7 @@ const routes =[
 
     { path: '/admin/add-services', exact: true, name: 'AddServices', component: AddServices },
     { path: '/admin/view-services', exact: true, name: 'ViewServices', component: ViewServices },
-    { path: '/admin/edit-services/:id', exact: true, name: 'EditServices', component: EditServices },
-
-    { path: '/admin/orders', exact: true, name: 'Order', component: Order }
-
-
+    { path: '/admin/edit-services/:id', exact: true, name: 'EditServices', component: EditServices }
 
 ];
 

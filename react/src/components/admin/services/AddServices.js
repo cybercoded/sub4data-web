@@ -8,7 +8,7 @@ function AddServices() {
     const [productList, setproductList] = useState([]);
     const [errorList, setError] = useState([]);
     const [servicesInput, setservices] = useState({
-        product_id: '1',
+        product_id: '4',
         name: '',
         description: '',
         price: '',

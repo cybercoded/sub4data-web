@@ -34,20 +34,15 @@ const Navbar = () => {
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li className="nav-item dropdown">
                         <span
-                            className="nav-link btn btn-danger dropdown-toggle"
+                            className="nav-link dropdown-toggle"
                             id="navbarDropdown"
                             role="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <i className="fas fa-user fa-fw"></i> Menu
+                            <i className="fas fa-user fa-fw"></i>
                         </span>
                         <ul className="dropdown-menu dropdown-menu-end" data-bs-target="#navbarDropdown" aria-labelledby="navbarDropdown">
-                            <li>
-                                <Link className="dropdown-item" onClick={logoutSubmit}>
-                                    Logout
-                                </Link>
-                            </li>
                             <li>
                                 <Link className="dropdown-item" to="#!">
                                     Settings
@@ -62,7 +57,7 @@ const Navbar = () => {
                                 <hr className="dropdown-divider" />
                             </li>
                             <li>
-                                <Link className="dropdown-item" to="#!">
+                                <Link className="dropdown-item" to="#!" onClick={logoutSubmit}>
                                     Logout
                                 </Link>
                             </li>

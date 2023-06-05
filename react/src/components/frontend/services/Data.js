@@ -12,7 +12,8 @@ function Data(props) {
     const [serviceList, setServiceList] = useState([]);
     const [errorList, setErrorList] = useState([]);
     const [textInput, setTextIput] = useState({
-        product: '',
+        productId: '',
+        serviceId: '',
         tel: '',
         amount: ''
     });
@@ -24,7 +25,7 @@ function Data(props) {
    
     const handleProductSelection = (product, product_id) => {        
         setProductActive(product);
-        setTextIput({ ...textInput, product: product });
+        setTextIput({ ...textInput, productId: product_id });
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
@@ -35,19 +36,27 @@ function Data(props) {
         });
     };
 
-    const handleAmount = (e) => {
-        var value = e.target.value;
-        setTextIput({ ...textInput, [e.target.name]: value });
+    const handleProductSelection2 = (e) => {
+        
+        var slug = e.target.selectedOptions[0].dataset.slug;        
+        var product_id = e.target.value;      
+                
+        setProductActive(slug);
+        setTextIput({ ...textInput, productId: product_id });
 
-        var response = '';
-        if (value < 50) {
-            response = 'Amount should not be lesser than 50';
-        }
-        if (value > 5000) {
-            response = 'Amount should not be greater than 5,000';
-        }
+        setLoading(true);
+        axios.get(`api/view-services/${product_id}`).then((res) => {
+            if (res.status === 200) {
+                setServiceList(res.data.services);
+            }
+            setLoading(false);
+        });
+    };
 
-        setErrorList({ ...errorList, amount: response });
+    const handleServiceSelection = (e) => {
+        var value = e.target.selectedOptions[0].dataset.amount;
+        var api_servie_id = e.target.selectedOptions[0].dataset.api_id;
+        setTextIput({ ...textInput, [e.target.name]: e.target.value, amount: value, serviceId: api_servie_id });
     };
 
     const dataSubmit = (e) => {
@@ -109,9 +118,7 @@ function Data(props) {
 
     return (
         
-        <div className="container">
-            
-
+        <div className="container">           
             <h4  className="alert alert-secondary">Buy <b>Data</b> </h4>
             <div className="bg-light card card-body col-md-6">
                 <ReactOverlayLoader isActive={loading} 
@@ -126,7 +133,7 @@ function Data(props) {
                                     key={index}
                                     className={`btn btn-outline-primary ${productActive === item.slug && 'active'}`}
                                     onClick={() => { handleProductSelection(item.slug, item.id); }}
-                                    style={{ marginRight: 2 }}
+                                    style={{ margin: 2 }}
                                 >
                                     <img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name} />
                                 </button>
@@ -136,11 +143,35 @@ function Data(props) {
                     
                     
                     <div className="form-group mb-3">
+                        <label>Data Services:</label>
+                        <select name="product" onChange={handleProductSelection2} value={textInput.productId} className="form-select">
+                            <option value="">--Choose Data Service--</option>
+                            {productList?.map((item, index) => (
+                                <option 
+                                    key={index} 
+                                    value={item.id}
+                                    data-slug={item.slug} 
+                                >
+                                    {item.name}
+                                </option>                                
+                            ))}
+                        </select>
+                        <small className="text-danger">{errorList?.services}</small>
+                    </div>
+                    
+                    <div className="form-group mb-3">
                         <label>Data Plan:</label>
-                        <select name="services" onChange={handleInput} value={textInput.services} className="form-select">
+                        <select name="service" onChange={handleServiceSelection} className="form-select">
                             <option value="">--Choose Data Plan--</option>
-                            {serviceList.map((item, index) => (
-                                <option key={index} value={item.id}>{item.name}</option>
+                            {serviceList?.map((item, index) => (
+                                <option 
+                                    key={index} 
+                                    data-amount={item.amount} 
+                                    data-api_id={item.api_servie_id} 
+                                    value={item.id}
+                                >
+                                    {item.name}
+                                </option>
                             ))}
                         </select>
                         <small className="text-danger">{errorList?.services}</small>
@@ -150,6 +181,12 @@ function Data(props) {
                         <label>Phone number</label>
                         <input type="tel" name="tel" onChange={handleInput} value={textInput.tel} className="form-control"></input>
                         <small className="text-danger">{errorList?.tel}</small>
+                    </div>
+
+                    <div className="form-group mb-3">
+                        <label>Amount</label>
+                        <input type="text" disabled value={textInput.amount} className="form-control"></input>
+                        <small className="text-danger">{errorList?.amount}</small>
                     </div>
 
                     <div className="form-group mb-3">

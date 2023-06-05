@@ -14,7 +14,7 @@ function AddProduct() {
         meta_title: '',
         meta_keyword: '',
         meta_description: '',
-        status: ''
+        status: true
     });
 
     const [picture, setPicture] = useState([]);
@@ -231,6 +231,7 @@ function AddProduct() {
                                             name="status"
                                             onChange={handleInput}
                                             value={productInput.status}
+                                            defaultChecked={productInput.status}
                                         />
                                     </div>
                                 </div>
