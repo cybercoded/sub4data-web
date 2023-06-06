@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banks;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,7 +11,34 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function update(Request $request)
+    public function index()
+    {
+        $users = User::all();
+        return response()->json([
+            'status' => 200,
+            'users' => $users
+        ]);
+    }
+
+    public function edit($id)
+    {
+        $user = User::find($id);
+
+        if ($user) {
+
+            return response()->json([
+                'status' => 200,
+                'data' => $user
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No user found'
+            ]);
+        }
+    }
+
+    public function userUpdate(Request $request)
     {
         
         $validator=Validator::make($request->all(),[
@@ -35,6 +63,44 @@ class UserController extends Controller
                 return response()->json([
                     'status'=>200,
                     'message'=>"Profile updates successfully",
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'status'=>404,
+                    'errors'=>"Unable to update user",
+                ]);
+            }
+        }
+    }
+
+    public function adminUpdate(Request $request, $id)
+    {
+        
+        $validator=Validator::make($request->all(),[
+            'name'=>'required|string',
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'status'=>422,
+                'errors'=>$validator->errors(),
+            ]);
+        }
+        else
+        {
+            $user= User::find($id);
+            $user->name= $request->input('name');                
+            $user->status= $request->input('status') == true ? 1 : 0;                
+            $user->balance= $request->input('balance'); 
+            
+            if ( $user->save() ) 
+            {
+                return response()->json([
+                    'status'=>200,
+                    'message'=>"User updated successfully",
                 ]);
             }
             else
@@ -101,6 +167,27 @@ class UserController extends Controller
                     'errors'=>"Unable to update password",
                 ]);
             }
+        }
+    }
+
+    public function viewBanks()
+    {
+        $user_id=auth('sanctum')->user()->id; 
+        $banks = Banks::where('user_id', $user_id)->get();
+
+        if($banks)
+        {            
+            return response()->json([
+                'status'=>200,
+                'banks'=>$banks
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No product found'
+            ]);
         }
     }
     

@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->integer('level');
             $table->integer('role_as');
             $table->integer('status');
+            $table->string('balance');
             $table->rememberToken();
             $table->timestamps();
         });

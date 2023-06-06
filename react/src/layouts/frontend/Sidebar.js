@@ -20,7 +20,7 @@ const SideBar = () => {
         <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light">
             <div className="sb-sidenav-menu">
                 <div className="nav">
-                    <Link className={`nav-link ${ 'dashboard' === window.location.href.split('/')[3] && 'active' }`} to="/dashboard">
+                    <Link className={`nav-link ${ 'dashboard' === window.location.href.split('/')[3] && 'active' }`} to="/user/dashboard">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-tachometer-alt"></i>
                         </div>
@@ -32,7 +32,7 @@ const SideBar = () => {
                     </div>
                     {   categoryList.map((item, index) => (
                         <div className="nav-item" key={index}>
-                            <Link className={`nav-link ${ item.slug === window.location.href.split('/')[4] && 'active' }`}to={`/services/${item.slug}/${item.id}`} >
+                            <Link className={`nav-link ${ item.slug === window.location.href.split('/')[4] && 'active' }`}to={`/user/services/${item.slug}/${item.id}`} >
                                 <div className="sb-nav-link-icon">
                                     <img src={`http://localhost:8000/${item.image}`} width="20" height="20" alt={item.name}/>
                                 </div>

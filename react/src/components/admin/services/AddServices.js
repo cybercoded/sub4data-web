@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory} from 'react-router-dom';
 import swal from 'sweetalert';
 import { Loader } from '../../Global';
-import $ from 'jquery';
 
 function AddServices() {
     const history = useHistory();
@@ -11,7 +10,7 @@ function AddServices() {
     const [productList, setproductList] = useState([]);
     const [errorList, setError] = useState([]);
     const [servicesInput, setservices] = useState({
-        product_id: '5',
+        product_id: '',
         name: '',
         description: '',
         price: '',
@@ -43,8 +42,7 @@ function AddServices() {
         axios.post(`api/store-services`, servicesInput).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() =>{
-                    // window.location.reload();
-                    $('form').reset();
+                    window.location.reload();
                 });
             } else if (res.data.status === 422 ) {
                 swal('All fields are mandatory', '', 'error');

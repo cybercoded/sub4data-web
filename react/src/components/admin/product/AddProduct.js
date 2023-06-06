@@ -10,7 +10,7 @@ function AddProduct() {
     const [categoryList, setCategoryList] = useState([]);
     const [errorList, setError] = useState([]);
     const [productInput, setProduct] = useState({
-        category_id: '',
+        category_id: '3',
         slug: '',
         name: '',
         description: '',
@@ -144,6 +144,7 @@ function AddProduct() {
                                         name="category_id"
                                         onChange={handleInput}
                                         value={productInput.category_id}
+                                        defaultValue={productInput.category_id}
                                         className="form-select"
                                     >
                                         <option>Select Category</option>

@@ -13,6 +13,7 @@ import ViewServices from '../components/admin/services/ViewServices';
 import EditServices from '../components/admin/services/EditServices';
 
 import Profile from '../components/admin/Profile';
+import EditUser from '../components/admin/user/EditUuser';
 
 const AdminRouteList =[
     { path: '/admin', exact: true, name: 'Admin' },
@@ -29,6 +30,8 @@ const AdminRouteList =[
     { path: '/admin/add-services', exact: true, name: 'AddServices', component: AddServices },
     { path: '/admin/view-services', exact: true, name: 'ViewServices', component: ViewServices },
     { path: '/admin/edit-services/:id', exact: true, name: 'EditServices', component: EditServices },
+    
+    { path: '/admin/edit-user/:id', exact: true, name: 'EditUser', component: EditUser },
     
     { path: '/admin/profile', exact: true, name: 'Profile', component: Profile },
 

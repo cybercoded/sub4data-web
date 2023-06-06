@@ -2,19 +2,48 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactjsOverlayLoader from 'reactjs-overlay-loader';
+import $ from 'jquery';
 
 function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [categoryList, setCategoryList] = useState([]);
+    const [bankList, setBankList] = useState([]);
 
     useEffect(() => {
         axios.get(`api/view-category`).then((res) => {
-            if (res.status === 200) {
+            if (res.data.status === 200) {
                 setCategoryList(res.data.category);
             }
             setLoading(false);
         });
+
+        axios.get(`api/user-banks`).then((res) => {
+            if (res.data.status === 200) {
+                setBankList(res.data.banks);
+            }
+            setLoading(false);
+        });
     }, []);
+
+    const handleCopy = (elementId) => {
+        // Create a "hidden" input
+        var aux = document.createElement("input");
+
+        // Assign it the value of the specified element
+        aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+
+        // Append it to the body
+        document.body.appendChild(aux);
+
+        // Highlight its content
+        aux.select();
+
+        // Copy the highlighted text
+        document.execCommand("copy");
+
+        // Remove it from the body
+        document.body.removeChild(aux);
+    };
 
     return (
         <div className="container mt-5">
@@ -26,27 +55,25 @@ function Dashboard() {
             <div>
                 <div style={{overflowX: 'scroll', overflowY: 'hidden'}}>
                     <div style={{width: 4000}}>
-                        <div className='card my-bank-card bg-light border-danger float-start' style={{minWidth: 250}}>
-                            <div className="card-body" style={{height: 150}}>
-                                <div>Account Name:kunley247</div>
-                                <div>Account Number: 8240314943 copy</div>
-                                <div>Bank Name: Wema bank</div>
-                            </div>
-                        </div>
-                        <div className='card bg-light border-danger float-start' style={{minWidth: 250}}>
-                            <div className="card-body" style={{height: 150}}>
-                                <div>Account Name:kunley247</div>
-                                <div>Account Number: 8240314943 copy</div>
-                                <div>Bank Name: Wema bank</div>
-                            </div>
-                        </div>
-                        <div className='card bg-light border-danger float-start' style={{minWidth: 250}}>
-                            <div className="card-body" style={{height: 150}}>
-                                <div>Account Name:kunley247</div>
-                                <div>Account Number: 8240314943 copy</div>
-                                <div>Bank Name: Wema bank</div>
-                            </div>
-                        </div>
+                        { bankList.map((item, index) => (
+                                <div key={index} className='card bg-light my-bank-card bg-light border-danger float-start' style={{minWidth: 250, marginRight: 10}}>
+                                    <div className="card-body" style={{height: 150}}>
+                                        <div>
+                                            {item.bank_name}
+                                            <span className="float-endd">{item.account_name}</span>
+                                        </div>
+                                        <div className='h1'>{item.account_number}</div>
+                                        <div className='mt-3'>
+                                            <button className='btn btn-sm btn-info' 
+                                                onClick={() =>  navigator.clipboard.writeText(item.account_number)}                                            
+                                            >
+                                                Copy Account Number
+                                            </button>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
             </div>

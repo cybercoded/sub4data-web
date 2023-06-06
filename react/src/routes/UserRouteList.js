@@ -9,16 +9,16 @@ import UpdatePassword from '../components/frontend/UpdatePassword';
 
 
 const UserRouteList =[
-    { path: 'dashboard', exact: true, name: 'Dashboard', component: Dashboard },
-    { path: '/profile', exact: true, name: 'Profile', component: Profile },
+    { path: '/user/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
+    { path: '/user/profile', exact: true, name: 'Profile', component: Profile },
     
-    { path: '/services/data/:id', exact: true, name: 'Data', component: Data },
-    { path: '/services/airtime/:id', exact: true, name: 'Airtime', component: Airtime },
-    { path: '/services/bill/:id', exact: true, name: 'Bill', component: Bill },
-    { path: '/services/electricity/:id', exact: true, name: 'Electricity', component: Electricity },
+    { path: '/user/services/data/:id', exact: true, name: 'Data', component: Data },
+    { path: '/user/services/airtime/:id', exact: true, name: 'Airtime', component: Airtime },
+    { path: '/user/services/bill/:id', exact: true, name: 'Bill', component: Bill },
+    { path: '/user/services/electricity/:id', exact: true, name: 'Electricity', component: Electricity },
 
-    { path: '/update-pin', exact: true, name: 'UpdatePin', component: UpdatePin },
-    { path: '/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword }
+    { path: '/user/update-pin', exact: true, name: 'UpdatePin', component: UpdatePin },
+    { path: '/user/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword }
 
 
 ];

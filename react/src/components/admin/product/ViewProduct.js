@@ -74,8 +74,8 @@ function ViewProduct(){
                             </tr>
                         </thead>
                         <tbody>
-                            {productList.map((item)=> (
-                                <tr key={item.id}>
+                            {productList?.map((item, index)=> (
+                                <tr key={index}>
                                     <td>{item.id}</td>
                                     <td>{item.category.name}</td>
                                     <td>{item.name}</td>

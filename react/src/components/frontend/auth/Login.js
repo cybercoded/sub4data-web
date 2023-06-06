@@ -3,11 +3,12 @@ import Navbar from "../../../layouts/frontend/Navbar";
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { Loader } from '../../Global';
 
 function Login() {
 
     const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
-
+const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [loginInput, setLogin] = useState({
         email:'',
@@ -29,6 +30,7 @@ function Login() {
             password: loginInput.password,
         }
 
+        setLoading(true);
         axios.get('/sanctum/csrf-cookie').then(response => {
             axios.post(`api/login`,data).then(res =>{
                 if(res.data.status === 200){
@@ -38,25 +40,28 @@ function Login() {
                     if(res.data.role==='admin'){
                         history.push("/admin/dashboard");
                     }else{
-                        history.push("/user");
+                        history.push("/user/dashboard");
                     }
                 }else if(res.data.status === 401) {
                     swal('Warning', res.data.message,'warning');
                 }else{
                     setLogin({...loginInput,error_list: res.data.validation_erros});
                 }
+                setLoading(false);
             });
         });
     }
 
     return(
-            <div className='my-bg-primary'>
-                <div className="d-flex align-items-center justify-content-center vh-100">                    
+        <div>
+            <div className='my-bg-primary'>                
+                <div className="d-flex align-items-center justify-content-center vh-100">                                 
                     <div className='card col-md-3'>
+                        <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
                             <h4>Login your account</h4>
-                        </Link>
+                        </Link>                        
                         <div className='card-body'>
                             <form onSubmit={loginSubmit}>
                                 <div className='form-group mb-3'>
@@ -84,6 +89,7 @@ function Login() {
                     </div>
                 </div>
             </div>
+        </div>
     );
 }
 

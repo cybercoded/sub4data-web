@@ -3,11 +3,12 @@ import Navbar from "../../../layouts/frontend/Navbar";
 import axios from 'axios';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
+import { Loader } from '../../Global';
 
 function Register() {
 
     const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
-
+    const [loading, setLoading] = useState(false);
 
     const history=useHistory();
     const [registerInput, setRegister] = useState({
@@ -32,26 +33,28 @@ function Register() {
             error_list:[]
         }
 
+        setLoading(true);
         axios.get('/sanctum/csrf-cookie').then(response => {
-
-        axios.post(`/api/register`,data).then(res=>{
-            if(res.data.status===200){
-                localStorage.setItem("auth_token",res.data.token);
-                localStorage.setItem("auth_name",res.data.username);
-                swal("success",res.data.message,"success");
-                history.push("/user");
-            }else{
-                
-                setRegister({ ...registerInput, error_list:res.data.validation_errors})
-            }
-        })
-    });
+            axios.post(`/api/register`,data).then(res=>{
+                if(res.data.status===200){
+                    localStorage.setItem("auth_token",res.data.token);
+                    localStorage.setItem("auth_name",res.data.username);
+                    swal("success",res.data.message,"success");
+                    history.push("/user");
+                }else{
+                    
+                    setRegister({ ...registerInput, error_list:res.data.validation_errors})
+                }
+                setLoading(false);
+            })
+        });
     }
 
     return(
         <div className='my-bg-primary'>
             <div className="d-flex align-items-center justify-content-center vh-100">
                 <div className='card col-md-3'>
+                    <Loader isActive={loading} />
                     <Link to="/" className='card-header text-center text-decoration-none'>                            
                         <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
                         <h4>register new account</h4>

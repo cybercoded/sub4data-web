@@ -1,6 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import PublicLayout from './layouts/public/PublicLayout';
+import PublicLayout from "./layouts/public/PublicLayout";
 
 function PublicRoute(rest){
     return(

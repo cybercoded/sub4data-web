@@ -21,9 +21,13 @@ function App() {
         <div className="App">
             <BrowserRouter>
                 <Switch>
-                    <AdminPrivateRoute path="/admin" name="Admin" />
                     <PublicRoute path="/" name="Index" />
-                    <UserRoute path="/user" name="Home" />
+                </Switch>
+                <Switch>
+                    <UserRoute path="/user" name="User" />
+                </Switch>
+                <Switch>
+                    <AdminPrivateRoute path="/admin" name="Admin" />
                 </Switch>
             </BrowserRouter>
         </div>

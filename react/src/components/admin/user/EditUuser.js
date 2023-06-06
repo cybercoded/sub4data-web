@@ -3,24 +3,27 @@ import React, { useEffect, useState } from "react";
 import ReactjsOverlayLoader from "reactjs-overlay-loader";
 import swal from "sweetalert";
 
-function Profile(){
+function EditUser(props){
 
     const [loading, setLoading] = useState(true);
-    const [textInput, setTextIput] = useState({
-        name: '',
-        email: ''
-    });
+    const [textInput, setTextIput] = useState([]);
 
     const handleInput = (e) => {
         e.persist();
         setTextIput({ ...textInput, [e.target.name]: e.target.value });
     };
 
+    const handleCheckBox = (e) => {
+        e.persist();
+        setTextIput({ ...textInput, [e.target.name]: e.target.checked });
+    };
+
     const handleProfileUpdate = (e) => {        
         e.preventDefault();
 
         setLoading(true);
-        axios.post(`api/update-user`, {name: textInput.name}).then((res) => {
+
+        axios.post(`api/update-user/${textInput.id}`, textInput).then((res) => {
             if (res.data.status === 200) {
 
                 swal('Sucess!', 'Profile data successfully updated', 'success').then(() => {
@@ -35,13 +38,17 @@ function Profile(){
     };
 
     useEffect(() => {
-        axios.get(`api/user/`).then((res) => {
-            if (res.status === 200) {
-                setTextIput(res.data);
+
+        const user_id = props.match.params.id;
+
+        setLoading(true);
+        axios.get(`api/get-user/${user_id}`).then((res) => {
+            if (res.data.status === 200) {
+                setTextIput(res.data.data);
             }
             setLoading(false);
         });
-    }, []);
+    }, [props.match.params.id]);
 
 
     return (
@@ -69,7 +76,25 @@ function Profile(){
                     </div>
 
                     <div className='form-group mb-3'>
-                        <button type='submit' className='btn btn-primary w-100'>Update profile</button>
+                        <label>Balance</label>
+                        <input type='number' name="balance" onChange={handleInput} value={textInput.balance} className='form-control' ></input>
+                        <small className="text-danger">{textInput.error_list?.balance}</small>
+                    </div>
+
+                    <div className="form-group mb-3">
+                        <label>Status</label>
+                        <input 
+                            type="checkbox"
+                            name="status"
+                            onChange={handleCheckBox}
+                            checked={textInput.status === 1 ? true : false}
+                        />
+                        <br /> 
+                        <small className="text-info">Status checked = Active / Unchecked = Inactive</small>
+                    </div>
+
+                    <div className='form-group mb-3'>
+                        <button type='submit' className='btn btn-primary w-100'>Update User</button>
                     </div>
                 </form>
             </div>
@@ -79,4 +104,4 @@ function Profile(){
 }
 
 
-export default Profile;
+export default EditUser;

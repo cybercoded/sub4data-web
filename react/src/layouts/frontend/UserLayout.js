@@ -3,7 +3,7 @@ import React from "react";
 import {Route,Switch} from 'react-router-dom';
 import Navbar from "../../layouts/frontend/Navbar";
 import SideBar from "./Sidebar";
-import PublicRouteList from "../../routes/PublicRouteList";
+import UserRouteList from "../../routes/UserRouteList";
 const UserLayout= ()=>{
 
     return(
@@ -16,7 +16,7 @@ const UserLayout= ()=>{
                 <div id="layoutSidenav_content">
                     <main>
                         <Switch>
-                            {PublicRouteList.map((routeData,idx)=>{
+                            {UserRouteList.map((routeData,idx)=>{
                                 return (
                                     routeData.component && (
                                         <Route key={idx}  
