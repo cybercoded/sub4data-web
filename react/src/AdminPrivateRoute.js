@@ -48,7 +48,7 @@ function AdminPrivateRoute({ ...rest }) {
     );
 
     if (loading) {
-        return <h1>Loading...</h1>;
+        return <h1>Loading check</h1>;
     }
 
     return (

@@ -1,16 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-
 import reportWebVitals from './reportWebVitals';
 
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+//Bootstrap and jQuery libraries
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.bundle.js'; 
 
+//Datatable Modules
+import "datatables.net-dt/js/dataTables.dataTables";
+import "datatables.net-dt/css/jquery.dataTables.min.css";
+
+//Template dependencies
+import './assets/admin/css/styles.css';
+import './assets/admin/js/scripts';
+
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <>
     <App />
-  </React.StrictMode>,
+  </>,
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 

@@ -22,18 +22,23 @@ const Navbar = () => {
         });
     };
 
+    const handleSideBar = (e) => {
+        e.persist();
+        document.body.classList.toggle('sb-sidenav-toggled');
+    };
+
     return (
         <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <Link className="navbar-brand ps-3" to="/collections">
                 Home
             </Link>
-            <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" data-bs-target="#navbarDropdown">
+            <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" onClick={handleSideBar}>
                 <i className="fas fa-bars"></i>
             </button>
             <div className='container'>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li className="nav-item dropdown">
-                        <span
+                    <span
                             className="nav-link dropdown-toggle"
                             id="navbarDropdown"
                             role="button"

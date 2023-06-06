@@ -2,6 +2,7 @@ import axios from "axios";
 import React,{useEffect,useState} from "react";
 import { Link, useHistory } from "react-router-dom";
 import swal from "sweetalert";
+import { Loader } from "../../Global";
 
 function EditProduct(props){
 
@@ -104,21 +105,18 @@ function EditProduct(props){
                 swal("Erro",res.data.message,"error");
                 history.push('admin/view-product');
             }
+            setLoading(false);
         });
     }
 
-
-    if(loading)
-    {
-        return <h4>Loading product</h4>;
-    }
     return(
         <div className="container-fluid px-4">
             <div className="card mt-4">
+                <Loader isActive={loading} />
                 <div className="card-header">
-                <h4>Edit product | 
-                    <Link to="/admin/view-product" className="btn btn-primary btn-sm float-end">View product</Link>
-                </h4>
+                    <h4>Edit product | 
+                        <Link to="/admin/view-product" className="btn btn-primary btn-sm float-end">View product</Link>
+                    </h4>
                 </div>
                 <form encType="multipart/form-data" onSubmit={updateProduct} id="add_product_form"> 
 
@@ -185,7 +183,7 @@ function EditProduct(props){
                                 <div className="col-md-8 form-group mb-3">
                                     <label>Image</label>
                                     <input type="file" onChange={handleImage}  name="image" className="form-control" />
-                                    <img src={`http://localhost:8000/${productInput.image}`} width="50" height="50" />
+                                    <img src={`http://localhost:8000/${productInput.image}`} width="50" height="50" alt="img" />
                                     <small className="text-danger">{errorList?.image}</small>
                                 </div>
                             </div>

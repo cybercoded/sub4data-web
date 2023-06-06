@@ -38,7 +38,7 @@ function Login() {
                     if(res.data.role==='admin'){
                         history.push("/admin/dashboard");
                     }else{
-                        history.push("/dashboard");
+                        history.push("/user");
                     }
                 }else if(res.data.status === 401) {
                     swal('Warning', res.data.message,'warning');
@@ -51,9 +51,9 @@ function Login() {
 
     return(
             <div className='my-bg-primary'>
-                <div class="d-flex align-items-center justify-content-center vh-100">                    
+                <div className="d-flex align-items-center justify-content-center vh-100">                    
                     <div className='card col-md-3'>
-                        <Link to="/index" className='card-header text-center text-decoration-none'>                            
+                        <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
                             <h4>Login your account</h4>
                         </Link>

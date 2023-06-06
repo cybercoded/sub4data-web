@@ -2,13 +2,15 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
+import { Loader } from '../../Global';
 
 function Category() {
+    const [loading, setLoading] = useState(false);
     const [categoryInput, setCategory] = useState({
         slug: '',
         name: '',
         description: '',
-        status: '',
+        status: true,
         meta_title: '',
         meta_keyword: '',
         meta_description: '',
@@ -21,9 +23,9 @@ function Category() {
     };
 
     const [picture, setPicture] = useState([]);
-    const handleImage =(e)=>{
-        setPicture({image: e.target.files[0]});
-    }
+    const handleImage = (e) => {
+        setPicture({ image: e.target.files[0] });
+    };
 
     const submitCategory = (e) => {
         e.preventDefault();
@@ -38,14 +40,16 @@ function Category() {
         formData.append('meta_description', categoryInput.meta_description);
         formData.append('meta_keyword', categoryInput.meta_keyword);
 
+        setLoading(true);
         axios.post(`/api/store-category`, formData).then((res) => {
             if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() =>{
+                swal('Success', res.data.message, 'success').then(() => {
                     window.location.reload();
                 });
             } else if (res.data.status === 400) {
                 setCategory({ ...categoryInput, error_list: res.data.errors });
             }
+            setLoading(false);
         });
     };
 
@@ -65,6 +69,7 @@ function Category() {
             })}
 
             <div className="card mt-4">
+                <Loader isActive={loading} />
                 <div className="card-header">
                     <h4>
                         Add Category |
@@ -145,7 +150,8 @@ function Category() {
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>Status (Optional)</label>
-                                    <input type="checkbox" name="status" onChange={handleInput} value={categoryInput.status} /> Status 0=shown/ 1=hidden
+                                    <input type="checkbox" name="status" onChange={handleInput} defaultChecked={true} value={categoryInput.status} /> Status
+                                    0=shown/ 1=hidden
                                 </div>
                             </div>
                             <div className="tab-pane card-body border fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">
@@ -183,10 +189,10 @@ function Category() {
 
                                 <div className="form-group mb-3">
                                     <label>Image</label>
-                                    <input type="file" onChange={handleImage}  name="image" className="form-control" />
-                                    <img src={`http://localhost:8000/${categoryInput.image}`} width="50" height="50" />
+                                    <input type="file" onChange={handleImage} name="image" className="form-control" />
+                                    <img src={`http://localhost:8000/${categoryInput.image}`} width="50" height="50" alt="Img" />
                                     <small className="text-danger">{categoryInput?.error_list.image}</small>
-                                </div>  
+                                </div>
                             </div>
                         </div>
 

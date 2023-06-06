@@ -17,7 +17,7 @@ const SideBar = () => {
     },[]);
 
     return (
-        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="sidenavAccordion" data-bs-target="#navbarDropdown">
+        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light">
             <div className="sb-sidenav-menu">
                 <div className="nav">
                     <Link className={`nav-link ${ 'dashboard' === window.location.href.split('/')[3] && 'active' }`} to="/dashboard">

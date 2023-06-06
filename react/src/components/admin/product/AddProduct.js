@@ -2,8 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
+import { Loader } from '../../Global';
 
 function AddProduct() {
+
+    const [loading, setLoading] = useState(true);
     const [categoryList, setCategoryList] = useState([]);
     const [errorList, setError] = useState([]);
     const [productInput, setProduct] = useState({
@@ -32,6 +35,8 @@ function AddProduct() {
         axios.get(`api/all-category`).then((res) => {
             if (res.data.status === 200) {
                 setCategoryList(res.data.category);
+
+                setLoading(false);
             }
         });
 
@@ -53,9 +58,10 @@ function AddProduct() {
         formData.append('meta_description', productInput.meta_description);
         formData.append('status', productInput.status);
 
+        setLoading(true);
         axios.post(`api/store-product`, formData).then((res) => {
             if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() =>{
+                swal('Success', res.data.message, 'success').then(() =>{                    
                     window.location.reload();
                 });
                 
@@ -63,12 +69,14 @@ function AddProduct() {
                 swal('All fields are mandatory', '', 'error');
                 setError(res.data.errors);
             }
+            setLoading(false);
         });
     };
 
     return (
-        <div className="container-fluid px-4">
+        <div className="container px-4">            
             <div className="card mt-4">
+                <Loader isActive={loading} />
                 <div className="card-header">
                     <h4>
                         Add product |

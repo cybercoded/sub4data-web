@@ -14,7 +14,7 @@ import EditServices from '../components/admin/services/EditServices';
 
 import Profile from '../components/admin/Profile';
 
-const routes =[
+const AdminRouteList =[
     { path: '/admin', exact: true, name: 'Admin' },
     { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },    
 
@@ -34,4 +34,4 @@ const routes =[
 
 ];
 
-export default routes;
+export default AdminRouteList;

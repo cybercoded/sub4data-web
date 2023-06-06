@@ -2,6 +2,7 @@ import axios from "axios";
 import React,{useState,useEffect} from "react";
 import { Link, useHistory } from "react-router-dom";
 import swal from "sweetalert";
+import { Loader } from "../../Global";
 
 function EditCategory(props){
 
@@ -72,12 +73,10 @@ function EditCategory(props){
         });
     }
 
-    if(loading){
-        return <h4>Loading category...</h4>
-    }
     return(
         <div className="container px-4">
              <div className="card mt-4">
+                <Loader isActive={loading} />
                 <div className="card-header">
                     <h4>Edit Category | 
                         <Link to="/admin/view-category" className="btn btn-primary btn-sm float-end">Back</Link>

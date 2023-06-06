@@ -39,7 +39,7 @@ function Register() {
                 localStorage.setItem("auth_token",res.data.token);
                 localStorage.setItem("auth_name",res.data.username);
                 swal("success",res.data.message,"success");
-                history.push("/");
+                history.push("/user");
             }else{
                 
                 setRegister({ ...registerInput, error_list:res.data.validation_errors})
@@ -50,9 +50,9 @@ function Register() {
 
     return(
         <div className='my-bg-primary'>
-            <div class="d-flex align-items-center justify-content-center vh-100">
+            <div className="d-flex align-items-center justify-content-center vh-100">
                 <div className='card col-md-3'>
-                    <Link to="/index" className='card-header text-center text-decoration-none'>                            
+                    <Link to="/" className='card-header text-center text-decoration-none'>                            
                         <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
                         <h4>register new account</h4>
                     </Link>

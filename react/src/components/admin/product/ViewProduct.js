@@ -2,6 +2,8 @@ import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import $ from "jquery";
+import { Loader } from "../../Global";
 
 function ViewProduct(){
 
@@ -18,6 +20,10 @@ function ViewProduct(){
                 {
                     setProduct(res.data.product);
                     setLoading(false);
+
+                    $(document).ready(function () {
+                        $('table').DataTable();
+                    });
                 }
             }
       });
@@ -45,36 +51,9 @@ function ViewProduct(){
         })
     }
     
-    var view_products='';
-    if(loading)
-    {
-        return <h4>Loading products...</h4>
-    }
-    else
-    {
-        var productStatus='';
-        view_products=
-        productList.map((item)=>{
-            return (
-                <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.category.name}</td>
-                    <td>{item.name}</td>
-                    <td>{item.status ===0 ? 'Shown' : 'Hidden'}</td>
-                    <td><img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name}/></td>
-                    <td>
-                        <Link to={`/admin/edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
-                    </td>                    
-                    <td>
-                        <button type="button" onClick={(e)=>deleteProduct(e,item.id)} className="btn btn-danger btn-sm">Delete</button>
-                    </td>
-                </tr>
-            )
-        })
-
-    }
     return(
         <div className="card px-3">
+            <Loader isActive={loading} />
             <div className="card-header">
                 <h4>View product | 
                     <Link to="add-product" className="btn btn-primary btn-sm float-end">Add product</Link>
@@ -95,7 +74,22 @@ function ViewProduct(){
                             </tr>
                         </thead>
                         <tbody>
-                            {view_products}
+                            {productList.map((item)=> (
+                                <tr key={item.id}>
+                                    <td>{item.id}</td>
+                                    <td>{item.category.name}</td>
+                                    <td>{item.name}</td>
+                                    <td>{item.status === 1 ? 'Shown' : 'Hidden'}</td>
+                                    <td><img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name}/></td>
+                                    <td>
+                                        <Link to={`/admin/edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
+                                    </td>                    
+                                    <td>
+                                        <button type="button" onClick={(e)=>deleteProduct(e,item.id)} className="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                                ))
+                            }
                         </tbody>
 
                     </table>

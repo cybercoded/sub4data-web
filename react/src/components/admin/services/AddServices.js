@@ -2,13 +2,16 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory} from 'react-router-dom';
 import swal from 'sweetalert';
+import { Loader } from '../../Global';
+import $ from 'jquery';
 
 function AddServices() {
     const history = useHistory();
+    const [loading, setLoading] = useState(false);
     const [productList, setproductList] = useState([]);
     const [errorList, setError] = useState([]);
     const [servicesInput, setservices] = useState({
-        product_id: '4',
+        product_id: '5',
         name: '',
         description: '',
         price: '',
@@ -22,10 +25,12 @@ function AddServices() {
     };
 
     useEffect(() => {
+        setLoading(true);
         axios.get(`api/view-product`).then((res) => {
             if (res.data.status === 200) {
                 setproductList(res.data.product);
             }
+            setLoading(false);
         });
 
         return () => {};
@@ -34,10 +39,12 @@ function AddServices() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        setLoading(true);
         axios.post(`api/store-services`, servicesInput).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() =>{
-                    window.location.reload();
+                    // window.location.reload();
+                    $('form').reset();
                 });
             } else if (res.data.status === 422 ) {
                 swal('All fields are mandatory', '', 'error');
@@ -51,12 +58,14 @@ function AddServices() {
                 swal('Error', res.data.message, 'error');
                 history.push('admin/view-services');
             }
+            setLoading(false);
         });
     };
 
     return (
         <div className="container-fluid px-4">
             <div className="card mt-4">
+                <Loader isActive={loading} />
                 <div className="card-header">
                     <h4>
                         Add services |

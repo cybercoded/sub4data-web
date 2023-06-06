@@ -2,7 +2,8 @@ import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
-
+import { Loader } from "../../Global";
+import $ from "jquery";
 
 function ViewServices(){
 
@@ -18,13 +19,16 @@ function ViewServices(){
                 if(res.data.status===200)
                 {
                     setservice(res.data.service);
-                    setLoading(false);
+                    $(document).ready(function () {
+                        $('table').DataTable();
+                    });
                 }
             }
-      });
-      return ()=>{
-          isMounted = false;
-      }
+            setLoading(false);
+        });
+        return ()=>{
+            isMounted = false;
+        }
     }, []);
 
     const deleteService = (e,id)=>{
@@ -32,7 +36,7 @@ function ViewServices(){
 
         const thisClicked=e.currentTarget;
         thisClicked.innerText="Deleting";
-
+        
         axios.delete(`api/delete-services/${id}`).then(res=>{
             if(res.data.status===200)
             {
@@ -46,35 +50,9 @@ function ViewServices(){
         })
     }
     
-    var view_services='';
-    if(loading)
-    {
-        return <h4>Loading services...</h4>
-    }
-    else
-    {
-        var serviceStatus='';
-        view_services=
-        serviceList.map((item)=>{
-            return (
-                <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.product.name}</td>
-                    <td>{item.name}</td>                    
-                    <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
-                    <td>
-                        <Link to={`/admin/edit-services/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
-                    </td>
-                    <td>
-                        <button type="button" onClick={(e)=>deleteService(e,item.id)} className="btn btn-danger btn-sm">Delete</button>
-                    </td>
-                </tr>
-            )
-        })
-
-    }
     return(
         <div className="card px-3">
+            <Loader isActive={loading} />
             <div className="card-header">
                 <h4>View service | 
                     <Link to="/admin/add-services" className="btn btn-primary btn-sm float-end">Add service</Link>
@@ -94,7 +72,21 @@ function ViewServices(){
                             </tr>
                         </thead>
                         <tbody>
-                            {view_services}
+                            {serviceList.map((item)=> (
+                                    <tr key={item.id}>
+                                        <td>{item.id}</td>
+                                        <td>{item.product.name}</td>
+                                        <td>{item.name}</td>                    
+                                        <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
+                                        <td>
+                                            <Link to={`/admin/edit-services/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
+                                        </td>
+                                        <td>
+                                            <button type="button" onClick={(e)=>deleteService(e,item.id)} className="btn btn-danger btn-sm">Delete</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
 
                     </table>

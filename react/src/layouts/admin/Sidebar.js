@@ -15,7 +15,7 @@ const SideBar = () => {
         });
     };
     return (
-        <nav className="sb-sidenav accordion sb-sidenav-light" id="#navbarDropdown">
+        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="sidenavAccordion" data-bs-target="#navbarDropdown2">
             <div className="sb-sidenav-menu">
                 <div className="nav">
                     <div className="sb-sidenav-menu-heading">Core</div>

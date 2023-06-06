@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
+import { Loader } from '../../Global';
 
 function EditServices(props) {
     const history = useHistory();
@@ -11,10 +12,12 @@ function EditServices(props) {
     const [error, setError] = useState([]);
 
     useEffect(() => {
+        setLoading(true);
         axios.get(`api/view-product`).then((res) => {
             if (res.data.status === 200) {
                 setProductData(res.data.product);
             }
+            setLoading(false);
         });
 
         const services_id = props.match.params.id;
@@ -44,6 +47,8 @@ function EditServices(props) {
         e.preventDefault();
         const services_id = props.match.params.id;
         const data = servicesInput;
+
+        setLoading(true);
         axios.put(`api/update-services/${services_id}`, data).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() =>{
@@ -61,15 +66,14 @@ function EditServices(props) {
                 swal('Error', res.data.message, 'error');
                 history.push('admin/view-services');
             }
+            setLoading(false);
         });
     };
 
-    if (loading) {
-        return <h4>Loading services...</h4>;
-    }
     return (
         <div className="container px-4">
             <div className="card mt-4">
+                <Loader isActive={loading} />
                 <div className="card-header">
                     <h4>
                         Edit services |
