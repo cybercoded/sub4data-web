@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import ReactOverlayLoader from "reactjs-overlay-loader";
+import { Loader } from '../../Global';
 
 function Data(props) {
     const history = useHistory();
@@ -118,12 +119,12 @@ function Data(props) {
 
     return (
         
-        <div className="container">           
-            <h4  className="alert alert-secondary">Buy <b>Data</b> </h4>
+        <div className="container mt-5">           
+            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+                <b>Data</b> Purchase |
+            </div>
             <div className="bg-light card card-body col-md-6">
-                <ReactOverlayLoader isActive={loading} 
-                    icon={<img alt='loader' width={50} src={'http://localhost/sub4data-web/react/src/assets/admin/assets/img/loading.gif' }/>} 
-                />
+                <Loader isActive={loading} />
                 <form onSubmit={dataSubmit} className="">
                     <div className="form-group mb-3">
                         {productList.map((item, index) => {

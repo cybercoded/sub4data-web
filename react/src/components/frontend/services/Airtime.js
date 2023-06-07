@@ -2,11 +2,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
+import { Loader } from '../../Global';
 
 function Airtime(props) {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
-    const [productActive, setProductActive] = useState('mtn-data-sme');
+    const [productActive, setProductActive] = useState();
     const [productList, setProductList] = useState([]);
     const [errorList, setErrorList] = useState([]);
     const [textInput, setTextIput] = useState({
@@ -84,6 +85,8 @@ function Airtime(props) {
 
     useEffect(() => {
         const product_id = props.match.params.id;
+
+        setLoading(true);
         axios.get(`api/view-product/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setProductList(res.data.product);
@@ -92,13 +95,14 @@ function Airtime(props) {
         });
     }, [props.match.params.id, history]);
 
-    if (loading) {
-        return <h4>Loading category...</h4>;
-    }
 
     return (
-        <div className="container">
+        <div className="container mt-5">
+            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+                <b>Airtime</b> Purchase |
+            </div>
             <div className="bg-light card card-body col-md-6">
+                <Loader isActive={loading} />
                 <form onSubmit={loginSubmit} className="">
                     <div className="form-group mb-3">
                         {productList.map((item, index) => {
@@ -142,7 +146,7 @@ function Airtime(props) {
                     </div>
 
                     <div className="form-group mb-3">
-                        <button type="submit" disabled={errorList.amount !== ''} className="btn btn-primary">
+                        <button type="submit" disabled={errorList.amount !== ''} className="btn btn-primary w-100">
                             Proceed
                         </button>
                     </div>

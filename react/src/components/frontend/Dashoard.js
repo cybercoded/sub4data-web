@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactjsOverlayLoader from 'reactjs-overlay-loader';
-import $ from 'jquery';
+import Toastify from 'toastify-js';
+import "toastify-js/src/toastify.css";
 
 function Dashboard() {
     const [loading, setLoading] = useState(true);
@@ -25,48 +26,45 @@ function Dashboard() {
         });
     }, []);
 
-    const handleCopy = (elementId) => {
-        // Create a "hidden" input
-        var aux = document.createElement("input");
+    const handleCopy = (value) => {
+        navigator.clipboard.writeText(value)
 
-        // Assign it the value of the specified element
-        aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+        Toastify({
+            text: "Copied to your clipboard",
+            duration: 3000,
+            className: "info",
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            offset: {
+                y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+            },
+          }).showToast();
 
-        // Append it to the body
-        document.body.appendChild(aux);
+    }
 
-        // Highlight its content
-        aux.select();
-
-        // Copy the highlighted text
-        document.execCommand("copy");
-
-        // Remove it from the body
-        document.body.removeChild(aux);
-    };
 
     return (
         <div className="container mt-5">
-            <ReactjsOverlayLoader
-                isActive={loading}
-                icon={<img alt="loader" width={50} src={'http://localhost/sub4data-web/react/src/assets/admin/assets/img/loading.gif'} />}
-            />
+            <ReactjsOverlayLoader isActive={loading} />
 
-            <div>
+            <div className='mb-5'>
                 <div style={{overflowX: 'scroll', overflowY: 'hidden'}}>
                     <div style={{width: 4000}}>
                         { bankList.map((item, index) => (
-                                <div key={index} className='card bg-light my-bank-card bg-light border-danger float-start' style={{minWidth: 250, marginRight: 10}}>
-                                    <div className="card-body" style={{height: 150}}>
-                                        <div>
+                                <div key={index} className='card bg-light my-bank-card bg-light btn-outline-primary float-start' style={{minWidth: 270, marginRight: 10}}>
+                                    <div className="card-body py-4">
+                                        <div className='text-muted mb-2'>
                                             {item.bank_name}
-                                            <span className="float-endd">{item.account_name}</span>
+                                            <span className="float-end">
+                                                {item.account_name}
+                                                <i className="fa fa-arrow-right"></i>
+                                            </span>
                                         </div>
-                                        <div className='h1'>{item.account_number}</div>
+                                        <div className='h3 font-weight-bold my-3'>{item.account_number}</div>
                                         <div className='mt-3'>
-                                            <button className='btn btn-sm btn-info' 
-                                                onClick={() =>  navigator.clipboard.writeText(item.account_number)}                                            
-                                            >
+                                            <button className='btn btn-sm btn-primary' onClick={() => handleCopy(item.account_number)} >
                                                 Copy Account Number
                                             </button>
                                         </div>                                        

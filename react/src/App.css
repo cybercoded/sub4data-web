@@ -100,7 +100,7 @@ body, .my-bg-light {
     background-color: #f3e8ff !important;
 }
 
-.btn-outline-primary {
+.btn-outline-primary, .border-primary {
     border-color: #2d0856 !important;
     color: #2d0856 !important;
 }
