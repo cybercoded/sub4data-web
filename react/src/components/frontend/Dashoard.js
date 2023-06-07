@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import ReactjsOverlayLoader from 'reactjs-overlay-loader';
 import Toastify from 'toastify-js';
 import "toastify-js/src/toastify.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import swal from 'sweetalert';
 
 function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [categoryList, setCategoryList] = useState([]);
-    const [bankList, setBankList] = useState([]);
+    const [userDataList, setUserDataList] = useState([]);
 
     useEffect(() => {
         axios.get(`api/view-category`).then((res) => {
@@ -18,12 +21,13 @@ function Dashboard() {
             setLoading(false);
         });
 
-        axios.get(`api/user-banks`).then((res) => {
-            if (res.data.status === 200) {
-                setBankList(res.data.banks);
+        axios.get(`api/user/`).then((res) => {
+            if (res.status === 200) {
+                setUserDataList(res.data);
             }
             setLoading(false);
         });
+
     }, []);
 
     const handleCopy = (value) => {
@@ -50,16 +54,16 @@ function Dashboard() {
             <ReactjsOverlayLoader isActive={loading} />
 
             <div className='mb-5'>
-                <div style={{overflowX: 'scroll', overflowY: 'hidden'}}>
-                    <div style={{width: 4000}}>
-                        { bankList.map((item, index) => (
-                                <div key={index} className='card bg-light my-bank-card bg-light btn-outline-primary float-start' style={{minWidth: 270, marginRight: 10}}>
+                <PerfectScrollbar>
+                    <div style={{width: 300 * userDataList.banks?.length}}>
+                        { userDataList.banks?.map((item, index) => (
+                                <div key={index} className='card bg-light float-start' style={{minWidth: 280, marginRight: 10}}>
                                     <div className="card-body py-4">
                                         <div className='text-muted mb-2'>
                                             {item.bank_name}
                                             <span className="float-end">
                                                 {item.account_name}
-                                                <i className="fa fa-arrow-right"></i>
+                                                <i className="fa fa-chevron-circle-right"></i>
                                             </span>
                                         </div>
                                         <div className='h3 font-weight-bold my-3'>{item.account_number}</div>
@@ -73,7 +77,7 @@ function Dashboard() {
                             ))
                         }
                     </div>
-                </div>
+                </PerfectScrollbar>
             </div>
             
             <div className="row">

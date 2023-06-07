@@ -161,7 +161,7 @@ function AddServices() {
                                 <div className="row">
                                     <div className="col-md-4 form-group mb-3">
                                         <label>API service id</label>
-                                        <input type="text" onChange={handleInput} name="api_servie_id" className="form-control" />
+                                        <input type="text" onChange={handleInput} name="api_service_id" className="form-control" />
                                         <small className="text-info">Copy this from the API server's end</small>
                                     </div>
                                     <div className="col-md-4 form-group mb-3">

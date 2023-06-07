@@ -6,6 +6,7 @@ import Bill from '../components/frontend/services/Bill';
 import Electricity from '../components/frontend/services/Electricity';
 import UpdatePin from '../components/frontend/UpdatePin';
 import UpdatePassword from '../components/frontend/UpdatePassword';
+import CreatePin from '../components/frontend/CreatePin';
 
 
 const UserRouteList =[
@@ -17,6 +18,7 @@ const UserRouteList =[
     { path: '/user/services/bill/:id', exact: true, name: 'Bill', component: Bill },
     { path: '/user/services/electricity/:id', exact: true, name: 'Electricity', component: Electricity },
 
+    { path: '/user/create-pin', exact: true, name: 'CreatePin', component: CreatePin },
     { path: '/user/update-pin', exact: true, name: 'UpdatePin', component: UpdatePin },
     { path: '/user/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword }
 

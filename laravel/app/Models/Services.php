@@ -14,7 +14,7 @@ class Services extends Model
     protected $fillable = [
         'product_id',
         'name',
-        'api_servie_id',
+        'api_service_id',
         'description',
         'price',
         'available'

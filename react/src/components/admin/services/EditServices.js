@@ -173,8 +173,8 @@ function EditServices(props) {
                                         <input
                                             type="text"
                                             onChange={handleInput}
-                                            value={servicesInput?.api_servie_id}
-                                            name="api_servie_id"
+                                            value={servicesInput?.api_service_id}
+                                            name="api_service_id"
                                             className="form-control"
                                         />
                                         <small className="text-danger">

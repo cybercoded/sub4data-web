@@ -5,6 +5,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\PinController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\PurchaseController;
 use App\Http\Controllers\API\ServicesController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VerificationController;
@@ -102,6 +103,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('database-backup', [BackupController::class, 'backup']);
 
     Route::get('user-banks', [UserController::class, 'viewBanks']);
+
+    Route::get('user-discount', [UserController::class, 'getDiscount']);
+
+    //Purchases
+    Route::post('airtime-purchase', [PurchaseController::class, 'airtime']);
+
+    Route::post('data-purchase', [PurchaseController::class, 'data']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

@@ -8,17 +8,19 @@ function Airtime(props) {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
     const [productActive, setProductActive] = useState();
+    const [discount, setDiscount   ] = useState();
     const [productList, setProductList] = useState([]);
     const [errorList, setErrorList] = useState([]);
     const [textInput, setTextIput] = useState({
-        product: '',
-        tel: '',
+        product_id: '',
+        phone: '',
         amount: ''
     });
 
     const handleInput = (e) => {
         e.persist();
         setTextIput({ ...textInput, [e.target.name]: e.target.value });
+
     };
 
     const handleAmount = (e) => {
@@ -36,49 +38,45 @@ function Airtime(props) {
         setErrorList({ ...errorList, amount: response });
     };
 
-    const loginSubmit = (e) => {
+    const handlePurchaseAirtime = (e) => {
         e.preventDefault();
 
-            swal({
-                text: 'Enter your transaction pin',
-                content: 'input',
-                button: {
-                    text: 'Verify!',
-                    closeModal: false
-                }
-            })
+        swal({
+            text: 'Enter your transaction pin',
+            content: 'input',
+            button: {
+                text: 'Verify!',
+                closeModal: false
+            }
+        })
             .then((pin) => {
-
-                return axios.get(`/api/verify-pin/${pin}`)
+                return axios.get(`/api/verify-pin/${pin}`);
             })
             .then((results) => {
                 let result = results.data;
 
-                if(result.status === 200) {
+                if (result.status === 200) {
                     swal({
-                        title: "Are you sure?",
-                        text: "Are you sure to proceed with your transaction!",
-                        icon: "warning",
+                        title: 'Are you sure?',
+                        text: 'Are you sure to proceed with your transaction!',
+                        icon: 'warning',
                         buttons: true,
-                        dangerMode: true,
-                    })
-                    .then((willDelete) => {
+                        dangerMode: true
+                    }).then((willDelete) => {
                         if (willDelete) {
-                          swal("Poof! Your imaginary file has been deleted!", {
-                            icon: "success",
-                          });
+                            setLoading(true);
+                            axios.post(`/api/airtime-purchase/`, textInput).then((res) => {
+                                if (res.data.status === 200) {
+                                    swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
+                                        history.push('/user/dashboard');
+                                    });
+                                }
+                                setLoading(false);
+                            });
                         }
                     });
-                }else {
-                    swal('Oh noes!', result.message, 'error');
-                }
-            })
-            .catch((err) => {
-                if (err) {
-                    swal('Oh noes!', 'The AJAX request failed!', 'error');
                 } else {
-                    swal.stopLoading();
-                    swal.close();
+                    swal('Oh noes!', result.message, 'error');
                 }
             });
     };
@@ -93,8 +91,23 @@ function Airtime(props) {
             }
             setLoading(false);
         });
-    }, [props.match.params.id, history]);
 
+        axios.get(`api/user-discount`).then((res) => {
+            if (res.status === 200) {
+                setDiscount(res.data.percentage);
+            }
+        });
+
+        axios.get(`api/user/`).then((res) => {
+            if (res.status === 200) {
+                if(res.data.pin === null) {
+                    swal('Error', 'You must create a Transaction PIN to Use this App', 'warning').then((res) => {
+                        history.push('/user/create-pin')
+                    })
+                }
+            }
+        });
+    }, [props.match.params.id, history]);
 
     return (
         <div className="container mt-5">
@@ -103,18 +116,19 @@ function Airtime(props) {
             </div>
             <div className="bg-light card card-body col-md-6">
                 <Loader isActive={loading} />
-                <form onSubmit={loginSubmit} className="">
+                <form onSubmit={handlePurchaseAirtime} className="">
                     <div className="form-group mb-3">
                         {productList.map((item, index) => {
                             return (
                                 <button
                                     type="button"
                                     key={index}
-                                    className={`btn btn-outline-primary ${productActive === item.slug && 'active'}`}
+                                    className={`btn btn-outline-primary ${productActive === item.api_product_id && 'active'}`}
                                     onClick={() => {
-                                        setProductActive(item.slug);
+                                        setProductActive(item.api_product_id);
+                                        setTextIput({...textInput, product_id: item.api_product_id });
                                     }}
-                                    style={{ marginRight: 2 }}
+                                    style={{ margin: 2 }}
                                 >
                                     <img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name} />
                                 </button>
@@ -123,8 +137,8 @@ function Airtime(props) {
                     </div>
                     <div className="form-group mb-3">
                         <label>Phone number</label>
-                        <input type="tel" name="tel" onChange={handleInput} value={textInput.tel} className="form-control"></input>
-                        <small className="text-danger">{errorList?.tel}</small>
+                        <input type="phone" name="phone" maxLength={11} minLength={11} onChange={handleInput} value={textInput.phone} className="form-control"></input>
+                        <small className="text-danger">{errorList?.phone}</small>
                     </div>
 
                     <div className="form-group mb-3">
@@ -139,14 +153,18 @@ function Airtime(props) {
                             type="number"
                             name="amount_to_charged"
                             disabled
-                            value={textInput.amount - (2 * textInput.amount) / 100}
+                            value={textInput.amount - (discount * textInput.amount) / 100 || 0}
                             className="form-control"
                         ></input>
-                        <small className="text-info">2% on all of your airtime recharge</small>
+                        <small className="text-info">{discount} % on all of your airtime recharge</small>
                     </div>
 
                     <div className="form-group mb-3">
-                        <button type="submit" disabled={errorList.amount !== ''} className="btn btn-primary w-100">
+                        <button
+                            type="submit"
+                            disabled={errorList.amount !== '' || textInput.phone === '' || textInput.product_id === ''}
+                            className="btn btn-primary w-100"
+                        >
                             Proceed
                         </button>
                     </div>

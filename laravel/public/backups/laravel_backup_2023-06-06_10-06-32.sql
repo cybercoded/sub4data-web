@@ -197,7 +197,7 @@ CREATE TABLE `services` (
   `name` varchar(191) NOT NULL,
   `description` varchar(191) DEFAULT NULL,
   `price` varchar(191) NOT NULL,
-  `api_servie_id` varchar(191) NOT NULL,
+  `api_service_id` varchar(191) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,

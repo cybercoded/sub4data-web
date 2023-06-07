@@ -64,8 +64,8 @@ function Electricity(props) {
     };
 
     const handleServiceSelection = (e) => {
-        var api_servie_id = e.target.selectedOptions[0].dataset.api_id;
-        setTextIput({ ...textInput, [e.target.name]: e.target.value, serviceId: api_servie_id });
+        var api_service_id = e.target.selectedOptions[0].dataset.api_id;
+        setTextIput({ ...textInput, [e.target.name]: e.target.value, serviceId: api_service_id });
     };
 
     const handleAmount = (e) => {
@@ -177,7 +177,7 @@ function Electricity(props) {
                                 <option 
                                     key={index} 
                                     data-amount={item.amount} 
-                                    data-api_id={item.api_servie_id} 
+                                    data-api_id={item.api_service_id} 
                                     value={item.id}
                                 >
                                     { item.name.split('=')[0]}

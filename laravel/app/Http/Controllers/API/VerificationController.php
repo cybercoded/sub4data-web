@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Levels;
+use App\Models\Services;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -12,14 +13,16 @@ class VerificationController extends Controller
 {
     //Verification of services
     public function smartnumber(Request $request)
-    {       
+    {   
+        $service = Services::where('id', $request->service_id)->first();
         $curl = curl_init();
         $url = "https://smartrecharge.ng/api/v2/tv/";
-
+        
+        // print_r($service);
         $get_array = array(
             'api_key' => 'wfmmh34p7yz3b1oe1k0yx4m0gwny5a8t1xpljzoysi9u',
             'smartcard_number' => $request->smartcard_number,
-            'product_code' => $request->product_code,
+            'product_code' => $service['api_service_id'],
             'task' => 'verify',
         );
 

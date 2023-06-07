@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banks;
+use App\Models\Levels;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -187,6 +188,27 @@ class UserController extends Controller
             return response()->json([
                 'status'=>404,
                 'message'=>'No product found'
+            ]);
+        }
+    }
+
+    public function getDiscount()
+    {
+        $user_level=auth('sanctum')->user()->level; 
+        $level = Levels::where('level', $user_level)->first();
+
+        if($level && $user_level)
+        {            
+            return response()->json([
+                'status'=>200,
+                'percentage'=> $level['percentage']
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No discount or percentage found'
             ]);
         }
     }
