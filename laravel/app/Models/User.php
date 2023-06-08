@@ -45,9 +45,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $with = ['banks'];
+    protected $with = ['banks', 'levels'];
     public function banks(){
         return $this->hasMany(Banks::class, 'user_id', 'id');
+    }
+
+    public function levels(){
+        return $this->hasMany(Levels::class, 'level', 'id');
     }
 
 

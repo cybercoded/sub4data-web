@@ -219,7 +219,7 @@ class PurchaseController extends Controller
                     'amount' => $discountedAmount,     
                     'reference' => 'SUB'.rand(),     
                     'api_reference' => '',     
-                    'description' => "₦".number_format($discountedAmount) ." ". $service['name'],     
+                    'description' => "₦".number_format($discountedAmount) ." ". $service['name']. " for ". $request->smartcard_number,
                     'after_balance' => $afterBalance,
                     'status' => 'success',
                 ]);
@@ -293,7 +293,7 @@ class PurchaseController extends Controller
                     'amount' => $discountedAmount,     
                     'reference' => 'SUB'.rand(),     
                     'api_reference' => '',     
-                    'description' => "₦".number_format($discountedAmount) ." ". $product['name'],     
+                    'description' => "₦".number_format($discountedAmount) ." ". $product['name']. " for ". $request->meter_number,     
                     'after_balance' => $afterBalance,     
                     'status' => 'success',     
                 ]);

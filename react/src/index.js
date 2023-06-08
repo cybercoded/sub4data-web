@@ -19,11 +19,9 @@ import './assets/admin/css/styles.css';
 import './assets/admin/js/scripts';
 
 ReactDOM.render(
-  // <React.StrictMode>
-  <>
+  <React.StrictMode>
     <App />
-  </>,
-  // </React.StrictMode>,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

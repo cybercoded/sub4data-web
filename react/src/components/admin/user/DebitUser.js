@@ -1,14 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
-import ReactjsOverlayLoader from "reactjs-overlay-loader";
 import swal from "sweetalert";
+import { Loader } from "../../Global";
+import { useHistory } from "react-router-dom";
 
 function DebitUser(){
-
+    const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [textInput, setTextIput] = useState({
-        oldPin: '1111',
-        newPin: '1111'
+        user_id: '',
+        email: '',
+        amount: ''
     });
 
     const handleInput = (e) => {
@@ -16,43 +18,42 @@ function DebitUser(){
         setTextIput({ ...textInput, [e.target.name]: e.target.value });
     };
 
-    const handleTransactionPIN = (e) => {        
+    const handleCreditTransaction = (e) => {        
         e.preventDefault();
 
-        if (textInput.oldPin === '' || textInput.newPin === '') {
+        if (textInput.amount === '' || textInput.email === '') {
             swal('Error!', 'Please fill all fields', 'error');
             return;
         }
-        if (textInput.oldPin.length !== 4 || textInput.newPin.length !== 4) {
-            swal('Error!', 'PIN should be 4 Digits', 'error');
+        if (textInput.amount > 5000) {
+            swal('Error!', 'Amount should not be greater than 5,000', 'error');
             return;
         }
            
         setLoading(true);
-        axios.get(`/api/verify-pin/${textInput.oldPin}`).then((res) => {
-            if (res.data.status === 200) {
-                
+        axios.get(`/api/verify-email/${textInput.email}`).then((res) => {
+            if (res.data.status === 200) {                
                 swal({
-                    title: "Are you sure?",
-                    text: "Are you sure you want to chnage your Transaction PIN!",
+                    title: res.data.data.name,
+                    text: `Are you sure you want to debit this user with ${textInput.amount}`,
                     icon: "warning",
                     buttons: true,
                     dangerMode: true
                 }).then((willDelete) => {
                     if (willDelete) {
                         setLoading(true);
-                        axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
-                            if (res.data.status === 200) {
-                                swal('Sucess!', 'Transaction PIN successfully updated','success').then((result) => {
-                                    window.location.reload();
+                        axios.put(`/api/credit-user/`, {...textInput, user_id: res.data.data.user_id}).then((res2) => {
+                            if (res2.data.status === 200) {
+                                swal('Sucess!', `${res.data.data.name} was successfully debited`,'success').then((result) => {
+                                    history.push('/admin/dashboard');
                                 });
                             }
                             setLoading(false);
                         });
                     }
                 });
-            }else {
-                swal('Error!', 'Incorrect Old PIN, try again', 'error');
+            } else {                
+                swal('Error!', res.data.errors, 'error');
             }
             setLoading(false);
         });
@@ -61,27 +62,25 @@ function DebitUser(){
     return (
         <div className="container mt-5">
             <div className="text-muted h5 mb-4 pb-4 border-bottom">
-                <b>Transaction</b> PIN /
+                <b>Debit</b> User /
             </div>
             <div className="bg-light card card-body col-md-6">
-                <ReactjsOverlayLoader isActive={loading} 
-                    icon={<img alt='loader' width={50} src={'http://localhost/sub4data-web/react/src/assets/admin/assets/img/loading.gif' }/>} 
-                />
+                <Loader isActive={loading} />
 
-                <form onSubmit={handleTransactionPIN}>
+                <form onSubmit={handleCreditTransaction}>
 
                     <div className='form-group mb-3'>
-                        <label>Current PIN</label>
-                        <input type='number' name="oldPin" onChange={handleInput} value={textInput.oldPin} className='form-control' ></input>
+                        <label>User Email</label>
+                        <input type='email' name="email" onChange={handleInput} value={textInput.email} className='form-control' ></input>
                     </div>
 
                     <div className='form-group mb-3'>
-                        <label>New PIN</label>
-                        <input type='number' name="newPin" onChange={handleInput} value={textInput.newPin} className='form-control' ></input>
+                        <label>Amount</label>
+                        <input type='float' name="amount" onChange={handleInput} value={textInput.amount} className='form-control' ></input>
                     </div>
 
                     <div className='form-group mb-3'>
-                        <button type='submit' className='btn btn-primary w-100'>Update PIN</button>
+                        <button type='submit' className='btn btn-primary w-100'>Credit User</button>
                     </div>
                 </form>
             </div>

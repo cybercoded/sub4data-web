@@ -25,14 +25,21 @@ const SideBar = () => {
             <Loader isActive={loading} />
             <div className="sb-sidenav-menu">
                 <div className="nav">
-                    <div className="sb-sidenav-menu-heading">Core</div>
+                    <div className="sb-sidenav-menu-heading">Menu</div>
                     <Link className="nav-link" to="/admin/dashboard">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-tachometer-alt"></i>
                         </div>
                         Dashboard
                     </Link>
+                    <Link className="nav-link" to="/admin/transactions">
+                        <div className="sb-nav-link-icon">
+                            <i className="fas fa-tachometer-alt"></i>
+                        </div>
+                        Transactions
+                    </Link>
 
+                    <div className="sb-sidenav-menu-heading">Others</div>
                     <Link
                         className="nav-link collapsed"
                         to="#"

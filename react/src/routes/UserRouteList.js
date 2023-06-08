@@ -7,6 +7,8 @@ import Electricity from '../components/frontend/services/Electricity';
 import UpdatePin from '../components/frontend/UpdatePin';
 import UpdatePassword from '../components/frontend/UpdatePassword';
 import CreatePin from '../components/frontend/CreatePin';
+import Transactions from '../components/frontend/Transactions';
+import TransferFund from '../components/frontend/TransferFund';
 
 
 const UserRouteList =[
@@ -20,8 +22,9 @@ const UserRouteList =[
 
     { path: '/user/create-pin', exact: true, name: 'CreatePin', component: CreatePin },
     { path: '/user/update-pin', exact: true, name: 'UpdatePin', component: UpdatePin },
-    { path: '/user/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword }
-
+    { path: '/user/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword },
+    { path: '/user/transactions', exact: true, name: 'Transactions', component: Transactions },
+    { path: '/user/transfer-fund', exact: true, name: 'TransferFund', component: TransferFund }
 
 ];
 

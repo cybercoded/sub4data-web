@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 import swal from "sweetalert";
-import { Loader } from "../../Global";
 import { useHistory } from "react-router-dom";
+import { Loader } from "../Global";
 
-function CreditUser(){
+function TransferFund(){
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [textInput, setTextIput] = useState({
@@ -42,12 +42,12 @@ function CreditUser(){
                 }).then((willDelete) => {
                     if (willDelete) {
                         setLoading(true);
-                        axios.put(`/api/credit-user/`, {...textInput, user_id: res.data.data.user_id}).then((res2) => {
+                        axios.put(`/api/transfer-fund/`, {...textInput, user_id: res.data.data.user_id}).then((res2) => {
                             if (res2.data.status === 200) {
                                 swal('Sucess!', `${res.data.data.name} was successfully credited`,'success').then((result) => {
-                                    history.push('/admin/dashboard');
+                                    history.push('/user/dashboard');
                                 });
-                            }else {
+                            } else {
                                 swal('Error!', res2.data.errors, 'error');
                             }
                             setLoading(false);
@@ -64,7 +64,7 @@ function CreditUser(){
     return (
         <div className="container mt-5">
             <div className="text-muted h5 mb-4 pb-4 border-bottom">
-                <b>Credit</b> User /
+                <b>Transfer</b> Fund /
             </div>
             <div className="bg-light card card-body col-md-6">
                 <Loader isActive={loading} />
@@ -92,4 +92,4 @@ function CreditUser(){
 }
 
 
-export default CreditUser;
+export default TransferFund;

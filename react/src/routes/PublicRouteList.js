@@ -5,12 +5,10 @@ import Page403 from "../components/errors/Page403";
 import Page404 from "../components/errors/Page404";
 import Login from "../components/frontend/auth/Login";
 import Register from "../components/frontend/auth/Register";
-import Dashboard from '../components/frontend/Dashoard';
 
 
 const PublicRouteList =[
     { path: '/', exact: true, name: 'Home', component: Home },
-    { path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
     { path: '/about', exact: true, name: 'About', component: About },
     { path: '/contact', exact: true, name: 'Contact', component: Contact },
     { path: '/403', exact: true, name: 'Page403', component: Page403 },

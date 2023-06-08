@@ -75,6 +75,15 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::post('update-user/{id}', [UserController::class, 'adminUpdate']);
 
+    Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
+
+    Route::put('credit-user', [UserController::class, 'adminCreditUser']);
+    
+    //Transactions
+    Route::get('view-transactions', [TransactionController::class, 'view']);
+
+    Route::post('filter-transactions', [TransactionController::class, 'adminFilter']);
+
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -84,6 +93,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('view-category', [CategoryController::class, 'index']);
 
     Route::get('view-product/{id}', [ProductController::class, 'view']);
+
+    Route::get('view-product', [ProductController::class, 'index']);
 
     Route::get('view-services/{id}', [ServicesController::class, 'view']);
 
@@ -117,7 +128,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('electricity-purchase', [PurchaseController::class, 'electricity']);
 
     //Transactions
-    Route::get('view-transactions', [TransactionController::class, 'index']);
+    Route::get('view-transactions', [TransactionController::class, 'get']);
+
+    Route::post('filter-transactions', [TransactionController::class, 'filter']);
+
+    Route::put('transfer-fund', [UserController::class, 'adminCreditUser']);
+
+    Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
