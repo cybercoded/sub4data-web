@@ -3,14 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactjsOverlayLoader from 'reactjs-overlay-loader';
 import Toastify from 'toastify-js';
-import "toastify-js/src/toastify.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import swal from 'sweetalert';
 
 function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [categoryList, setCategoryList] = useState([]);
+    const [transactionList, setTransactionList] = useState([]);
     const [userDataList, setUserDataList] = useState([]);
 
     useEffect(() => {
@@ -21,11 +19,16 @@ function Dashboard() {
             setLoading(false);
         });
 
+        axios.get(`api/view-transactions`).then((res) => {
+            if (res.data.status === 200) {
+                setTransactionList(res.data.data);
+            }
+        });
+
         axios.get(`api/user/`).then((res) => {
             if (res.status === 200) {
                 setUserDataList(res.data);
             }
-            setLoading(false);
         });
 
     }, []);
@@ -44,7 +47,7 @@ function Dashboard() {
             offset: {
                 y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
             },
-          }).showToast();
+        }).showToast();
 
     }
 
@@ -55,7 +58,7 @@ function Dashboard() {
 
             <div className='mb-5'>
                 <PerfectScrollbar>
-                    <div style={{width: 300 * userDataList.banks?.length}}>
+                    <div style={{width: 300 * userDataList.banks?.length || 0}}>
                         { userDataList.banks?.map((item, index) => (
                                 <div key={index} className='card bg-light float-start' style={{minWidth: 280, marginRight: 10}}>
                                     <div className="card-body py-4">
@@ -99,6 +102,44 @@ function Dashboard() {
                         </div>
                     </Link>
                 ))}
+            </div>
+
+            <div className='mt-5'>
+                <div className="text-muted h5 mb-4 pb-4 border-bottom">
+                    <b>Transaction</b> records |
+                    <Link to="/user/view-transactions" className="btn btn-primary btn-sm float-end">All Transaction</Link>
+                </div>
+                <div className="table-responsive">
+                    <table className="table table-boardered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                                <th>Reference</th>
+                                <th>Description</th>
+                                <th className='float-end'>View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {transactionList.map((item, index)=> {
+                                let formater = new Intl.NumberFormat();
+                                return (
+                                    <tr key={index}>
+                                        <td>{index+1}</td>
+                                        <td><span className='badge bg-info'>{item.status}</span></td>
+                                        <td>₦{formater.format(item.amount)}</td>
+                                        <td>{item.reference}</td>
+                                        <td>{item.description}</td>
+                                        <td>
+                                            <Link to={`/user/get-transaction/${item.id}`} className="btn btn-primary btn-sm float-end">View</Link>
+                                        </td>
+                                    </tr>
+                                )})
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

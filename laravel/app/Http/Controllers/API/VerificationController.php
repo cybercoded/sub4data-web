@@ -57,17 +57,18 @@ class VerificationController extends Controller
     }
 
     public function meternumber(Request $request)
-    {       
+    {   
+        $service = Services::where('id', $request->service_id)->first();
         $curl = curl_init();
         $url = "https://smartrecharge.ng/api/v2/electric/";
 
         $get_array = array(
             'api_key' => 'wfmmh34p7yz3b1oe1k0yx4m0gwny5a8t1xpljzoysi9u',
             'meter_number' => $request->meter_number,
-            'product_code' => $request->product_code,
+            'product_code' => $service['api_service_id'],
             'task' => 'verify',
         );
-
+        
         $curl_url = $url . "?" . http_build_query($get_array);
 
         curl_setopt_array($curl, array(

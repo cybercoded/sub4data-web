@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Banks;
 use App\Models\Levels;
+use App\Models\Transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -95,7 +96,6 @@ class UserController extends Controller
             $user= User::find($id);
             $user->name= $request->input('name');                
             $user->status= $request->input('status') == true ? 1 : 0;                
-            $user->balance= $request->input('balance'); 
             
             if ( $user->save() ) 
             {

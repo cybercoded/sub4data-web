@@ -2,20 +2,21 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import ReactOverlayLoader from "reactjs-overlay-loader";
+import Toastify from 'toastify-js';
 import $ from 'jquery';
 import { Loader } from '../../Global';
 
 function Electricity(props) {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
+    const [discount, setDiscount] = useState();
     const [productActive, setProductActive] = useState();
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
     const [errorList, setErrorList] = useState([]);
     const [textInput, setTextIput] = useState({
-        product: '',
-        serviceId: '',
+        product_id: '',
+        service_id: '',
         meter_number: '54150268040',
         amount: ''
     });
@@ -25,9 +26,9 @@ function Electricity(props) {
         setTextIput({ ...textInput, [e.target.name]: e.target.value });
     };
    
-    const handleProductSelection = (product, product_id) => {        
-        setProductActive(product);
-        setTextIput({ ...textInput, product: product });
+    const handleProductSelection = (product_id) => {
+        setProductActive(product_id);
+        setTextIput({ ...textInput, product_id: product_id.toString(), service_id: '' });
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
@@ -36,22 +37,46 @@ function Electricity(props) {
             }
             setLoading(false);
         });
+    };
 
-        $('#validatation-container').attr('hidden', 'hidden');
-        $('#proceed-btn').removeAttr('hidden', 'hidden');
+    const handleProductSelection2 = (e) => {
+        var product_id = e.target.value;
+
+        setTextIput({ ...textInput, product_id: product_id, service_id: '' });
+
+        setLoading(true);
+        axios.get(`api/view-services/${product_id}`).then((res) => {
+            if (res.status === 200) {
+                setServiceList(res.data.services);
+            }
+            setLoading(false);
+        });
+        setProductActive(Number(product_id));
     };
 
     const handleVerification = (e) => {        
         e.persist();
 
-        if(textInput.meter_number !== '' && textInput.product !== '' && textInput.serviceId !== '') {
+        if(textInput.meter_number !== '' && textInput.product !== '' && textInput.service_id !== '') {
 
             setLoading(true);
-            axios.post(`api/meternumber-verification`, {meter_number: textInput.meter_number, product_code: textInput.serviceId}).then((res) => {
+            axios.post(`api/meternumber-verification`, {meter_number: textInput.meter_number, service_id: textInput.service_id}).then((res) => {
                 if (res.data.status === 200) {
                     $('#beneficiary-name').val(res.data.name);
                     $('#validatation-container').removeAttr('hidden')
                     $('#proceed-btn').attr('hidden', 'hidden');
+                    Toastify({
+                        text: "Your card has been verified!",
+                        duration: 3000,
+                        className: "info",
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "center", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        offset: {
+                            y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                        },
+                    }).showToast();
 
                 }else {
                     swal('Unable to verify!', 'Please check your smartcard number and try again', 'error');
@@ -61,11 +86,6 @@ function Electricity(props) {
         }else {
             swal('All fields are required!', 'Fill and select all fields', 'error');
         }
-    };
-
-    const handleServiceSelection = (e) => {
-        var api_service_id = e.target.selectedOptions[0].dataset.api_id;
-        setTextIput({ ...textInput, [e.target.name]: e.target.value, serviceId: api_service_id });
     };
 
     const handleAmount = (e) => {
@@ -84,53 +104,49 @@ function Electricity(props) {
     };
 
 
-    const dataSubmit = (e) => {
+    const handlePurchaseElectricity = (e) => {
         e.persist();
 
-        if(textInput.meter_number !== '' && textInput.product !== '' && textInput.serviceId !== '') {
-            swal({
-                text: 'Enter your transaction pin',
-                content: 'input',
-                button: {
-                    text: 'Verify!',
-                    closeModal: false
-                }
-            })
+        swal({
+            text: 'Enter your transaction pin',
+            content: 'input',
+            button: {
+                text: 'Verify!',
+                closeModal: false
+            }
+        })
             .then((pin) => {
-
-                return axios.get(`/api/verify-pin/${pin}`)
+                return axios.get(`/api/verify-pin/${pin}`);
             })
             .then((results) => {
                 let result = results.data;
 
-                if(result.status === 200) {
+                if (result.status === 200) {
                     swal({
-                        title: "Are you sure?",
-                        text: "Are you sure to proceed with your transaction!",
-                        icon: "warning",
+                        title: 'Are you sure?',
+                        text: 'Are you sure to proceed with your transaction!',
+                        icon: 'warning',
                         buttons: true,
-                        dangerMode: true,
-                    })
-                    .then((willDelete) => {
+                        dangerMode: true
+                    }).then((willDelete) => {
                         if (willDelete) {
-                          swal("Poof! Your imaginary file has been deleted!", {
-                            icon: "success",
-                          });
+                            setLoading(true);
+                            axios.post(`/api/electricity-purchase/`, textInput).then((res) => {
+                                if (res.data.status === 200) {
+                                    swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
+                                        history.push('/user/dashboard');
+                                    });
+                                }else {
+                                    swal('Error!', res.data.errors, 'error');
+                                }
+                                setLoading(false);
+                            });
                         }
                     });
-                }else {
+                } else {
                     swal('Oh noes!', result.message, 'error');
                 }
-            })
-            .catch((err) => {
-                if (err) {
-                    swal('Oh noes!', 'The AJAX request failed!', 'error');
-                } else {
-                    swal.stopLoading();
-                    swal.close();
-                }
             });
-        }
     };
 
     useEffect(() => {
@@ -140,6 +156,12 @@ function Electricity(props) {
                 setProductList(res.data.product);
             }
             setLoading(false);
+        });
+
+        axios.get(`api/user-discount`).then((res) => {
+            if (res.status === 200) {
+                setDiscount(res.data.percentage);
+            }
         });
     }, [props.match.params.id, history]);
 
@@ -151,15 +173,17 @@ function Electricity(props) {
             </div>
             <div className="bg-light card card-body col-md-6">
                 <Loader isActive={loading} />
-                <form onSubmit={dataSubmit} className="">
-                    <div className="form-group mb-3">
+                <form onSubmit={handlePurchaseElectricity} className="">
+                <div className="form-group mb-3">
                         {productList.map((item, index) => {
                             return (
                                 <button
                                     type="button"
                                     key={index}
-                                    className={`btn btn-outline-primary ${productActive === item.slug && 'active'}`}
-                                    onClick={() => { handleProductSelection(item.slug, item.id); }}
+                                    className={`btn btn-outline-primary ${productActive === item.id && 'active'}`}
+                                    onClick={() => {
+                                        handleProductSelection(item.id, item.id);
+                                    }}
                                     style={{ margin: 2 }}
                                 >
                                     <img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name} />
@@ -167,17 +191,27 @@ function Electricity(props) {
                             );
                         })}
                     </div>
-                    
+
+                    <div className="form-group mb-3">
+                        <label>Electricity Services:</label>
+                        <select name="product_id" onChange={handleProductSelection2} value={textInput.product_id} className="form-select">
+                            <option value="">--Choose Data Service--</option>
+                            {productList?.map((item, index) => (
+                                <option key={index} value={item.id}>
+                                    {item.name}
+                                </option>
+                            ))}
+                        </select>
+                        <small className="text-danger">{errorList?.services}</small>
+                    </div>                 
                     
                     <div className="form-group mb-3">
                         <label>Electricity Plan:</label>
-                        <select name="services" onChange={handleServiceSelection} className="form-select" required>
+                        <select name="service_id" onChange={handleInput} value={textInput.service_id} className="form-select" required>
                             <option value="">--Choose Electricity Plan--</option>
                             {serviceList.map((item, index) => (
                                 <option 
                                     key={index} 
-                                    data-amount={item.amount} 
-                                    data-api_id={item.api_service_id} 
                                     value={item.id}
                                 >
                                     { item.name.split('=')[0]}
@@ -205,14 +239,19 @@ function Electricity(props) {
                             type="number"
                             name="amount_to_charged"
                             disabled
-                            value={textInput.amount - (2 * textInput.amount) / 100}
+                            value={textInput.amount - (discount * textInput.amount) / 100 || 0}
                             className="form-control"
                         ></input>
-                        <small className="text-info">2% on all of your airtime recharge</small>
+                        <small className="text-info">{discount} % on all of your airtime recharge</small>
                     </div>
                     
                     <div id='proceed-btn' className="form-group mb-3">
-                        <button type="button" onClick={handleVerification} className="btn w-100 btn-primary">
+                        <button 
+                            type="button" 
+                            onClick={handleVerification}
+                            className="btn w-100 btn-primary"
+                            disabled={textInput.product_id === '' || errorList.amount !== '' || textInput.amount === '' || textInput.service_id === '' || textInput.meter_number === ''} 
+                        >
                             Verify smartcard
                         </button>
                     </div>
@@ -223,8 +262,13 @@ function Electricity(props) {
                             <input type="text" id='beneficiary-name' name="name" disabled className="form-control"></input>
                             <small className="text-danger">{errorList?.name}</small>
                         </div>
-                        <div className="form-group mb-3" >
-                            <button type="button" className="btn w-100 btn-primary">
+                        <div className="form-group mb-3">
+                            <button 
+                                type="button" 
+                                className="btn w-100 btn-primary"
+                                onClick={handlePurchaseElectricity}
+                                disabled={textInput.amount === '' || errorList.amount !== '' || textInput.product_id === '' || textInput.service_id === '' || textInput.meter_number === ''} 
+                            >
                                 Proceed
                             </button>
                         </div>

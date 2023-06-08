@@ -11,6 +11,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.js';
 //Datatable Modules
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
+import "toastify-js/src/toastify.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 //Template dependencies
 import './assets/admin/css/styles.css';

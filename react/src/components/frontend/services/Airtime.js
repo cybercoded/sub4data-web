@@ -70,6 +70,8 @@ function Airtime(props) {
                                     swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
                                         history.push('/user/dashboard');
                                     });
+                                }else {
+                                    swal('Error!', result.data.errors, 'error');
                                 }
                                 setLoading(false);
                             });
@@ -123,10 +125,11 @@ function Airtime(props) {
                                 <button
                                     type="button"
                                     key={index}
-                                    className={`btn btn-outline-primary ${productActive === item.api_product_id && 'active'}`}
+                                    className={`btn btn-outline-primary ${productActive === item.id && 'active'}`}
                                     onClick={() => {
-                                        setProductActive(item.api_product_id);
-                                        setTextIput({...textInput, product_id: item.api_product_id });
+                                        setProductActive(item.id);
+                                        setTextIput({...textInput, product_id: item.id });
+                                        console.log(textInput.product_id);
                                     }}
                                     style={{ margin: 2 }}
                                 >

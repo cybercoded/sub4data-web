@@ -6,16 +6,13 @@ import swal from "sweetalert";
 function EditUser(props){
 
     const [loading, setLoading] = useState(true);
-    const [textInput, setTextIput] = useState([]);
+    const [textInput, setTextIput] = useState({
+        status: false
+    });
 
     const handleInput = (e) => {
         e.persist();
         setTextIput({ ...textInput, [e.target.name]: e.target.value });
-    };
-
-    const handleCheckBox = (e) => {
-        e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.checked });
     };
 
     const handleProfileUpdate = (e) => {        
@@ -75,20 +72,16 @@ function EditUser(props){
                         <small className="text-danger">{textInput.error_list?.name}</small>
                     </div>
 
-                    <div className='form-group mb-3'>
-                        <label>Balance</label>
-                        <input type='number' name="balance" onChange={handleInput} value={textInput.balance} className='form-control' ></input>
-                        <small className="text-danger">{textInput.error_list?.balance}</small>
-                    </div>
-
                     <div className="form-group mb-3">
                         <label>Status</label>
                         <input 
-                            type="checkbox"
-                            name="status"
-                            onChange={handleCheckBox}
-                            checked={textInput.status === 1 ? true : false}
+                            type="checkbox" 
+                            checked={textInput.status} 
+                            onChange={e => 
+                                setTextIput({...textInput, status: e.target.checked})
+                            } 
                         />
+
                         <br /> 
                         <small className="text-info">Status checked = Active / Unchecked = Inactive</small>
                     </div>

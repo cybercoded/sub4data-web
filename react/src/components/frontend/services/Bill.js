@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import ReactOverlayLoader from 'reactjs-overlay-loader';
+import Toastify from 'toastify-js';
 import $ from 'jquery';
 import { Loader } from '../../Global';
 
@@ -65,6 +65,19 @@ function Bill(props) {
                         $('#beneficiary-name').val(res.data.name);
                         $('#validatation-container').removeAttr('hidden');
                         $('#proceed-btn').attr('hidden', 'hidden');
+
+                        Toastify({
+                            text: "Your card has been verified!",
+                            duration: 3000,
+                            className: "info",
+                            close: true,
+                            gravity: "top", // `top` or `bottom`
+                            position: "center", // `left`, `center` or `right`
+                            stopOnFocus: true, // Prevents dismissing of toast on hover
+                            offset: {
+                                y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                            },
+                        }).showToast();
                     } else {
                         swal('Unable to verify!', 'Please check your smartcard number and try again', 'error');
                     }
@@ -82,7 +95,7 @@ function Bill(props) {
     };
 
     const handlePurchaseBill = (e) => {
-        e.preventDefault();
+        e.persist();
 
         swal({
             text: 'Enter your transaction pin',
@@ -113,6 +126,8 @@ function Bill(props) {
                                     swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
                                         history.push('/user/dashboard');
                                     });
+                                }else {
+                                    swal('Error!', res.data.errors, 'error');
                                 }
                                 setLoading(false);
                             });
@@ -152,7 +167,7 @@ function Bill(props) {
                                     onClick={() => {
                                         handleProductSelection(item.id, item.id);
                                     }}
-                                    style={{ marginRight: 2 }}
+                                    style={{ margin: 2 }}
                                 >
                                     <img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name} />
                                 </button>
@@ -161,7 +176,7 @@ function Bill(props) {
                     </div>
 
                     <div className="form-group mb-3">
-                        <label>Data Services:</label>
+                        <label>Bill Services:</label>
                         <select name="product_id" onChange={handleProductSelection2} value={textInput.product_id} className="form-select">
                             <option value="">--Choose Data Service--</option>
                             {productList?.map((item, index) => (
@@ -225,6 +240,7 @@ function Bill(props) {
                             <button 
                                 type="button" 
                                 className="btn w-100 btn-primary"
+                                onClick={handlePurchaseBill}
                                 disabled={textInput.product_id === '' || textInput.service_id === '' || textInput.smartcard_number === ''} 
                             >
                                 Proceed

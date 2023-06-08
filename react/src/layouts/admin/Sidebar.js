@@ -42,6 +42,36 @@ const SideBar = () => {
                         aria-controls="collapseCategory"
                     >
                         <div className="sb-nav-link-icon">
+                            <i className="fa fa-users"></i>
+                        </div>
+                            Users
+                        <div className="sb-sidenav-collapse-arrow">
+                            <i className="fas fa-angle-down"></i>
+                        </div>
+                    </Link>
+                    <div className="collapse" id="collapseCategory" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/view-category">
+                                View users
+                            </Link>
+                            <Link className="nav-link" to="/admin/credit-user">
+                                Credit user
+                            </Link>
+                            <Link className="nav-link" to="/admin/debit-user">
+                                Debit user
+                            </Link>
+                        </nav>
+                    </div>
+                    
+                    <Link
+                        className="nav-link collapsed"
+                        to="#"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseCategory"
+                        aria-expanded="false"
+                        aria-controls="collapseCategory"
+                    >
+                        <div className="sb-nav-link-icon">
                             <i className="fa fa-list-alt"></i>
                         </div>
                             Categories

@@ -94,6 +94,8 @@ function Data(props) {
                                     swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
                                         history.push('/user/dashboard');
                                     });
+                                }else {
+                                    swal('Error!', result.data.errors, 'error');
                                 }
                                 setLoading(false);
                             });
