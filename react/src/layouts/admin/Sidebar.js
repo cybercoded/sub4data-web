@@ -1,11 +1,9 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Loader } from '../../components/Global';
 const SideBar = () => {
-
-    const history = useHistory();
 
     const [loading, setLoading] = useState();
     const handleBackUp = (e) => {
@@ -18,7 +16,7 @@ const SideBar = () => {
             }
             setLoading(false);
         });
-    };
+    };    
 
     return (
         <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="sidenavAccordion" data-bs-target="#navbarDropdown2">

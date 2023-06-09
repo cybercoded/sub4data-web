@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useState } from "react";
-import ReactjsOverlayLoader from "reactjs-overlay-loader";
 import swal from "sweetalert";
 import { useHistory } from 'react-router-dom';
 import { Loader } from "../Global";
@@ -9,7 +8,7 @@ function CreatePin(){
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [textInput, setTextIput] = useState({
-        newPin: '1111'
+        newPin: ''
     });
 
     const handleInput = (e) => {

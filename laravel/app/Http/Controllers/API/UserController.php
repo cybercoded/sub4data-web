@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Banks;
 use App\Models\Levels;
+use App\Models\PasswordReset;
 use App\Models\Transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -67,6 +68,91 @@ class UserController extends Controller
                     'status' => 404,
                     'errors' => "Unable to update user",
                 ]);
+            }
+        }
+    }
+
+    public function resetPassword(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $password_reset = new PasswordReset();
+            $password_reset->token = rand ( 10000 , 99999 );
+            $password_reset->email = $request->input('email');
+
+            if ($password_reset->save()) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => "OTP updated successfully",
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'errors' => "Unable to update user",
+                ]);
+            }
+        }
+    }
+    
+    public function verifyOtpAndResetPassword(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $password_reset = PasswordReset::where('token', $request->input('otp'))->first();
+            $user= User::where('email',$request->email)->first();
+            
+            if($password_reset) {
+
+                $seconds = 1800; // 30 mins
+                $time1 = strtotime($password_reset->created_at) + $seconds;
+                if(time() >= $time1) {
+                    return response()->json([
+                        'status' => 422,
+                        'errors' => "OTP has expired after 30 Minutes",
+                    ]);
+                }
+            
+                if ($password_reset->email === $user->email) {
+                    
+                    if($request->password) {
+                        $user->password = Hash::make($request->input('password'));
+                        $user->save();
+                    }
+
+                    return response()->json([
+                        'status' => 200,
+                        'message' => "OTP updated successfully",
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 400,
+                        'errors' => "Incorrect OTP",
+                    ]);
+                }
+            } else {
+                return response()->json([
+                   'status' => 404,
+                   'errors' => "User not found",
+                ]);
+    
             }
         }
     }

@@ -28,6 +28,12 @@ Route::post('register', [AuthController::class, 'register']);
 
 Route::post('login', [AuthController::class, 'login']);
 
+Route::get('verify-user-email/{email}', [UserController::class, 'adminVerifyEmail']);
+
+Route::put('password-reset', [UserController::class, 'resetPassword']);
+
+Route::put('verify-otp-and-reset', [UserController::class, 'verifyOtpAndResetPassword']);
+
 Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::get('/checkingAuthenticated', function () {

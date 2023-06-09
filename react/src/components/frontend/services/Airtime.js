@@ -44,6 +44,7 @@ function Airtime(props) {
         swal({
             text: 'Enter your transaction pin',
             content: 'input',
+            closeOnClickOutside: false,
             button: {
                 text: 'Verify!',
                 closeModal: false
@@ -71,7 +72,7 @@ function Airtime(props) {
                                         history.push('/user/dashboard');
                                     });
                                 }else {
-                                    swal('Error!', result.data.errors, 'error');
+                                    swal('Error!', res.data.errors, 'error');
                                 }
                                 setLoading(false);
                             });

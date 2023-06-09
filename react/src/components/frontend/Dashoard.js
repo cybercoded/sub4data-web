@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ReactjsOverlayLoader from 'reactjs-overlay-loader';
 import Toastify from 'toastify-js';
 import PerfectScrollbar from "react-perfect-scrollbar";
+import swal from 'sweetalert';
 
 function Dashboard() {
     const [loading, setLoading] = useState(true);
@@ -50,6 +51,57 @@ function Dashboard() {
         }).showToast();
 
     }
+
+    const handleViewTransaction = (e) => {
+        e.preventDefault();
+        var dataArray = e.target.dataset;
+        console.log(dataArray);
+        var table = document.createElement("div");
+        table.style.textAlign = "left";
+        table.innerHTML = (`<table class="table align-left table-striped table-hover">
+            <body style="align-text: left;">
+                <tr>
+                    <th>Refernce</th>
+                    <td>${dataArray.reference}</td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>${dataArray.name}</td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td>${dataArray.amount}</td>
+                </tr>
+                <tr>
+                    <th>Product</th>
+                    <td>${dataArray.product}</td>
+                </tr>
+                <tr>
+                    <th>Service</th>
+                    <td>${dataArray.service}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>${dataArray.description}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>${dataArray.status}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>${dataArray.date}</td>
+                </tr>
+            </body>
+        </table>`);
+        swal({
+            content: table,
+            buttons: {
+                confirm: true,
+                cancel: false,
+            }
+        });
+    };
 
 
     return (
@@ -148,7 +200,7 @@ function Dashboard() {
                                 <th>Amount</th>
                                 <th>Reference</th>
                                 <th>Description</th>
-                                <th className='float-end'>View</th>
+                                <th><span className='float-end'>View</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -162,7 +214,19 @@ function Dashboard() {
                                         <td>{item.reference}</td>
                                         <td>{item.description}</td>
                                         <td>
-                                            <Link to={`/user/get-transaction/${item.id}`} className="btn btn-primary btn-sm float-end">View</Link>
+                                            <button onClick={handleViewTransaction} 
+                                                    className="btn btn-primary btn-sm float-end"
+                                                    data-reference={item.reference}
+                                                    data-amount={item.amount}
+                                                    data-name={item.user.name}
+                                                    data-product={item.product?.name}
+                                                    data-service={item.service?.name}
+                                                    data-status={item.status}
+                                                    data-description={item.description}
+                                                    data-date={item.created_at}
+                                                >
+                                                View
+                                            </button>
                                         </td>
                                     </tr>
                                 )})

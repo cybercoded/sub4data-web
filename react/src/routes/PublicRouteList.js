@@ -5,6 +5,9 @@ import Page403 from "../components/errors/Page403";
 import Page404 from "../components/errors/Page404";
 import Login from "../components/frontend/auth/Login";
 import Register from "../components/frontend/auth/Register";
+import Reset from "../components/frontend/auth/Reset";
+import NewPassword from "../components/frontend/auth/NewPassword";
+import VerifyOtp from "../components/frontend/auth/VerifyOtp";
 
 
 const PublicRouteList =[
@@ -15,6 +18,9 @@ const PublicRouteList =[
     { path: '/404', exact: true, name: 'Page404', component: Page404 },
     { path: '/login', exact: true, name: 'Login', component: Login },
     { path: '/register', exact: true, name: 'Register', component: Register },
+    { path: '/reset', exact: true, name: 'Reset', component: Reset },
+    { path: '/new-passpord/:email/:otp', exact: true, name: 'NewPassword', component: NewPassword },
+    { path: '/verify-otp/:email', exact: true, name: 'VerifyOtp', component: VerifyOtp },
 
 ];
 

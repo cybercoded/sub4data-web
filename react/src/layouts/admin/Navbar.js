@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Loader } from '../../components/Global';
 
-const Navbar = () => {
+const Navbar = (ref) => {
 
     const [loading, setLoading] = useState();
     const history = useHistory();
@@ -28,6 +28,7 @@ const Navbar = () => {
 
     const handleSideBar = (e) => {
         e.persist();
+        
         document.body.classList.toggle('sb-sidenav-toggled');
     };
 

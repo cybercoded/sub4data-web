@@ -110,6 +110,7 @@ function Electricity(props) {
         swal({
             text: 'Enter your transaction pin',
             content: 'input',
+            closeOnClickOutside: false,
             button: {
                 text: 'Verify!',
                 closeModal: false
@@ -127,7 +128,8 @@ function Electricity(props) {
                         text: 'Are you sure to proceed with your transaction!',
                         icon: 'warning',
                         buttons: true,
-                        dangerMode: true
+                        dangerMode: true,
+                        closeOnClickOutside: false
                     }).then((willDelete) => {
                         if (willDelete) {
                             setLoading(true);

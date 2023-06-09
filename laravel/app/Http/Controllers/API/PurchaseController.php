@@ -332,6 +332,7 @@ class PurchaseController extends Controller
         $transaction->reference = $request['reference']; 
         $transaction->api_reference = $request['api_reference']; ;
         $transaction->description = $request['description'];
+        $transaction->status = $request['status'];
         $transaction->type = 'debit';
 
         $user= User::find($request['user_id']); 

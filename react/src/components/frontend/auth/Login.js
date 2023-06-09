@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Navbar from "../../../layouts/frontend/Navbar";
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -8,7 +7,7 @@ import { Loader } from '../../Global';
 function Login() {
 
     const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
-const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [loginInput, setLogin] = useState({
         email:'',
@@ -56,7 +55,7 @@ const [loading, setLoading] = useState(false);
         <div>
             <div className='my-bg-primary'>                
                 <div className="d-flex align-items-center justify-content-center vh-100">                                 
-                    <div className='card col-md-3'>
+                    <div className='card col-md-4 col-lg-3 col-10'>
                         <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
@@ -81,7 +80,8 @@ const [loading, setLoading] = useState(false);
                                 
                                 <div className='form-group mb-3'>
                                     <div className="text-center mb-0">
-                                        <div>Don't have an account? <Link to="/register">Register</Link> or </div>
+                                        <div>Don't have an account? <Link to="/register">Register</Link> or <br />
+                                        <Link to="/reset">Reset password</Link></div>
                                     </div>
                                 </div>
                             </form>

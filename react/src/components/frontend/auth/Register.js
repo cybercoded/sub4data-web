@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Navbar from "../../../layouts/frontend/Navbar";
 import axios from 'axios';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
@@ -40,7 +39,7 @@ function Register() {
                     localStorage.setItem("auth_token",res.data.token);
                     localStorage.setItem("auth_name",res.data.username);
                     swal("success",res.data.message,"success");
-                    history.push("/user");
+                    history.push("/user/dashboard");
                 }else{
                     
                     setRegister({ ...registerInput, error_list:res.data.validation_errors})
@@ -53,41 +52,43 @@ function Register() {
     return(
         <div className='my-bg-primary'>
             <div className="d-flex align-items-center justify-content-center vh-100">
-                <div className='card col-md-3'>
-                    <Loader isActive={loading} />
-                    <Link to="/" className='card-header text-center text-decoration-none'>                            
-                        <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
-                        <h4>register new account</h4>
-                    </Link>
-                    <div className='card-body'>
-                        <form onSubmit={registerSubmit}>
-                            <div className='form-group mb-3'>
-                                <label>Full Name</label>
-                                <input type='' name="name" onChange={handleInput} value={registerInput.name} className='form-control' ></input>
-                                <span>{registerInput.error_list?.name}</span>
-                            </div>
-                            <div className='form-group mb-3'>
-                                <label>Email ID</label>
-                                <input type='' name="email" onChange={handleInput} value={registerInput.email} className='form-control' ></input>
-                                <span>{registerInput.error_list?.email}</span>
-                            </div>
-                            <div className='form-group mb-3'>
-                                <label>Password</label>
-                                <input type='password' name="password" onChange={handleInput} value={registerInput.password} className='form-control' ></input>
-                                <span>{registerInput.error_list?.password}</span>
-                            </div>
-                            
-                            <div className='form-group mb-3'>
-                                <button type='submit' className='btn btn-primary w-100'>Register</button>
-                            </div>
-
-                            <div className='form-group mb-3'>
-                                <div className="text-center mb-0">
-                                    <div>Already have an account? <Link to="/login">Login</Link> or </div>
-                                    <div>you forgotten passwor? <Link to="/reset">Reset</Link></div>
+                <div className='col-md-4 col-lg-3 col-10'>
+                    <div className='card'>
+                        <Loader isActive={loading} />
+                        <Link to="/" className='card-header text-center text-decoration-none'>                            
+                            <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
+                            <h4>register new account</h4>
+                        </Link>
+                        <div className='card-body'>
+                            <form onSubmit={registerSubmit}>
+                                <div className='form-group mb-3'>
+                                    <label>Full Name</label>
+                                    <input type='' name="name" onChange={handleInput} value={registerInput.name} className='form-control' ></input>
+                                    <span>{registerInput.error_list?.name}</span>
                                 </div>
-                            </div>
-                        </form>
+                                <div className='form-group mb-3'>
+                                    <label>Email ID</label>
+                                    <input type='' name="email" onChange={handleInput} value={registerInput.email} className='form-control' ></input>
+                                    <span>{registerInput.error_list?.email}</span>
+                                </div>
+                                <div className='form-group mb-3'>
+                                    <label>Password</label>
+                                    <input type='password' name="password" onChange={handleInput} value={registerInput.password} className='form-control' ></input>
+                                    <span>{registerInput.error_list?.password}</span>
+                                </div>
+                                
+                                <div className='form-group mb-3'>
+                                    <button type='submit' className='btn btn-primary w-100'>Register</button>
+                                </div>
+
+                                <div className='form-group mb-3'>
+                                    <div className="text-center mb-0">
+                                        <div>Already have an account? <Link to="/login">Login</Link> or </div>
+                                        <div>you forgotten passwor? <Link to="/reset">Reset</Link></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
