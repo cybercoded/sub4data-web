@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\TransactionMail;
 use App\Models\Category;
 use App\Models\Levels;
 use App\Models\Product;
@@ -10,30 +11,28 @@ use App\Models\Services;
 use App\Models\Transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Mail;
 
 class PurchaseController extends Controller
 {
     //Processing all of my purchase requests
 
     public function airtime(Request $request)
-    {   
-        $user_id=auth('sanctum')->user()->id;
-        $user_level=auth('sanctum')->user()->level;
-        $user= User::find($user_id);
+    {
+        $user_id = auth('sanctum')->user()->id;
+        $user_level = auth('sanctum')->user()->level;
+        $user = User::find($user_id);
         $level = Levels::where('level', $user_level)->first();
         $product = Product::where('id', $request->input('product_id'))->first();
         $discountedAmount = $request->input('amount') - ($request->input('amount') * $level['percentage']) / 100;
         $afterBalance = $user->balance - $discountedAmount;
 
-        if ($afterBalance - $discountedAmount < 0) 
-        {
+        if ($afterBalance - $discountedAmount < 0) {
             return response()->json([
-               'status'=>400,
-                'errors'=> 'You do not have enough balance'
+                'status' => 400,
+                'errors' => 'You do not have enough balance'
             ]);
-        }
-        else
-        {
+        } else {
             $curl = curl_init();
             $url = "https://smartrecharge.ng/api/v2/airtime/";
 
@@ -48,50 +47,53 @@ class PurchaseController extends Controller
 
             $curl_url = $url . "?" . http_build_query($get_array);
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $curl_url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-            ));
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => $curl_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                )
+            );
 
-            $response =  curl_exec($curl);
+            $response = curl_exec($curl);
             $result = json_decode($response, true);
             // print_r($result);
-            
+
             if ($result['error_code'] === '1983') {
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
-                    'user_id' => $user_id,
-                    'category_id' => $product['category_id'],     
-                    'product_id' => $product['id'],     
-                    'service_id' => null,     
-                    'amount' => $discountedAmount,     
-                    'reference' => 'SUB'.rand(),     
-                    'api_reference' => '',     
-                    'description' => "₦".number_format($discountedAmount) ." ". $product['name'],     
+                    'user' => $user,
+                    'category_id' => $product['category_id'],
+                    'product_id' => $product['id'],
+                    'service_id' => null,
+                    'amount' => $discountedAmount,
+                    'reference' => 'SUB' . rand(),
+                    'api_reference' => '',
+                    'description' => "₦" . number_format($discountedAmount) . " " . $product['name'],
                     'after_balance' => $afterBalance,
                     'status' => 'success',
                 ]);
 
-            }else {
+            } else {
                 return response()->json([
-                    'status'=>400,
-                    'errors'=> 'Something went wrong'
+                    'status' => 400,
+                    'errors' => 'Something went wrong'
                 ]);
             }
         }
     }
 
     public function data(Request $request)
-    {   
-        $user_id=auth('sanctum')->user()->id;
-        $user_level=auth('sanctum')->user()->level;
-        $user= User::find($user_id);
+    {
+        $user_id = auth('sanctum')->user()->id;
+        $user_level = auth('sanctum')->user()->level;
+        $user = User::find($user_id);
         $level = Levels::where('level', $user_level)->first();
         $product = Product::where('id', $request->input('product_id'))->first();
         $service = Services::where('id', $request->input('service_id'))->first();
@@ -99,15 +101,12 @@ class PurchaseController extends Controller
 
         $afterBalance = $user->balance - $discountedAmount;
 
-        if ($afterBalance - $discountedAmount < 0) 
-        {
+        if ($afterBalance - $discountedAmount < 0) {
             return response()->json([
-               'status'=>400,
-                'errors'=> 'You do not have enough balance'
+                'status' => 400,
+                'errors' => 'You do not have enough balance'
             ]);
-        }
-        else
-        {
+        } else {
             $curl = curl_init();
             $url = "https://smartrecharge.ng/api/v2/datashare/";
 
@@ -121,64 +120,64 @@ class PurchaseController extends Controller
 
             $curl_url = $url . "?" . http_build_query($get_array);
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $curl_url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-            ));
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => $curl_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                )
+            );
 
-            $response =  curl_exec($curl);
+            $response = curl_exec($curl);
             $result = json_decode($response, true);
             // print_r($result);
-            
+
             if ($result['error_code'] === '1983') {
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
-                    'user_id' => $user_id,
-                    'category_id' => $product['category_id'],     
-                    'product_id' => $product['id'],     
-                    'service_id' => $service['id'],     
-                    'amount' => $discountedAmount,     
-                    'reference' => 'SUB'.rand(),     
-                    'api_reference' => '',     
-                    'description' => "₦".number_format($discountedAmount) ." ". $service['name'],     
+                    'user' => $user,
+                    'category_id' => $product['category_id'],
+                    'product_id' => $product['id'],
+                    'service_id' => $service['id'],
+                    'amount' => $discountedAmount,
+                    'reference' => 'SUB' . rand(),
+                    'api_reference' => '',
+                    'description' => "₦" . number_format($discountedAmount) . " " . $service['name'],
                     'after_balance' => $afterBalance,
                     'status' => 'success',
                 ]);
-            }else {
+            } else {
                 return response()->json([
-                    'status'=>400,
-                    'errors'=> 'Something went wrong'
+                    'status' => 400,
+                    'errors' => 'Something went wrong'
                 ]);
             }
         }
     }
 
     public function bill(Request $request)
-    {   
-        $user_id=auth('sanctum')->user()->id;
-        $user= User::find($user_id);  
-        $user_level=auth('sanctum')->user()->level; 
+    {
+        $user_id = auth('sanctum')->user()->id;
+        $user = User::find($user_id);
+        $user_level = auth('sanctum')->user()->level;
         $level = Levels::where('level', $user_level)->first();
         $product = Product::where('id', $request->input('product_id'))->first();
         $service = Services::where('id', $request->input('service_id'))->first();
         $discountedAmount = $service['price'] - ($service['price'] * $level['percentage']) / 100;
         $afterBalance = $user->balance - $discountedAmount;
 
-        if ($afterBalance - $discountedAmount < 0) 
-        {
+        if ($afterBalance - $discountedAmount < 0) {
             return response()->json([
-               'status'=>400,
-                'errors'=> 'You do not have enough balance'
+                'status' => 400,
+                'errors' => 'You do not have enough balance'
             ]);
-        }
-        else
-        {
+        } else {
 
             $curl = curl_init();
             $url = "https://smartrecharge.ng/api/v2/tv/";
@@ -193,67 +192,67 @@ class PurchaseController extends Controller
 
             $curl_url = $url . "?" . http_build_query($get_array);
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $curl_url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-            ));
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => $curl_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                )
+            );
 
-            $response =  curl_exec($curl);
+            $response = curl_exec($curl);
             $result = json_decode($response, true);
             // print_r($result);
-            
+
             if ($result['error_code'] === '1983') {
-                
+
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
-                    'user_id' => $user_id,
-                    'category_id' => $product['category_id'],     
-                    'product_id' => $product['id'],     
-                    'service_id' => $service['id'],     
-                    'amount' => $discountedAmount,     
-                    'reference' => 'SUB'.rand(),     
-                    'api_reference' => '',     
-                    'description' => "₦".number_format($discountedAmount) ." ". $service['name']. " for ". $request->smartcard_number,
+                    'user' => $user,
+                    'category_id' => $product['category_id'],
+                    'product_id' => $product['id'],
+                    'service_id' => $service['id'],
+                    'amount' => $discountedAmount,
+                    'reference' => 'SUB' . rand(),
+                    'api_reference' => '',
+                    'description' => "₦" . number_format($discountedAmount) . " " . $service['name'] . " for " . $request->smartcard_number,
                     'after_balance' => $afterBalance,
                     'status' => 'success',
                 ]);
-            }else {
+            } else {
                 return response()->json([
-                    'status'=>400,
-                    'errors'=> 'Something went wrong'
+                    'status' => 400,
+                    'errors' => 'Something went wrong'
                 ]);
             }
         }
 
     }
-    
+
 
     public function electricity(Request $request)
-    {   
-        $user_id=auth('sanctum')->user()->id;
-        $user_level=auth('sanctum')->user()->level;
-        $user= User::find($user_id);
+    {
+        $user_id = auth('sanctum')->user()->id;
+        $user_level = auth('sanctum')->user()->level;
+        $user = User::find($user_id);
         $level = Levels::where('level', $user_level)->first();
         $product = Product::where('id', $request->input('product_id'))->first();
         $service = Services::where('id', $request->input('service_id'))->first();
         $discountedAmount = $request->input('amount') - ($request->input('amount') * $level['percentage']) / 100;
         $afterBalance = $user->balance - $discountedAmount;
 
-        if ($afterBalance - $discountedAmount < 0) 
-        {
+        if ($afterBalance - $discountedAmount < 0) {
             return response()->json([
-               'status'=>400,
-                'errors'=> 'You do not have enough balance'
+                'status' => 400,
+                'errors' => 'You do not have enough balance'
             ]);
-        }
-        else
-        {
+        } else {
             $curl = curl_init();
             $url = "https://smartrecharge.ng/api/v2/electric/";
 
@@ -268,40 +267,43 @@ class PurchaseController extends Controller
 
             $curl_url = $url . "?" . http_build_query($get_array);
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $curl_url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-            ));
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => $curl_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                )
+            );
 
-            $response =  curl_exec($curl);
+            $response = curl_exec($curl);
             $result = json_decode($response, true);
             // print_r($result);
-            
+
             if ($result['error_code'] === '1983') {
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
-                    'user_id' => $user_id,
-                    'category_id' => $product['category_id'],     
-                    'product_id' => $product['id'],     
-                    'service_id' => null,     
-                    'amount' => $discountedAmount,     
-                    'reference' => 'SUB'.rand(),     
-                    'api_reference' => '',     
-                    'description' => "₦".number_format($discountedAmount) ." ". $product['name']. " for ". $request->meter_number,     
-                    'after_balance' => $afterBalance,     
-                    'status' => 'success',     
+                    'user' => $user,
+                    'category_id' => $product['category_id'],
+                    'product_id' => $product['id'],
+                    'service_id' => null,
+                    'amount' => $discountedAmount,
+                    'reference' => 'SUB' . rand(),
+                    'api_reference' => '',
+                    'description' => "₦" . number_format($discountedAmount) . " " . $product['name'] . " for " . $request->meter_number,
+                    'after_balance' => $afterBalance,
+                    'status' => 'success',
                 ]);
 
-            }else {
+            } else {
                 return response()->json([
-                    'status'=>400,
-                    'errors'=> 'Something went wrong'
+                    'status' => 400,
+                    'errors' => 'Something went wrong'
                 ]);
             }
         }
@@ -309,7 +311,7 @@ class PurchaseController extends Controller
 
     public function purchaser($request)
     {
-         //Live transactions
+        //Live transactions
         /* if ($result['text_status'] == 'VERIFICATION SUCCESSFUL') {
             return response()->json([
                 'status'=>200,
@@ -323,30 +325,51 @@ class PurchaseController extends Controller
         } */
 
         //Demo transactions
-        $transaction=new Transactions();
-        $transaction->user_id= $request['user_id'];
-        $transaction->category_id = $request['category_id'];            
-        $transaction->product_id= $request['product_id'];
-        $transaction->service_id= $request['service_id'];
-        $transaction->amount = $request['amount'];            
-        $transaction->reference = $request['reference']; 
-        $transaction->api_reference = $request['api_reference']; ;
+
+        $title = '[Debit Transaction] Thank you for your purchase';
+        $customer_details = [
+            'name' => $request['user']['name'],
+            'email' => $request['user']['email'],
+            'title' => $title,
+            'balance' => $request['after_balance']
+        ];
+        $purchase_details = [
+            'reference' => $request['reference'],
+            'price' => number_format($request['amount']),
+            'description' => $request['description'],
+            'order_date' => date('Y-m-d H:i:s')
+        ];
+
+        Mail::to($customer_details['email'])
+        ->send(new TransactionMail($title, $customer_details, $purchase_details));
+        
+
+
+        $transaction = new Transactions();
+        $transaction->user_id = $request['user']['id'];
+        $transaction->category_id = $request['category_id'];
+        $transaction->product_id = $request['product_id'];
+        $transaction->service_id = $request['service_id'];
+        $transaction->amount = $request['amount'];
+        $transaction->reference = $request['reference'];
+        $transaction->api_reference = $request['api_reference'];
+        ;
         $transaction->description = $request['description'];
         $transaction->status = $request['status'];
         $transaction->type = 'debit';
 
-        $user= User::find($request['user_id']); 
+        $user = User::find($request['user']['id']);
         $user->balance = $request['after_balance'];
 
-        if ($transaction->save() && $user->save() ) {
+        if ($transaction->save() && $user->save()) {
             return [
-                'status'=>200,
-                'message'=> 'Transaction successful',
+                'status' => 200,
+                'message' => 'Transaction successful',
             ];
         } else {
             return [
-                'status'=>400,
-                'errors'=> 'Unable to save transaction'
+                'status' => 400,
+                'errors' => 'Unable to save transaction'
             ];
         }
     }

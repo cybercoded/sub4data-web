@@ -56,7 +56,7 @@ const SideBar = () => {
                     </Link>
                     <div className="collapse" id="collapseCategory" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav className="sb-sidenav-menu-nested nav">
-                            <Link className="nav-link" to="/admin/view-category">
+                            <Link className="nav-link" to="/admin/view-users">
                                 View users
                             </Link>
                             <Link className="nav-link" to="/admin/credit-user">
@@ -172,6 +172,22 @@ const SideBar = () => {
                                     <i className="fas fa-database"></i>
                                 </div>
                                 Database Backup
+                            </Link>
+                        </nav>
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/send-notification">
+                                <div className="sb-nav-link-icon">
+                                    <i className="fas fa-bell"></i>
+                                </div>
+                                Send notification
+                            </Link>
+                        </nav>
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/send-message">
+                                <div className="sb-nav-link-icon">
+                                    <i className="fas fa-envelope"></i>
+                                </div>
+                                Send message
                             </Link>
                         </nav>
                     </div>

@@ -21,7 +21,7 @@ function Dashboard(){
             setLoading(false);
         });
 
-        axios.get(`api/view-transactions`).then(res=>{
+        axios.get(`api/view-transactions-admin`).then(res=>{
             if(res.status===200){
                 setTransactionData(res.data.data);
             }

@@ -87,36 +87,89 @@ function EditUser(props){
                                     icon={<img alt='loader' width={50} src={'http://localhost/sub4data-web/react/src/assets/admin/assets/img/loading.gif' }/>} 
                                 />
 
-                                <form onSubmit={handleProfileUpdate}>
-
-                                    <div className='form-group mb-3'>
-                                        <label>Email ID</label>
-                                        <input type='text' name="email"  value={textInput.email} disabled className='form-control' ></input>
-                                        <small className="text-info">Your email cannot be changed</small>
+                                <form className="row" onSubmit={handleProfileUpdate}>
+                                    <div className="col-md-6">
+                                        <div className='form-group mb-3'>
+                                            <label>Email ID</label>
+                                            <input type='text' name="email"  value={textInput.email} onChange={handleInput} className='form-control' ></input>
+                                        </div>
                                     </div>
 
-                                    <div className='form-group mb-3'>
-                                        <label>Full Name</label>
-                                        <input type='text' name="name" onChange={handleInput} value={textInput.name} className='form-control' ></input>
-                                        <small className="text-danger">{textInput.error_list?.name}</small>
+                                     <div className="col-md-6">
+                                        <div className='form-group mb-3'>
+                                            <label>Full Name</label>
+                                            <input type='text' name="name" onChange={handleInput} value={textInput.name} className='form-control' ></input>
+                                        </div>
                                     </div>
 
-                                    <div className="form-group mb-3">
-                                        <label>Status</label>
-                                        <input 
-                                            type="checkbox" 
-                                            checked={textInput.status} 
-                                            onChange={e => 
-                                                setTextIput({...textInput, status: e.target.checked})
-                                            } 
-                                        />
-
-                                        <br /> 
-                                        <small className="text-info">Status checked = Active / Unchecked = Inactive</small>
+                                    <div className="col-md-4">
+                                        <div className="custom-control custom-checkbox mb-3">
+                                            <label>Status</label>
+                                            <input 
+                                                type="checkbox"
+                                                className="custom-control-input" 
+                                                name="status"
+                                                checked={textInput.status} 
+                                                onChange={e => 
+                                                    setTextIput({...textInput, status: e.target.checked})
+                                                } 
+                                            />
+                                            <br />
+                                            <small className="text-info">Status checked = Active / Unchecked = Inactive</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="col-md-4">
+                                        <div className="custom-control custom-checkbox mb-3">
+                                            <label>Role</label>
+                                            <input
+                                                name="role_as"
+                                                type="checkbox"
+                                                className="custom-control-input" 
+                                                checked={textInput.role_as} 
+                                                onChange={e => 
+                                                    setTextIput({...textInput, role_as: e.target.checked})
+                                                } 
+                                            />
+                                            <br />
+                                            <small className="text-info">Status checked = Admin / Unchecked = User</small>
+                                        </div>
                                     </div>
 
-                                    <div className='form-group mb-3'>
-                                        <button type='submit' className='btn btn-primary w-100'>Update User</button>
+                                    <div className="col-md-4">
+                                        <div className="custom-control custom-checkbox mb-3">
+                                            <label>Password reset</label>
+                                            <input
+                                                name="password"
+                                                type="checkbox"
+                                                checked={textInput.password} 
+                                                className="custom-control-input" 
+                                                onChange={(e) => {
+                                                    e.preventDefault();
+                                                    swal({
+                                                        title: 'Are you sure?',
+                                                        text: "Are you sure you want to reset this user's password?",
+                                                        icon: 'warning',
+                                                        buttons: true,
+                                                        dangerMode: true
+                                                    }).then((willDelete) => {
+                                                        if (willDelete) {
+                                                            setTextIput({...textInput, password: true});
+                                                        } else {
+                                                            setTextIput({...textInput, password: false});
+                                                        }
+                                                    });
+                                                }}
+                                            />
+                                            <br />
+                                            <small className="text-info">Password checked = Reset</small>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12">
+                                        <div className='form-group mb-3'>
+                                            <button type='submit' className='btn btn-primary'>Update User</button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

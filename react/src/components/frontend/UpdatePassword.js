@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import ReactjsOverlayLoader from "reactjs-overlay-loader";
 import swal from "sweetalert";
-
+import { Link } from "react-router-dom";
 function UpdatePassword(){
 
     const [loading, setLoading] = useState(false);
@@ -79,6 +79,8 @@ function UpdatePassword(){
                     <div className='form-group mb-3'>
                         <button type='submit' className='btn btn-primary w-100'>Update Password</button>
                     </div>
+
+                    <Link to='/reset'>Forgot my old passpord</Link>
                 </form>
             </div>
         </div>

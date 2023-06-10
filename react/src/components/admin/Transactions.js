@@ -107,7 +107,7 @@ function Transactions(props){
         e.preventDefault();
        
         setLoading(true);
-        axios.post(`/api/filter-transactions`, textInput).then((res) => {
+        axios.post(`/api/filter-transactions${!user_id ? '-admin' : ''}`, textInput).then((res) => {
             if(res.data.status===200)
             {
                 setTransactionData(res.data.data);
@@ -124,7 +124,7 @@ function Transactions(props){
     useEffect(() => {
 
         setLoading(true);
-        axios.post(`/api/filter-transactions`, textInput).then((res) => {
+        axios.post(`/api/filter-transactions${!user_id ? '-admin' : ''}`, textInput).then((res) => {
             if(res.data.status===200)
             {
                 setTransactionData(res.data.data);

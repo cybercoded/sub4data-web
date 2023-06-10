@@ -1,20 +1,36 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import ReactjsOverlayLoader from "reactjs-overlay-loader";
 import swal from "sweetalert";
 
 function UpdatePin(){
-
+    const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [textInput, setTextIput] = useState({
-        oldPin: '1111',
-        newPin: '1111'
+        oldPin: '',
+        newPin: ''
     });
 
     const handleInput = (e) => {
         e.persist();
         setTextIput({ ...textInput, [e.target.name]: e.target.value });
     };
+
+    const handleReset = (e) => {
+        setLoading(true);
+        axios.get(`/api/reset-pin/`).then((res) => {
+            if (res.data.status === 200) {
+                swal('Sucess!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                    history.push(`/user/pin-verify-otp`);
+                });
+            }else {
+                swal('Error!', res.data.errors, 'error');
+            }
+            setLoading(false);
+        });
+    }
+
 
     const handleTransactionPIN = (e) => {        
         e.preventDefault();
@@ -83,6 +99,8 @@ function UpdatePin(){
                     <div className='form-group mb-3'>
                         <button type='submit' className='btn btn-primary w-100'>Update PIN</button>
                     </div>
+
+                    <button type="button" className="btn btn-secondary" onClick={handleReset}>Reset PIN</button>
                 </form>
             </div>
         </div>

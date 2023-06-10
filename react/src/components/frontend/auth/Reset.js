@@ -21,74 +21,27 @@ function Reset() {
         setTextIput({...textInput,[e.target.name]: e.target.value});
     }
 
-   const handleResend = (e)=>{                   
-        setLoading(true);
-        if(loading === false){
-            axios.get(`/api/verify-user-email/${textInput.email}`).then((res) => {
-                Toastify({
-                    text: "OTP was successfully resent to you",
-                    duration: 3000,
-                    className: "info",
-                    close: true,
-                    gravity: "top", // `top` or `bottom`
-                    position: "center", // `left`, `center` or `right`
-                    stopOnFocus: true, // Prevents dismissing of toast on hover
-                    offset: {
-                        y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-                    },
-                }).showToast();
-                setLoading(false);
-            });
-        }
-    }
-    
-    const handleVerify = (e)=>{   
-        e.preventDefault();
-        
-        let otp = $('#otp-input').val();
-
-        setLoading(true);
-        if(otp === ''){
-            swal('Error!', 'Please enter OTP', 'error');
-            return;
-        }
-        if(otp > 5 || otp < 5){
-            swal('Error!', 'OTP must 5 digits', 'error');
-            return;
-        }
-        axios.put(`/api/verify-otp-and-reset/`, otp).then((res) => {
-            if (res.data.status === 200) {
-                swal.stopLoading();
-                swal('Sucess!', `OTP was successfully sent to ${textInput.email}`,'success').then(() => {
-                    history.push(`/new-passpord/${textInput.email}`);
-                });
-            }else {
-                swal('Error!', res.data.errors, 'error');
-            }
-            setLoading(false);
-        });
-    }
-
-    $('#resend-btn').off().on('click', handleResend);
-    $('#verify-btn').off().on('submit', handleVerify);    
-
     const loginSubmit= (e)=>{
         e.preventDefault();
         
         setLoading(true);
         axios.get(`/api/verify-user-email/${textInput.email}`).then((res) => {
-            if (res.data.status === 200) {     
+            if (res.data.status === 200) {
                 axios.put(`/api/password-reset/`, textInput).then((res) => {
-                    if (res.data.status === 200) { 
-                        history.push(`/verify-otp/${textInput.email}`);
+                    if (res.data.status === 200) {
+                        swal('Sucess!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                            history.push(`/verify-otp/${textInput.email}`);
+                        });
                     }else {
                         swal('Error!', res.data.errors, 'error');
                     }
+                    setLoading(false);
                 });
             } else {                
                 swal('Error!', res.data.errors, 'error');
+                setLoading(false);
             }
-            setLoading(false);
+            
         });
     }
 

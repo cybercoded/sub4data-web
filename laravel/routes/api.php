@@ -77,6 +77,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     //Users
     Route::get('view-users', [UserController::class, 'index']);
 
+    Route::post('view-users', [UserController::class, 'index']);
+
     Route::get('get-user/{id}', [UserController::class, 'edit']);
 
     Route::post('update-user/{id}', [UserController::class, 'adminUpdate']);
@@ -86,13 +88,17 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::put('credit-user', [UserController::class, 'adminCreditUser']);
     
     //Transactions
-    Route::get('view-transactions', [TransactionController::class, 'view']);
+    Route::get('view-transactions-admin', [TransactionController::class, 'index']);
 
-    Route::post('filter-transactions', [TransactionController::class, 'adminFilter']);
+    Route::post('filter-transactions-admin', [TransactionController::class, 'adminFilter']);
+
+    Route::post('filter-users', [UserController::class, 'usersFilter']);
 
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    //Users
 
     Route::post('logout', [AuthController::class, 'logout']);
 
@@ -107,6 +113,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('verify-pin/{pin}', [PinController::class, 'verify']);
 
     Route::put('update-pin', [PinController::class, 'update']);
+
+    Route::get('reset-pin', [PinController::class, 'resetPin']);
+
+    Route::put('verify-otp-and-reset-pin', [PinController::class, 'verifyOtpAndResetPin']);
 
     Route::post('smartcard-verification', [VerificationController::class, 'smartnumber']);
 
@@ -142,6 +152,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
 });
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

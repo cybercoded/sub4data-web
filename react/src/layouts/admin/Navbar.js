@@ -33,7 +33,7 @@ const Navbar = (ref) => {
     };
 
     return (
-        <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <nav className="sb-topnav navbar navbar-expand navbar-dark my-bg-primary">
             <Loader isActive={loading} />
             <Link className="navbar-brand ps-3" to="/collections">
                 Home

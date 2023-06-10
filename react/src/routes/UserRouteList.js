@@ -9,6 +9,7 @@ import UpdatePassword from '../components/frontend/UpdatePassword';
 import CreatePin from '../components/frontend/CreatePin';
 import Transactions from '../components/frontend/Transactions';
 import TransferFund from '../components/frontend/TransferFund';
+import VerifyPinOtp from '../components/frontend/VerifyPinOtp';
 
 
 const UserRouteList =[
@@ -24,7 +25,8 @@ const UserRouteList =[
     { path: '/user/update-pin', exact: true, name: 'UpdatePin', component: UpdatePin },
     { path: '/user/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword },
     { path: '/user/transactions', exact: true, name: 'Transactions', component: Transactions },
-    { path: '/user/transfer-fund', exact: true, name: 'TransferFund', component: TransferFund }
+    { path: '/user/transfer-fund', exact: true, name: 'TransferFund', component: TransferFund },
+    { path: '/user/pin-verify-otp', exact: true, name: 'VerifyPinOtp', component: VerifyPinOtp }
 
 ];
 

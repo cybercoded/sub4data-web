@@ -17,6 +17,7 @@ import EditUser from '../components/admin/user/EditUser';
 import CreditUser from '../components/admin/user/CreditUser';
 import DebitUser from '../components/admin/user/DebitUser';
 import Transactions from '../components/admin/Transactions';
+import ViewUsers from '../components/admin/user/ViewUsers';
 
 const AdminRouteList =[
     { path: '/admin', exact: true, name: 'Admin' },
@@ -39,8 +40,10 @@ const AdminRouteList =[
     { path: '/admin/debit-user', exact: true, name: 'DebitUser', component: DebitUser },
     { path: '/admin/transactions', exact: true, name: 'Transactions', component: Transactions },
     { path: '/admin/transactions/:id', exact: true, name: 'Transactions', component: Transactions },
+
+    { path: '/admin/view-users', exact: true, name: 'ViewUsers', component: ViewUsers },
     
-    { path: '/admin/profile', exact: true, name: 'Profile', component: Profile },
+    { path: '/admin/profile', exact: true, name: 'Profile', component: Profile }
 
 ];
 

@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordUpdateMail;
+use App\Mail\VerificationMail;
 use App\Models\Banks;
 use App\Models\Levels;
 use App\Models\PasswordReset;
+use App\Models\TransactionPin;
 use App\Models\Transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Mail;
 
 class UserController extends Controller
 {
@@ -86,13 +90,25 @@ class UserController extends Controller
             ]);
         } else {
             $password_reset = new PasswordReset();
-            $password_reset->token = rand ( 10000 , 99999 );
+            $otp = rand ( 10000 , 99999 );
+            $password_reset->token = $otp;
             $password_reset->email = $request->input('email');
 
             if ($password_reset->save()) {
+                
+                $user = User::where('email', $request->input('email'))->first();
+                $email_title = "[Verification] Password Reset";
+                $email_message = [
+                    'name' => $user->name,
+                    'otp' => $otp,
+                    'title' => $email_title,
+                ];        
+                Mail::to($request->input('email'))
+                ->send(new VerificationMail($email_title, $email_message));
+
                 return response()->json([
                     'status' => 200,
-                    'message' => "OTP updated successfully",
+                    'message' => "OTP sent successfully",
                 ]);
             } else {
                 return response()->json([
@@ -116,11 +132,10 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $password_reset = PasswordReset::where('token', $request->input('otp'))->first();
-            $user= User::where('email',$request->email)->first();
+            $password_reset = PasswordReset::where('token', $request->input('otp'))->first();           
             
-            if($password_reset) {
-
+            if($password_reset) {                
+                $user= User::where('email',$request->email)->first();
                 $seconds = 1800; // 30 mins
                 $time1 = strtotime($password_reset->created_at) + $seconds;
                 if(time() >= $time1) {
@@ -133,27 +148,61 @@ class UserController extends Controller
                 if ($password_reset->email === $user->email) {
                     
                     if($request->password) {
+                        $email_title = "[Update] Password Update";
+                        $email_message = [
+                            'name' => $user->name,
+                            'otp' => $request->input('otp'),
+                            'title' => $email_title
+                        ];        
+                        Mail::to($request->input('email'))
+                        ->send(new PasswordUpdateMail($email_title, $email_message));
+
                         $user->password = Hash::make($request->input('password'));
                         $user->save();
                     }
 
                     return response()->json([
                         'status' => 200,
-                        'message' => "OTP updated successfully",
+                        'message' => "Password reset successfully",
                     ]);
                 } else {
                     return response()->json([
                         'status' => 400,
-                        'errors' => "Incorrect OTP",
+                        'errors' => "User not found",
                     ]);
                 }
             } else {
                 return response()->json([
                    'status' => 404,
-                   'errors' => "User not found",
+                   'errors' => "Incorrect OTP",
                 ]);
     
             }
+        }
+    }
+
+    public function usersFilter(Request $request)
+    {
+        $users = User::query()
+        ->when($request->input('role_as'), fn ($query, $role_as) => $query->where('role_as', '=', $role_as))
+        ->when($request->input('status'), fn ($query, $status) => $query->where('status', '=', $status))
+        ->when($request->input('search'), fn ($query, $search) => $query->where('name', '=', $search))
+        ->when($request->input('search'), fn ($query, $search) => $query->orWhere('email', 'like', '%'. $search .'%'))
+        ->when($request->input('limit'), fn ($query, $limit) => $query->take($limit))
+        ->orderBy('id', 'desc')
+        ->get();
+
+
+        if (count ($users) > 0) {
+            return response()->json([
+                'status' => 200,
+                'users' => $users
+            ]);
+        } else {
+            return response()->json([
+               'status' => 422,
+                'errors' => 'No users found for your filter'
+            ]);
         }
     }
 
@@ -162,6 +211,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
+            'email' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -172,7 +222,13 @@ class UserController extends Controller
         } else {
             $user = User::find($id);
             $user->name = $request->input('name');
+            $user->email = $request->input('email');
             $user->status = $request->input('status') == true ? 1 : 0;
+            $user->role_as = $request->input('role_as') == true ? 1 : 0;
+            
+            if($request->input('password')) {
+                $user->password = Hash::make('password');
+            }
 
             if ($user->save()) {
                 return response()->json([

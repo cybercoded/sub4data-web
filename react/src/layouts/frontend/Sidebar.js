@@ -75,7 +75,11 @@ const SideBar = () => {
                         Others
                     </div>
                     <Link
-                        className="nav-link collapsed"
+                        className={`nav-link  
+                            ${window.location.href.split('/')[4] === 'profile' && 'active'}
+                            ${window.location.href.split('/')[4] === 'update-pin' && 'active'}
+                            ${window.location.href.split('/')[4] === 'update-password' && 'active'}
+                        }`}
                         to="#"
                         data-bs-toggle="collapse"
                         data-bs-target="#collapseSettings"
@@ -92,13 +96,13 @@ const SideBar = () => {
                     </Link>
                     <div className="collapse" id="collapseSettings" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav className="sb-sidenav-menu-nested nav">
-                            <Link className="nav-link" to="/profile">
+                            <Link className="nav-link" to="/user/profile">
                                 Update Profile
                             </Link>
-                            <Link className="nav-link" to="/update-pin">
+                            <Link className="nav-link" to="/user/update-pin">
                                 Update Transaction PIN
                             </Link>
-                            <Link className="nav-link" to="/update-password">
+                            <Link className="nav-link" to="/user/update-password">
                                 Update Password
                             </Link>
                         </nav>
