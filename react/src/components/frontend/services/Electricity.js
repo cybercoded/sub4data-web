@@ -14,7 +14,7 @@ function Electricity(props) {
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
     const [errorList, setErrorList] = useState([]);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         product_id: '',
         service_id: '',
         meter_number: '54150268040',
@@ -23,12 +23,12 @@ function Electricity(props) {
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
    
     const handleProductSelection = (product_id) => {
         setProductActive(product_id);
-        setTextIput({ ...textInput, product_id: product_id.toString(), service_id: '' });
+        setTextInput({ ...textInput, product_id: product_id.toString(), service_id: '' });
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
@@ -42,7 +42,7 @@ function Electricity(props) {
     const handleProductSelection2 = (e) => {
         var product_id = e.target.value;
 
-        setTextIput({ ...textInput, product_id: product_id, service_id: '' });
+        setTextInput({ ...textInput, product_id: product_id, service_id: '' });
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
@@ -90,7 +90,7 @@ function Electricity(props) {
 
     const handleAmount = (e) => {
         var value = e.target.value;
-        setTextIput({ ...textInput, [e.target.name]: value });
+        setTextInput({ ...textInput, [e.target.name]: value });
 
         var response = '';
         if (value < 500) {

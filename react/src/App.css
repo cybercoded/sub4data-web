@@ -1,3 +1,6 @@
+nav:hover a ~ #my-sidebar {
+    display: none;
+}
 #screen-page-text {
     color: white;
     position: absolute;

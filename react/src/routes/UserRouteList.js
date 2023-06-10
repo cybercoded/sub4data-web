@@ -1,15 +1,27 @@
-import Dashboard from '../components/frontend/Dashoard';
-import Profile from '../components/frontend/Profile';
-import Data from '../components/frontend/services/Data';
-import Airtime from '../components/frontend/services/Airtime';
-import Bill from '../components/frontend/services/Bill';
-import Electricity from '../components/frontend/services/Electricity';
-import UpdatePin from '../components/frontend/UpdatePin';
-import UpdatePassword from '../components/frontend/UpdatePassword';
-import CreatePin from '../components/frontend/CreatePin';
-import Transactions from '../components/frontend/Transactions';
-import TransferFund from '../components/frontend/TransferFund';
-import VerifyPinOtp from '../components/frontend/VerifyPinOtp';
+import CreatePin from "../components/frontend/user/CreatePin";
+import Dashboard from "../components/frontend/user/Dashboard";
+import Profile from "../components/frontend/user/Profile";
+
+import Data from "../components/frontend/services/Data";
+
+import Airtime from "../components/frontend/services/Airtime";
+
+import Bill from "../components/frontend/services/Bill";
+
+import Electricity from "../components/frontend/services/Electricity";
+
+import UpdatePin from "../components/frontend/user/UpdatePin";
+
+import UpdatePassword from "../components/frontend/user/UpdatePassword";
+
+import Transactions from "../components/frontend/user/Transactions";
+
+import TransferFund from "../components/frontend/user/TransferFund";
+
+import FundWallet from "../components/frontend/user/FundWallet";
+
+import VerifyPinOtp from "../components/frontend/user/VerifyPinOtp";
+
 
 
 const UserRouteList =[
@@ -26,7 +38,9 @@ const UserRouteList =[
     { path: '/user/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword },
     { path: '/user/transactions', exact: true, name: 'Transactions', component: Transactions },
     { path: '/user/transfer-fund', exact: true, name: 'TransferFund', component: TransferFund },
+    { path: '/user/fund-wallet', exact: true, name: 'FundWallet', component: FundWallet },
     { path: '/user/pin-verify-otp', exact: true, name: 'VerifyPinOtp', component: VerifyPinOtp }
+
 
 ];
 

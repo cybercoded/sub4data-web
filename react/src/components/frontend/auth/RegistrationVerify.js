@@ -4,15 +4,16 @@ import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { Loader } from '../../Global';
 import Toastify from 'toastify-js';
-import $ from 'jquery';
 
-function VerifyOtp(props) {
+function RegistrationVerify(props) {
     const email = props.match.params.email;
     const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [textInput, setTextInput] = useState({
-        email: email,
+        email: localStorage.getItem('registration_emil'),
+        name: localStorage.getItem('registration_name'),
+        password: localStorage.getItem('registration_password'),
         otp:'',
     });
 
@@ -24,7 +25,7 @@ function VerifyOtp(props) {
    const handleResend = (e)=>{                   
         setLoading(true);
         if(loading === false){
-            axios.get(`/api/verify-user-email/${textInput.email}`).then((res) => {
+            axios.put(`/api/send-otp/`, textInput).then((res) => {
                 if (res.data.status === 200) {
                     Toastify({
                         text: "OTP was resent to you",
@@ -37,7 +38,7 @@ function VerifyOtp(props) {
                         offset: {
                             y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
-                    }).showToast();
+                    }).showToast();                    
                 }else {
                     swal('Error!', res.data.errors, 'error');
                 }
@@ -59,16 +60,26 @@ function VerifyOtp(props) {
         }
         
         setLoading(true);
-        axios.put(`/api/verify-otp-and-reset/`, textInput).then((res) => {
+        axios.put(`/api/verify-registration-otp`, textInput).then((res) => {
             if (res.data.status === 200) {
-                swal.stopLoading();
-                swal('Success!', "OTP verified",'success').then(() => {
-                    history.push(`/new-password/${textInput.email}/${textInput.otp}`);
+                axios.get('/sanctum/csrf-cookie').then(() => {
+                    axios.post(`/api/register`, textInput).then(res=>{
+                        if(res.data.status===200){
+                            localStorage.setItem("auth_token",res.data.token);
+                            localStorage.setItem("auth_name",res.data.username);
+                            swal("success",res.data.message,"success").then(()=>{
+                                history.push("/user/dashboard");
+                            })
+                        }else{
+                            swal('Error!', res.data.validation_errors, 'error');
+                        }
+                        setLoading(false);
+                    })
                 });
             }else {
                 swal('Error!', res.data.errors, 'error');
+                setLoading(false);
             }
-            setLoading(false);
         });
     }
 
@@ -81,7 +92,7 @@ function VerifyOtp(props) {
                         <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
-                            <h4>Enter OTP Sent to <span className='text-info'> {email}</span></h4>
+                            <h4>Enter OTP Sent to <span className='text-info'> {textInput.email}</span></h4>
                         </Link>                        
                         <div className='card-body'>
                             <form onSubmit={handleVerify}>
@@ -109,4 +120,4 @@ function VerifyOtp(props) {
 }
 
 
-export default VerifyOtp;
+export default RegistrationVerify;

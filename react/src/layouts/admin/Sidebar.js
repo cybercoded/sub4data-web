@@ -1,8 +1,10 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Loader } from '../../components/Global';
+import $ from 'jquery';
+
 const SideBar = () => {
 
     const [loading, setLoading] = useState();
@@ -16,10 +18,16 @@ const SideBar = () => {
             }
             setLoading(false);
         });
-    };    
+    };
+
+    $('nav#my-admin-sidebar').on('click', function() {
+        if ($(window).width() < 768) {
+            document.body.classList.remove('sb-sidenav-toggled');            
+        }
+    });
 
     return (
-        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="sidenavAccordion" data-bs-target="#navbarDropdown2">
+        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="my-admin-sidebar" data-bs-target="#navbarDropdown2">
             <Loader isActive={loading} />
             <div className="sb-sidenav-menu">
                 <div className="nav">
@@ -32,19 +40,19 @@ const SideBar = () => {
                     </Link>
                     <Link className="nav-link" to="/admin/transactions">
                         <div className="sb-nav-link-icon">
-                            <i className="fas fa-tachometer-alt"></i>
+                            <i className="fas fa-list"></i>
                         </div>
                         Transactions
                     </Link>
 
-                    <div className="sb-sidenav-menu-heading">Others</div>
+                    <div className="sb-sidenav-menu-heading">User Settings</div>
                     <Link
                         className="nav-link collapsed"
                         to="#"
                         data-bs-toggle="collapse"
-                        data-bs-target="#collapseCategory"
+                        data-bs-target="#collapseUsers"
                         aria-expanded="false"
-                        aria-controls="collapseCategory"
+                        aria-controls="collapseUsers"
                     >
                         <div className="sb-nav-link-icon">
                             <i className="fa fa-users"></i>
@@ -54,7 +62,7 @@ const SideBar = () => {
                             <i className="fas fa-angle-down"></i>
                         </div>
                     </Link>
-                    <div className="collapse" id="collapseCategory" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    <div className="collapse" id="collapseUsers" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav className="sb-sidenav-menu-nested nav">
                             <Link className="nav-link" to="/admin/view-users">
                                 View users
@@ -149,6 +157,7 @@ const SideBar = () => {
                         </nav>
                     </div>
 
+                    <div className="sb-sidenav-menu-heading">Admin Settings</div>
                     <Link
                         className="nav-link collapsed"
                         to="#"
@@ -172,14 +181,6 @@ const SideBar = () => {
                                     <i className="fas fa-database"></i>
                                 </div>
                                 Database Backup
-                            </Link>
-                        </nav>
-                        <nav className="sb-sidenav-menu-nested nav">
-                            <Link className="nav-link" to="/admin/send-notification">
-                                <div className="sb-nav-link-icon">
-                                    <i className="fas fa-bell"></i>
-                                </div>
-                                Send notification
                             </Link>
                         </nav>
                         <nav className="sb-sidenav-menu-nested nav">

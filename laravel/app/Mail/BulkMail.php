@@ -7,9 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TransactionMail extends Mailable
+class BulkMail extends Mailable
 {
     use Queueable, SerializesModels;
+
     public  $title;
     public $body;
     /**
@@ -20,7 +21,7 @@ class TransactionMail extends Mailable
     public function __construct($title, $body) {
         //
         $this->title = $title;
-        $this->body= $body;
+        $this->body = $body;
     }
 
 
@@ -32,6 +33,6 @@ class TransactionMail extends Mailable
     public function build()
     {
         return $this->subject($this->title)
-        ->view('mail.transaction');
+        ->view('mail.bulk_mail');
     }
 }

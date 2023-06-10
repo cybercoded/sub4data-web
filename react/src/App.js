@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Switch, useHistory } from 'react-router-dom';
+import { HashRouter, Switch, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import AdminPrivateRoute from './AdminPrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -51,7 +51,7 @@ function App() {
     
     return (
         <div className="App">
-            <BrowserRouter>
+            <HashRouter>
                 <Switch>
                     <PublicRoute path="/" name="Index" />
                 </Switch>
@@ -61,7 +61,7 @@ function App() {
                 <Switch>
                     <AdminPrivateRoute path="/admin" name="Admin" />
                 </Switch>
-            </BrowserRouter>
+            </HashRouter>
         </div>
     );
 }

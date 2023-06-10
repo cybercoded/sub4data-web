@@ -9,13 +9,13 @@ function ViewUsers(props){
     const [usersData, setUsersData] = useState([]);
 
     const [loading, setLoading] = useState(true);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         limit: 10,
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleUsersFilter = (e) => {
@@ -44,7 +44,7 @@ function ViewUsers(props){
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
-                setTextIput({...textInput, limit: textInput.limit + 10 });
+                setTextInput({...textInput, limit: textInput.limit + 10 });
                 setLoading(false);
             }
         });
@@ -61,7 +61,7 @@ function ViewUsers(props){
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
-                setTextIput({...textInput, limit: textInput.limit + 10 });
+                setTextInput({...textInput, limit: textInput.limit + 10 });
                 setLoading(false);
             }
         });

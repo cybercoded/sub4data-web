@@ -2,19 +2,19 @@ import React, {useState} from 'react';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Loader } from '../Global';
+import { Loader } from '../../Global';
 import Toastify from 'toastify-js';
 
 function VerifyPinOtp(props) {
     const [loading, setLoading] = useState(false);
     const history=useHistory();
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         otp:''
     });
 
     const handleInput = (e)=>{
         e.persist();
-        setTextIput({...textInput,[e.target.name]: e.target.value});
+        setTextInput({...textInput,[e.target.name]: e.target.value});
     }
 
    const handleResend = (e)=>{                   
@@ -54,7 +54,7 @@ function VerifyPinOtp(props) {
         axios.put(`/api/verify-otp-and-reset-pin/`, textInput).then((res) => {
             if (res.data.status === 200) {
                 swal.stopLoading();
-                swal('Sucess!', "OTP successfully verified",'success').then(() => {
+                swal('Success!', "OTP successfully verified",'success').then(() => {
                     history.push(`/user/create-pin`);
                 });
             }else {

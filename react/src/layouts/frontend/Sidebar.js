@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory} from 'react-router-dom';
-import swal from 'sweetalert';
-const SideBar = () => {
+import { Link } from 'react-router-dom';
 
-    const history = useHistory();
+import $ from 'jquery';
+
+const SideBar = () => {
 
     const [categoryList, setCategoryList] = useState([]);
 
@@ -16,8 +16,14 @@ const SideBar = () => {
         })
     },[]);
 
+    $('#my-sidebar').on('click', function() {
+        if ($(window).width() < 768) {
+            document.body.classList.remove('sb-sidenav-toggled');            
+        }
+    });
+
     return (
-        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light">
+        <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id='my-sidebar'>
             <div className="sb-sidenav-menu">
                 <div className="nav">
                     <Link className={`nav-link ${ 'dashboard' === window.location.href.split('/')[4] && 'active' }`} to="/user/dashboard">

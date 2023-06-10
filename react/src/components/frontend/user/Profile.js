@@ -6,14 +6,14 @@ import swal from "sweetalert";
 function Profile(){
 
     const [loading, setLoading] = useState(true);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         name: '',
         email: ''
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleProfileUpdate = (e) => {        
@@ -23,7 +23,7 @@ function Profile(){
         axios.post(`api/update-user`, {name: textInput.name}).then((res) => {
             if (res.data.status === 200) {
 
-                swal('Sucess!', 'Profile data successfully updated', 'success').then(() => {
+                swal('Success!', 'Profile data successfully updated', 'success').then(() => {
                     window.location.reload();
                 });
 
@@ -37,7 +37,7 @@ function Profile(){
     useEffect(() => {
         axios.get(`api/user/`).then((res) => {
             if (res.status === 200) {
-                setTextIput(res.data);
+                setTextInput(res.data);
             }
             setLoading(false);
         });

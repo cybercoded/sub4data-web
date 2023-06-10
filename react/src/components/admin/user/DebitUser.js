@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 function DebitUser(){
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         user_id: '',
         email: '',
         amount: ''
@@ -15,7 +15,7 @@ function DebitUser(){
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleCreditTransaction = (e) => {        
@@ -44,7 +44,7 @@ function DebitUser(){
                         setLoading(true);
                         axios.put(`/api/credit-user/`, {...textInput, user_id: res.data.data.user_id}).then((res2) => {
                             if (res2.data.status === 200) {
-                                swal('Sucess!', `${res.data.data.name} was successfully debited`,'success').then((result) => {
+                                swal('Success!', `${res.data.data.name} was successfully debited`,'success').then((result) => {
                                     history.push('/admin/dashboard');
                                 });
                             }

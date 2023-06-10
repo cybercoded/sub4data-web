@@ -11,7 +11,7 @@ function AddProduct() {
     const [errorList, setError] = useState([]);
     const [productInput, setProduct] = useState({
         category_id: '3',
-        slug: '',
+        api_product_id: '',
         name: '',
         description: '',
         meta_title: '',
@@ -50,7 +50,7 @@ function AddProduct() {
 
         formData.append('image', picture.image);
         formData.append('category_id', productInput.category_id);
-        formData.append('slug', productInput.slug);
+        formData.append('api_product_id', productInput.api_product_id);
         formData.append('name', productInput.name);
         formData.append('description', productInput.description);
         formData.append('meta_title', productInput.meta_title);
@@ -105,20 +105,6 @@ function AddProduct() {
                             <li className="nav-item" role="presentation">
                                 <button
                                     className="nav-link"
-                                    id="seotags-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#seotags"
-                                    type="button"
-                                    role="tab"
-                                    aria-controls="seotags"
-                                    aria-selected="false"
-                                >
-                                    SEO Tags
-                                </button>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                                <button
-                                    className="nav-link"
                                     id="otherdetails-tab"
                                     data-bs-toggle="tab"
                                     data-bs-target="#otherdetails"
@@ -159,15 +145,15 @@ function AddProduct() {
                                     <small className="text-danger">{errorList?.category_id}</small>
                                 </div>
                                 <div className="form-group mb-3">
-                                    <label>Slug</label>
+                                    <label>api_product_id</label>
                                     <input
                                         type="text"
-                                        name="slug"
+                                        name="api_product_id"
                                         onChange={handleInput}
-                                        value={productInput.slug}
+                                        value={productInput.api_product_id}
                                         className="form-control"
                                     />
-                                    <small className="text-danger">{errorList?.slug}</small>
+                                    <small className="text-danger">{errorList?.api_product_id}</small>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>Name</label>
@@ -188,37 +174,6 @@ function AddProduct() {
                                         value={productInput.description}
                                         className="form-control"
                                     ></textarea>
-                                </div>
-                            </div>
-                            <div className="tab-pane card-body border fade" id="seotags" role="tabpanel" aria-labelledby="seotags-tab">
-                                <div className="form-group mb-3">
-                                    <label>Meta Title</label>
-                                    <input
-                                        type="text"
-                                        name="meta_title"
-                                        onChange={handleInput}
-                                        value={productInput.meta_title}
-                                        className="form-control"
-                                    />
-                                    <small className="text-danger">{errorList?.meta_title}</small>
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Meta Keywords (Optional)</label>
-                                    <textarea
-                                        name="meta_keyword"
-                                        onChange={handleInput}
-                                        value={productInput.meta_keyword}
-                                        className="form-control"
-                                    />
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Meta Description (Optional)</label>
-                                    <textarea
-                                        name="meta_description"
-                                        onChange={handleInput}
-                                        value={productInput.meta_description}
-                                        className="form-control"
-                                    />
                                 </div>
                             </div>
                             <div

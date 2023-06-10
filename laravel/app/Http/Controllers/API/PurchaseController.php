@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\TransactionMail;
+use App\Models\Activities;
 use App\Models\Category;
 use App\Models\Levels;
 use App\Models\Product;
@@ -331,9 +332,7 @@ class PurchaseController extends Controller
             'name' => $request['user']['name'],
             'email' => $request['user']['email'],
             'title' => $title,
-            'balance' => $request['after_balance']
-        ];
-        $purchase_details = [
+            'balance' => $request['after_balance'],
             'reference' => $request['reference'],
             'price' => number_format($request['amount']),
             'description' => $request['description'],
@@ -341,9 +340,13 @@ class PurchaseController extends Controller
         ];
 
         Mail::to($customer_details['email'])
-        ->send(new TransactionMail($title, $customer_details, $purchase_details));
-        
+        ->send(new TransactionMail($title, $customer_details));
 
+        Activities::create([
+            'type' => $request->type,
+            'title' => $request->title,
+            'log' => serialize($customer_details)
+        ]);
 
         $transaction = new Transactions();
         $transaction->user_id = $request['user']['id'];

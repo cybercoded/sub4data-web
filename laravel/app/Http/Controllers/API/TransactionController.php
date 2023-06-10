@@ -26,7 +26,7 @@ class TransactionController extends Controller
             'data' => $transactions
         ]);
     }
-    
+
     public function filter(Request $request)
     {
         $transactions = Transactions::query()

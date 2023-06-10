@@ -7,21 +7,21 @@ import swal from "sweetalert";
 function UpdatePin(){
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         oldPin: '',
         newPin: ''
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleReset = (e) => {
         setLoading(true);
         axios.get(`/api/reset-pin/`).then((res) => {
             if (res.data.status === 200) {
-                swal('Sucess!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
                     history.push(`/user/pin-verify-otp`);
                 });
             }else {
@@ -59,7 +59,7 @@ function UpdatePin(){
                         setLoading(true);
                         axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
                             if (res.data.status === 200) {
-                                swal('Sucess!', 'Transaction PIN successfully updated','success').then((result) => {
+                                swal('Success!', 'Transaction PIN successfully updated','success').then((result) => {
                                     window.location.reload();
                                 });
                             }

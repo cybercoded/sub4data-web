@@ -2,12 +2,12 @@ import axios from "axios";
 import React, { useState } from "react";
 import swal from "sweetalert";
 import { useHistory } from "react-router-dom";
-import { Loader } from "../Global";
+import { Loader } from "../../Global";
 
 function TransferFund(){
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         user_id: '',
         email: '',
         amount: ''
@@ -15,7 +15,7 @@ function TransferFund(){
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleDebitTransaction = (e) => {        
@@ -44,7 +44,7 @@ function TransferFund(){
                         setLoading(true);
                         axios.put(`/api/transfer-fund/`, {...textInput, user_id: res.data.data.user_id}).then((res2) => {
                             if (res2.data.status === 200) {
-                                swal('Sucess!', `${res.data.data.name} was successfully credited`,'success').then((result) => {
+                                swal('Success!', `${res.data.data.name} was successfully credited`,'success').then((result) => {
                                     history.push('/user/dashboard');
                                 });
                             } else {
@@ -82,7 +82,7 @@ function TransferFund(){
                     </div>
 
                     <div className='form-group mb-3'>
-                        <button type='submit' className='btn btn-primary w-100'>Credit User</button>
+                        <button type='submit' className='btn btn-primary w-100'>Proceed</button>
                     </div>
                 </form>
             </div>

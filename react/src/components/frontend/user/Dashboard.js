@@ -1,16 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import ReactjsOverlayLoader from 'reactjs-overlay-loader';
 import Toastify from 'toastify-js';
-import PerfectScrollbar from "react-perfect-scrollbar";
 import swal from 'sweetalert';
+import { Loader } from '../../Global';
 
 function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [categoryList, setCategoryList] = useState([]);
     const [transactionList, setTransactionList] = useState([]);
     const [userDataList, setUserDataList] = useState([]);
+    const [notification, setNotification] = useState('');
 
     useEffect(() => {
         axios.get(`api/view-category`).then((res) => {
@@ -23,6 +23,12 @@ function Dashboard() {
         axios.get(`api/view-transactions`).then((res) => {
             if (res.data.status === 200) {
                 setTransactionList(res.data.data);
+            }
+        });
+
+        axios.get(`api/get-notification`).then((res) => {
+            if (res.data.status === 200) {
+                setNotification(res.data.notification);
             }
         });
 
@@ -58,7 +64,7 @@ function Dashboard() {
         console.log(dataArray);
         var table = document.createElement("div");
         table.style.textAlign = "left";
-        table.innerHTML = (`<table class="table align-left table-striped table-hover">
+        table.innerHTML = (`<table className="table align-left table-striped table-hover">
             <body style="align-text: left;">
                 <tr>
                     <th>Refernce</th>
@@ -105,8 +111,7 @@ function Dashboard() {
 
 
     return (
-        <div className="container mt-5">
-            <ReactjsOverlayLoader isActive={loading} />
+        <div className="container mt-2">           
 
             <div className='mb-4'>
                 <div className='row'>
@@ -121,47 +126,55 @@ function Dashboard() {
                                 </div>
                                 <div className='h1 font-weight-bold my-3'>₦{ new Intl.NumberFormat().format(userDataList.balance)}</div>
                                 <div className='mt-3'>
-                                    <button className='btn btn-sm btn-secondary' style={{marginRight: 5}}>
+                                    <Link to="/user/fund-wallet" className='btn btn-sm btn-secondary' style={{marginRight: 5}}>
                                         Fund wallet
-                                    </button>
-                                    <button className='btn btn-sm btn-light'>
-                                        Transer fund
-                                    </button>
+                                    </Link>
+                                    <Link to="/user/transfer-fund" className='btn btn-sm btn-light'>
+                                        Transfer fund
+                                    </Link>
                                 </div>                                        
                             </div>
                         </div>
                     </div>
-                    <div className='col-md-9'>
-                        <PerfectScrollbar>
-                            <div style={{width: 300 * userDataList.banks?.length || 0}}>
-                                { userDataList.banks?.map((item, index) => (
-                                        <div key={index} className='card bg-light float-start' style={{minWidth: 280, marginRight: 10}}>
-                                            <div className="card-body">
-                                                <div className='text-muted mb-2'>
-                                                    {item.bank_name}
-                                                    <span className="float-end">
-                                                        {item.account_name}
-                                                        <i className="fa fa-chevron-circle-right"></i>
-                                                    </span>
-                                                </div>
-                                                <div className='h1 font-weight-bold my-3'>{item.account_number}</div>
-                                                <div className='mt-3'>
-                                                    <button className='btn btn-sm btn-primary' onClick={() => handleCopy(item.account_number)} >
-                                                        Copy Account Number
-                                                    </button>
-                                                </div>                                        
+                        { userDataList.banks?.map((item, index) => (
+                                <div className='col-md-3 mb-2 d-none d-md-block'>
+                                    <div key={index} className='card bg-light'>
+                                        <div className="card-body py-4">
+                                            <div className='text-muted mb-2'>
+                                                {item.bank_name}
+                                                <span className="float-end">
+                                                    {item.account_name}
+                                                    <i className="fa fa-chevron-circle-right"></i>
+                                                </span>
                                             </div>
+                                            <div className='h3 font-weight-bold my-3'>{item.account_number}</div>
+                                            <div className='mt-3'>
+                                                <button className='btn btn-sm btn-primary' onClick={() => handleCopy(item.account_number)} >
+                                                    Copy Account Number
+                                                </button>
+                                            </div>                                        
                                         </div>
-                                    ))
-                                }
-                            </div>
-                        </PerfectScrollbar>
-                    </div>
+                                    </div>
+                                </div>
+                            ))
+                        }
                 </div>
             </div>
+
+            <section>
+                <div className="alert alert-primary d-flex alert-dismissible fade show" role="alert">
+                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div style={{height: 70, overflow: 'hidden', marginLeft: 10}}>
+                        <strong>{notification.title}</strong>  {notification.message} 
+                        <span className='btn btn-secondary btn-sm' onClick={() => swal(notification.message) } style={{position: 'absolute', bottom: 10, right: 10}}>Read more</span>
+                    </div>
+                    
+                </div>
+            </section>
+            <Loader isActive={loading} />
             
             <div>
-                <div className="text-muted h5 mb-4 pb-4 border-bottom">
+                <div className="text-muted h5 mb-4 pb-4 border-bottom d-none d-md-block">
                     <b>Instant</b> | Services
                 </div>
                 <div className="row">
@@ -178,7 +191,7 @@ function Dashboard() {
                                             alt={item.name}
                                         />
                                     </div>
-                                    <div className="h5">{item.name}</div>
+                                    <div className="h5 text-truncate">{item.name}</div>
                                 </div>
                             </div>
                         </Link>
@@ -186,7 +199,7 @@ function Dashboard() {
                 </div>
             </div>
 
-            <div className='mt-2'>
+            <div className='mt-2 d-none d-md-block'>
                 <div className="text-muted h5 mb-4 pb-4 border-bottom">
                     <b>Transaction</b> records |
                     <Link to="/user/transactions" className="btn btn-primary btn-sm float-end">All Transaction</Link>

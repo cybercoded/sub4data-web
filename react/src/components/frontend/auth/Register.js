@@ -10,7 +10,7 @@ function Register() {
     const [loading, setLoading] = useState(false);
 
     const history=useHistory();
-    const [registerInput, setRegister] = useState({
+    const [textInput, setRegister] = useState({
         name:'',
         email:'',
         password: '',
@@ -18,35 +18,63 @@ function Register() {
 
     const handleInput = (e)=>{
         e.persist();
-        setRegister({...registerInput,[e.target.name]: e.target.value})
+        setRegister({...textInput,[e.target.name]: e.target.value})
 
+    }
+
+    const passwordValidator = (passwordInputValue) => {
+        const uppercaseRegExp   = /(?=.*?[A-Z])/;
+        const lowercaseRegExp   = /(?=.*?[a-z])/;
+        const digitsRegExp      = /(?=.*?[0-9])/;
+        const specialCharRegExp = /(?=.*?[#?!@$%^&+_*-])/;
+        const minLengthRegExp   = /.{8,}/;
+        const passwordLength =      passwordInputValue.length;
+        const uppercasePassword =   uppercaseRegExp.test(passwordInputValue);
+        const lowercasePassword =   lowercaseRegExp.test(passwordInputValue);
+        const digitsPassword =      digitsRegExp.test(passwordInputValue);
+        const specialCharPassword = specialCharRegExp.test(passwordInputValue);
+        const minLengthPassword =   minLengthRegExp.test(passwordInputValue);
+        let errMsg = "";
+        if(passwordLength===0){
+            errMsg="Password is empty";
+        }else if(!uppercasePassword){
+            errMsg="At least one Uppercase";
+        }else if(!lowercasePassword){
+            errMsg="At least one Lowercase";
+        }else if(!digitsPassword){
+            errMsg="At least one digit";
+        }else if(!specialCharPassword){
+            errMsg="At least one Special Characters";
+        }else if(!minLengthPassword){
+            errMsg="At least minumum of 8 characters";
+        }
+
+        return errMsg;
     }
 
     const registerSubmit= (e)=>{
         e.preventDefault();
 
-        const data={
-            name: registerInput.name,
-            email: registerInput.email,
-            password: registerInput.password,
-            error_list:[]
+        if( passwordValidator(textInput.password) !== "" ) {
+            swal('Error!', passwordValidator(textInput.password), 'error');
+            return;
         }
-
         setLoading(true);
-        axios.get('/sanctum/csrf-cookie').then(response => {
-            axios.post(`/api/register`,data).then(res=>{
-                if(res.data.status===200){
-                    localStorage.setItem("auth_token",res.data.token);
-                    localStorage.setItem("auth_name",res.data.username);
-                    swal("success",res.data.message,"success");
-                    history.push("/user/dashboard");
-                }else{
-                    
-                    setRegister({ ...registerInput, error_list:res.data.validation_errors})
-                }
-                setLoading(false);
-            })
-        });
+        axios.put(`/api/send-otp/`, textInput).then((res) => {
+            if (res.data.status === 200) {
+                
+                localStorage.setItem("registration_name",textInput.name);
+                localStorage.setItem("registration_email",textInput.email);
+                localStorage.setItem("registration_password",textInput.password);
+
+                swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                    history.push(`/verify-registration`);
+                });
+            }else {
+                swal('Error!', res.data.errors, 'error');
+            }
+            setLoading(false);
+        });        
     }
 
     return(
@@ -63,18 +91,18 @@ function Register() {
                             <form onSubmit={registerSubmit}>
                                 <div className='form-group mb-3'>
                                     <label>Full Name</label>
-                                    <input type='' name="name" onChange={handleInput} value={registerInput.name} className='form-control' ></input>
-                                    <span>{registerInput.error_list?.name}</span>
+                                    <input type='text' name="name" onChange={handleInput} value={textInput.name} className='form-control' required ></input>
+                                    <span>{textInput.error_list?.name}</span>
                                 </div>
                                 <div className='form-group mb-3'>
                                     <label>Email ID</label>
-                                    <input type='' name="email" onChange={handleInput} value={registerInput.email} className='form-control' ></input>
-                                    <span>{registerInput.error_list?.email}</span>
+                                    <input type='email' name="email" onChange={handleInput} value={textInput.email} className='form-control' required ></input>
+                                    <span>{textInput.error_list?.email}</span>
                                 </div>
                                 <div className='form-group mb-3'>
                                     <label>Password</label>
-                                    <input type='password' name="password" onChange={handleInput} value={registerInput.password} className='form-control' ></input>
-                                    <span>{registerInput.error_list?.password}</span>
+                                    <input type='password' name="password" onChange={handleInput} value={textInput.password} className='form-control' required ></input>
+                                    <span>{textInput.error_list?.password}</span>
                                 </div>
                                 
                                 <div className='form-group mb-3'>
@@ -84,7 +112,7 @@ function Register() {
                                 <div className='form-group mb-3'>
                                     <div className="text-center mb-0">
                                         <div>Already have an account? <Link to="/login">Login</Link> or </div>
-                                        <div>you forgotten passwor? <Link to="/reset">Reset</Link></div>
+                                        <div>you forgotten password? <Link to="/reset">Reset</Link></div>
                                     </div>
                                 </div>
                             </form>

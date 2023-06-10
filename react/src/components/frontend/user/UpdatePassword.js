@@ -6,14 +6,14 @@ import { Link } from "react-router-dom";
 function UpdatePassword(){
 
     const [loading, setLoading] = useState(false);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         oldPassword: '',
         newPassword: ''
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleTransactionPassword = (e) => {        
@@ -39,7 +39,7 @@ function UpdatePassword(){
                         setLoading(true);
                         axios.put(`/api/update-password/`, {password: textInput.newPassword}).then((res) => {
                             if (res.data.status === 200) {
-                                swal('Sucess!', 'Transaction Password successfully updated','success').then((result) => {
+                                swal('Success!', 'Transaction Password successfully updated','success').then((result) => {
                                     window.location.reload();
                                 });
                             }
@@ -80,7 +80,7 @@ function UpdatePassword(){
                         <button type='submit' className='btn btn-primary w-100'>Update Password</button>
                     </div>
 
-                    <Link to='/reset'>Forgot my old passpord</Link>
+                    <Link to='/reset'>Forgot my old password</Link>
                 </form>
             </div>
         </div>

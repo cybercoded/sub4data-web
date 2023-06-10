@@ -12,7 +12,7 @@ function Data(props) {
     const [serviceList, setServiceList] = useState([]);
     const [errorList, setErrorList] = useState([]);
 
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         product_id: '',
         service_id: '',
         phone: '',
@@ -21,13 +21,13 @@ function Data(props) {
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
 
     };
 
     const handleProductSelection = (product_id) => {
         setProductActive(product_id);
-        setTextIput({ ...textInput, product_id: product_id.toString(), service_id: '' });
+        setTextInput({ ...textInput, product_id: product_id.toString(), service_id: '' });
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
@@ -42,7 +42,7 @@ function Data(props) {
     const handleProductSelection2 = (e) => {
         var product_id = e.target.value;
 
-        setTextIput({ ...textInput, product_id: product_id, service_id: '' });
+        setTextInput({ ...textInput, product_id: product_id, service_id: '' });
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
@@ -58,7 +58,7 @@ function Data(props) {
     const handleServiceSelection = (e) => {
         var amount = e.target.selectedOptions[0].dataset.amount;
         var value = e.target.value;
-        setTextIput({ ...textInput, amount: amount, service_id: value });
+        setTextInput({ ...textInput, amount: amount, service_id: value });
 
     };
 

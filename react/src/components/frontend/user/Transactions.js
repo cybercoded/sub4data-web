@@ -3,7 +3,7 @@ import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import $ from "jquery";
-import { Loader } from "../Global";
+import { Loader } from "../../Global";
 
 function Transactions(props){
     const user_id = props.match.params.id;
@@ -13,14 +13,14 @@ function Transactions(props){
     const [serviceList, setServiceList] = useState([]);
 
     const [loading, setLoading] = useState(true);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         limit: 10,
         user_id: user_id
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleTransactionFilter = (e) => {
@@ -92,7 +92,7 @@ function Transactions(props){
     const handleProductSelection = (e) => {
         var product_id = e.target.value;
 
-        setTextIput({ ...textInput, product_id: product_id });
+        setTextInput({ ...textInput, product_id: product_id });
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
@@ -114,7 +114,7 @@ function Transactions(props){
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
-                setTextIput({...textInput, limit: textInput.limit + 10 });
+                setTextInput({...textInput, limit: textInput.limit + 10 });
                 setLoading(false);
             }
         });
@@ -139,7 +139,7 @@ function Transactions(props){
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
-                setTextIput({...textInput, limit: textInput.limit + 10 });
+                setTextInput({...textInput, limit: textInput.limit + 10 });
                 setLoading(false);
             }
         });

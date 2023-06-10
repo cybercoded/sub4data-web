@@ -2,18 +2,18 @@ import axios from "axios";
 import React, { useState } from "react";
 import swal from "sweetalert";
 import { useHistory } from 'react-router-dom';
-import { Loader } from "../Global";
+import { Loader } from "../../Global";
 
 function CreatePin(){
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         newPin: ''
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleTransactionPIN = (e) => {        
@@ -32,7 +32,7 @@ function CreatePin(){
         
         axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
             if (res.data.status === 200) {
-                swal('Sucess!', 'Transaction PIN successfully created','success').then((result) => {
+                swal('Success!', 'Transaction PIN successfully created','success').then((result) => {
                    history.push('/user/dashboard');
                 });
             }

@@ -11,7 +11,7 @@ function EditProduct(props) {
     const [loading, setLoading] = useState(true);
     const [productInput, setProduct] = useState({
         category_id: '',
-        slug: '',
+        api_product_id: '',
         name: '',
         description: '',
         meta_title: '',
@@ -67,12 +67,9 @@ function EditProduct(props) {
 
         formData.append('image', picture.image);
         formData.append('category_id', productInput.category_id);
-        formData.append('slug', productInput.slug);
+        formData.append('api_product_id', productInput.api_product_id);
         formData.append('name', productInput.name);
         formData.append('description', productInput.description);
-        formData.append('meta_title', productInput.meta_title);
-        formData.append('meta_keyword', productInput.meta_keyword);
-        formData.append('meta_description', productInput.meta_description);
 
         const product_id = props.match.params.id;
 
@@ -121,20 +118,7 @@ function EditProduct(props) {
                                     Home
                                 </button>
                             </li>
-                            <li className="nav-item" role="presentation">
-                                <button
-                                    className="nav-link"
-                                    id="seotags-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#seotags"
-                                    type="button"
-                                    role="tab"
-                                    aria-controls="seotags"
-                                    aria-selected="false"
-                                >
-                                    SEO Tags
-                                </button>
-                            </li>
+
                             <li className="nav-item" role="presentation">
                                 <button
                                     className="nav-link"
@@ -177,15 +161,15 @@ function EditProduct(props) {
                                     <small className="text-danger">{errorList?.category_id}</small>
                                 </div>
                                 <div className="form-group mb-3">
-                                    <label>Slug</label>
+                                    <label>api_product_id</label>
                                     <input
                                         type="text"
-                                        name="slug"
+                                        name="api_product_id"
                                         onChange={handleInput}
-                                        value={productInput.slug}
+                                        value={productInput.api_product_id}
                                         className="form-control"
                                     />
-                                    <small className="text-danger">{errorList?.slug}</small>
+                                    <small className="text-danger">{errorList?.api_product_id}</small>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>Name</label>
@@ -208,37 +192,7 @@ function EditProduct(props) {
                                     ></textarea>
                                 </div>
                             </div>
-                            <div className="tab-pane card-body border fade" id="seotags" role="tabpanel" aria-labelledby="seotags-tab">
-                                <div className="form-group mb-3">
-                                    <label>Meta Title</label>
-                                    <input
-                                        type="text"
-                                        name="meta_title"
-                                        onChange={handleInput}
-                                        value={productInput.meta_title}
-                                        className="form-control"
-                                    />
-                                    <small className="text-danger">{errorList?.meta_title}</small>
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Meta Keywords</label>
-                                    <textarea
-                                        name="meta_keyword"
-                                        onChange={handleInput}
-                                        value={productInput.meta_keyword}
-                                        className="form-control"
-                                    />
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Meta Description</label>
-                                    <textarea
-                                        name="meta_description"
-                                        onChange={handleInput}
-                                        value={productInput.meta_description}
-                                        className="form-control"
-                                    />
-                                </div>
-                            </div>
+
                             <div
                                 className="tab-pane card-body border fade"
                                 id="otherdetails"

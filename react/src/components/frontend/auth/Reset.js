@@ -11,14 +11,14 @@ function Reset() {
     const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const [loading, setLoading] = useState(false);
     const history=useHistory();
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         email:'',
         otp:'',
     });
 
     const handleInput = (e)=>{
         e.persist();
-        setTextIput({...textInput,[e.target.name]: e.target.value});
+        setTextInput({...textInput,[e.target.name]: e.target.value});
     }
 
     const loginSubmit= (e)=>{
@@ -29,7 +29,7 @@ function Reset() {
             if (res.data.status === 200) {
                 axios.put(`/api/password-reset/`, textInput).then((res) => {
                     if (res.data.status === 200) {
-                        swal('Sucess!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                        swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
                             history.push(`/verify-otp/${textInput.email}`);
                         });
                     }else {

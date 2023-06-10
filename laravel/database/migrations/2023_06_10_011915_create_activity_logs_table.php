@@ -17,7 +17,7 @@ class CreateActivityLogsTable extends Migration
             $table->id();
             $table->string('type');
             $table->string('title');
-            $table->field('log');
+            $table->longText('log');
             $table->timestamps();
         });
     }

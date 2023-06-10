@@ -18,11 +18,11 @@ class ProductController extends Controller
         ]);
     }
     public function store(Request $request){
-        
+
         $validator=Validator::make($request->all(),[
             'name'=>'required|string',
             'category_id'=>'required|integer',
-            'slug'=>'required|string',
+            'api_product_id'=>'required|string',
             'meta_title'=>'required',
         ]);
 
@@ -34,14 +34,14 @@ class ProductController extends Controller
         }else{
             $product=new Product();
             $product->category_id= $request->input('category_id');
-            $product->slug= $request->input('slug');
+            $product->api_product_id= $request->input('api_product_id');
             $product->name= $request->input('name');
             $product->description= $request->input('description');
             $product->meta_title= $request->input('meta_title');
             $product->meta_keyword= $request->input('meta_keyword');
             $product->meta_description= $request->input('meta_description');
             $product->status= $request->input('status') ==true? 1:0;
-            
+
 
             if($request->hasFile('image')){
                 $file=$request->file('image');
@@ -51,7 +51,7 @@ class ProductController extends Controller
                 $file->move($path,$fileName);
                 $product->image=$path.$fileName;
             }
-            
+
             $product->save();
             return response()->json([
                 'status'=>200,
@@ -67,7 +67,7 @@ class ProductController extends Controller
         $validator=Validator::make($request->all(),[
             'category_id'=>'required|integer',
             'name'=>'required|string',
-            'slug'=>'required|string',
+            'api_product_id'=>'required|string',
             'meta_title'=>'required',
         ]);
 
@@ -81,14 +81,14 @@ class ProductController extends Controller
             if($product)
             {
                 $product->category_id= $request->input('category_id');
-                $product->slug= $request->input('slug');
+                $product->api_product_id= $request->input('api_product_id');
                 $product->name= $request->input('name');
                 $product->description= $request->input('description');
                 $product->meta_title= $request->input('meta_title');
                 $product->meta_keyword= $request->input('meta_keyword');
                 $product->meta_description= $request->input('meta_description');
                 $product->status= $request->input('status') ==true? 1:0;
-                
+
 
                 if($request->hasFile('image')){
                     $path=$product->image;
@@ -103,7 +103,7 @@ class ProductController extends Controller
                     $file->move($new_path,$fileName);
                     $product->image=$new_path.$fileName;
                 }
-                
+
                 $product->update();
                 return response()->json([
                     'status'=>200,
@@ -126,7 +126,7 @@ class ProductController extends Controller
 
         if($product)
         {
-            
+
             return response()->json([
                 'status'=>200,
                 'product'=>$product
@@ -146,7 +146,7 @@ class ProductController extends Controller
         $products=Product::where('category_id', $id)->get();
 
         if($products)
-        {            
+        {
             return response()->json([
                 'status'=>200,
                 'product'=>$products

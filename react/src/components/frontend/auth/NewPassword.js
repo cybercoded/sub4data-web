@@ -12,7 +12,7 @@ function NewPassword(props) {
     const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const [loading, setLoading] = useState(false);
     const history=useHistory();
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         password:'kunleY247++',
         password2:'',
         email: email,
@@ -21,7 +21,7 @@ function NewPassword(props) {
 
     const handleInput = (e)=>{
         e.persist();
-        setTextIput({...textInput,[e.target.name]: e.target.value});
+        setTextInput({...textInput,[e.target.name]: e.target.value});
 
     }
 
@@ -58,7 +58,7 @@ function NewPassword(props) {
     const handleSubmit= (e)=>{
         e.preventDefault();
 
-        if( passwordValidator(textInput.password) === " " ) {
+        if( passwordValidator(textInput.password) !== "" ) {
             swal('Error!', passwordValidator(textInput.password), 'error');
             return;
         }
@@ -70,7 +70,7 @@ function NewPassword(props) {
         setLoading(true);
         axios.put(`/api/verify-otp-and-reset/`, textInput).then((res) => {
             if (res.data.status === 200) {
-                swal('Sucess!', `You can proceed to login`,'success').then(() => {
+                swal('Success!', `You can proceed to login`,'success').then(() => {
                     history.push('/login');
                 });
             }else {
@@ -88,7 +88,7 @@ function NewPassword(props) {
         
         axios.put(`/api/password-reset/`, {email: email}).then((res) => {
             if (res.data.status === 200) {
-                swal('Sucess!', `OTP was successfully sent to ${email}`,'success').then(() => {
+                swal('Success!', `OTP was successfully sent to ${email}`,'success').then(() => {
                     history.push('/admin/dashboard');
                 });
             }else {

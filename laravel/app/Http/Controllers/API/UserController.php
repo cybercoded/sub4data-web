@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\PasswordUpdateMail;
+use App\Mail\TransactionMail;
 use App\Mail\VerificationMail;
+use App\Models\Activities;
 use App\Models\Banks;
 use App\Models\Levels;
 use App\Models\PasswordReset;
@@ -24,6 +26,18 @@ class UserController extends Controller
         return response()->json([
             'status' => 200,
             'users' => $users
+        ]);
+    }
+
+    public function getNotification()
+    {
+        $notification = Activities::where('type', 'bulk_email')->first();
+        return response()->json([
+            'status' => 200,
+            'notification' => [
+                'title' => $notification['title'],
+                'message' => unserialize($notification['log'])['message']
+            ]
         ]);
     }
 
@@ -95,14 +109,14 @@ class UserController extends Controller
             $password_reset->email = $request->input('email');
 
             if ($password_reset->save()) {
-                
+
                 $user = User::where('email', $request->input('email'))->first();
                 $email_title = "[Verification] Password Reset";
                 $email_message = [
                     'name' => $user->name,
                     'otp' => $otp,
                     'title' => $email_title,
-                ];        
+                ];
                 Mail::to($request->input('email'))
                 ->send(new VerificationMail($email_title, $email_message));
 
@@ -118,7 +132,7 @@ class UserController extends Controller
             }
         }
     }
-    
+
     public function verifyOtpAndResetPassword(Request $request)
     {
 
@@ -132,9 +146,9 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $password_reset = PasswordReset::where('token', $request->input('otp'))->first();           
-            
-            if($password_reset) {                
+            $password_reset = PasswordReset::where('token', $request->input('otp'))->first();
+
+            if($password_reset) {
                 $user= User::where('email',$request->email)->first();
                 $seconds = 1800; // 30 mins
                 $time1 = strtotime($password_reset->created_at) + $seconds;
@@ -144,18 +158,24 @@ class UserController extends Controller
                         'errors' => "OTP has expired after 30 Minutes",
                     ]);
                 }
-            
+
                 if ($password_reset->email === $user->email) {
-                    
+
                     if($request->password) {
                         $email_title = "[Update] Password Update";
                         $email_message = [
                             'name' => $user->name,
                             'otp' => $request->input('otp'),
                             'title' => $email_title
-                        ];        
+                        ];
                         Mail::to($request->input('email'))
                         ->send(new PasswordUpdateMail($email_title, $email_message));
+
+                        Activities::create([
+                            'type' => $request->type,
+                            'title' => $request->title,
+                            'log' => serialize($email_message)
+                        ]);
 
                         $user->password = Hash::make($request->input('password'));
                         $user->save();
@@ -176,10 +196,50 @@ class UserController extends Controller
                    'status' => 404,
                    'errors' => "Incorrect OTP",
                 ]);
-    
+
             }
         }
     }
+
+    public function verifyRegistrationOtp(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $password_reset = PasswordReset::where('token', $request->input('otp'))
+            ->where('email', $request->input('email'))->first();
+
+            if($password_reset) {
+                $seconds = 1800; // 30 mins
+                $time1 = strtotime($password_reset->created_at) + $seconds;
+                if(time() >= $time1) {
+                    return response()->json([
+                        'status' => 422,
+                        'errors' => "OTP has expired after 30 Minutes",
+                    ]);
+                }
+                return response()->json([
+                    'status' => 200,
+                    'errors' => "OTP was verified successfully"
+                ]);
+            } else {
+                return response()->json([
+                   'status' => 404,
+                   'errors' => "Incorrect OTP",
+                ]);
+
+            }
+        }
+    }
+
 
     public function usersFilter(Request $request)
     {
@@ -225,7 +285,7 @@ class UserController extends Controller
             $user->email = $request->input('email');
             $user->status = $request->input('status') == true ? 1 : 0;
             $user->role_as = $request->input('role_as') == true ? 1 : 0;
-            
+
             if($request->input('password')) {
                 $user->password = Hash::make('password');
             }
@@ -263,7 +323,7 @@ class UserController extends Controller
             $to = User::find($request->user_id);
             $afterBalance = $from->balance - $request->input('amount');
 
-            if ($afterBalance - $request->input('amount') < 0) 
+            if ($afterBalance - $request->input('amount') < 0)
             {
                 return response()->json([
                 'status'=>400,
@@ -277,21 +337,21 @@ class UserController extends Controller
                 ]);
             }
             else {
-               
+
                 $transactionTo=new Transactions();
                 $transactionFrom=new Transactions();
-                
+
                 $transactionTo->user_id= $to->id;
-                $transactionTo->amount = $request->amount;            
-                $transactionTo->reference = 'TRANS'.rand(); 
+                $transactionTo->amount = $request->amount;
+                $transactionTo->reference = 'TRANS'.rand();
                 $transactionTo->description = "₦".number_format($request->amount) ." sent from ". $from->name;
                 $transactionTo->type = 'credit_transfer';
                 $transactionTo->status = 'success';
-                
-                
+
+
                 $transactionFrom->user_id= $from->id;
-                $transactionFrom->amount = $request->amount;            
-                $transactionFrom->reference = 'TRANS'.rand(); 
+                $transactionFrom->amount = $request->amount;
+                $transactionFrom->reference = 'TRANS'.rand();
                 $transactionFrom->description = "₦".number_format($request->amount) ." sent to ". $to->name;
                 $transactionFrom->type = 'debit_transfer';
                 $transactionFrom->status = 'success';
@@ -299,6 +359,52 @@ class UserController extends Controller
                 $to->balance = $to->balance + $request->amount;
 
                 $from->balance = $from->balance - $request->amount;
+
+                //mailing receivers
+                $title = '[Credit Transaction] Transfer';
+                $customer_details = [
+                    'name' => $from->name,
+                    'email' => $from->email,
+                    'title' => $title,
+                    'balance' => $from->balance,
+                    'reference' =>  $transactionFrom->reference,
+                    'price' => number_format($request['amount']),
+                    'description' => $from->description,
+                    'order_date' => date('Y-m-d H:i:s')
+                ];
+
+                Mail::to($customer_details['email'])
+                ->send(new TransactionMail($title, $customer_details));
+
+                //Recording receiver
+                Activities::create([
+                    'type' => $request->type,
+                    'title' => $request->title,
+                    'log' => serialize($customer_details)
+                ]);
+
+                //mailing sender
+                $title = '[Debit Transaction] Transfer';
+                $customer_details = [
+                    'name' => $to->name,
+                    'email' => $to->email,
+                    'title' => $title,
+                    'balance' => $to->balance,
+                    'reference' =>  $transactionTo->reference,
+                    'price' => number_format($request['amount']),
+                    'description' => $to->description,
+                    'order_date' => date('Y-m-d H:i:s')
+                ];
+
+                Mail::to($customer_details['email'])
+                ->send(new TransactionMail($title, $customer_details));
+
+                //Recording sender
+                Activities::create([
+                    'type' => $request->type,
+                    'title' => $request->title,
+                    'log' => serialize($customer_details)
+                ]);
 
 
                 if ($to->save() && $from->save() && $transactionTo->save() && $transactionFrom->save()) {
@@ -335,18 +441,18 @@ class UserController extends Controller
             $to = User::find($request->user_id);
             $transactionTo=new Transactions();
             $transactionFrom=new Transactions();
-            
+
             $transactionTo->user_id= $to->id;
-            $transactionTo->amount = $request->amount;            
-            $transactionTo->reference = 'TRANS'.rand(); 
+            $transactionTo->amount = $request->amount;
+            $transactionTo->reference = 'TRANS'.rand();
             $transactionTo->description = "₦".number_format($request->amount) ." debit from ". $from->name;
             $transactionTo->type = 'credit_transfer';
             $transactionTo->status = 'success';
-            
-            
+
+
             $transactionFrom->user_id= $from->id;
-            $transactionFrom->amount = $request->amount;            
-            $transactionFrom->reference = 'TRANS'.rand(); 
+            $transactionFrom->amount = $request->amount;
+            $transactionFrom->reference = 'TRANS'.rand();
             $transactionFrom->description = "₦".number_format($request->amount) ." debit to ". $to->name;
             $transactionFrom->type = 'debit_transfer';
             $transactionFrom->status = 'success';
@@ -354,6 +460,52 @@ class UserController extends Controller
             $to->balance = $to->balance - $request->amount;
 
             $from->balance = $from->balance + $request->amount;
+
+            //mailing receivers
+            $title = '[Credit Transaction] Transfer';
+            $customer_details = [
+                'name' => $from->name,
+                'email' => $from->email,
+                'title' => $title,
+                'balance' => $from->balance,
+                'reference' =>  $transactionFrom->reference,
+                'price' => number_format($request['amount']),
+                'description' => $from->description,
+                'order_date' => date('Y-m-d H:i:s')
+            ];
+
+            Mail::to($customer_details['email'])
+            ->send(new TransactionMail($title, $customer_details));
+
+            //Recording receiver
+            Activities::create([
+                'type' => $request->type,
+                'title' => $request->title,
+                'log' => serialize($customer_details)
+            ]);
+
+            //mailing sender
+            $title = '[Debit Transaction] Transfer';
+            $customer_details = [
+                'name' => $to->name,
+                'email' => $to->email,
+                'title' => $title,
+                'balance' => $to->balance,
+                'reference' =>  $transactionTo->reference,
+                'price' => number_format($request['amount']),
+                'description' => $to->description,
+                'order_date' => date('Y-m-d H:i:s')
+            ];
+
+            Mail::to($customer_details['email'])
+            ->send(new TransactionMail($title, $customer_details));
+
+            //Recording sender
+            Activities::create([
+                'type' => $request->type,
+                'title' => $request->title,
+                'log' => serialize($customer_details)
+            ]);
 
 
             if ($to->save() && $from->save() && $transactionTo->save() && $transactionFrom->save()) {
@@ -369,7 +521,7 @@ class UserController extends Controller
             }
         }
     }
-    
+
 
     public function verifyPassword($password)
     {

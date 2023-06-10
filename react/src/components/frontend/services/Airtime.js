@@ -11,7 +11,7 @@ function Airtime(props) {
     const [discount, setDiscount   ] = useState();
     const [productList, setProductList] = useState([]);
     const [errorList, setErrorList] = useState([]);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         product_id: '',
         phone: '',
         amount: ''
@@ -19,13 +19,13 @@ function Airtime(props) {
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
 
     };
 
     const handleAmount = (e) => {
         var value = e.target.value;
-        setTextIput({ ...textInput, [e.target.name]: value });
+        setTextInput({ ...textInput, [e.target.name]: value });
 
         var response = '';
         if (value < 50) {
@@ -129,7 +129,7 @@ function Airtime(props) {
                                     className={`btn btn-outline-primary ${productActive === item.id && 'active'}`}
                                     onClick={() => {
                                         setProductActive(item.id);
-                                        setTextIput({...textInput, product_id: item.id });
+                                        setTextInput({...textInput, product_id: item.id });
                                         console.log(textInput.product_id);
                                     }}
                                     style={{ margin: 2 }}

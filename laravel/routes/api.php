@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\API\ActivityController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
@@ -32,7 +34,11 @@ Route::get('verify-user-email/{email}', [UserController::class, 'adminVerifyEmai
 
 Route::put('password-reset', [UserController::class, 'resetPassword']);
 
+Route::put('send-otp', [AuthController::class, 'sendOTP']);
+
 Route::put('verify-otp-and-reset', [UserController::class, 'verifyOtpAndResetPassword']);
+
+Route::put('verify-registration-otp', [UserController::class, 'verifyRegistrationOtp']);
 
 Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
@@ -86,13 +92,19 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
 
     Route::put('credit-user', [UserController::class, 'adminCreditUser']);
-    
+
     //Transactions
     Route::get('view-transactions-admin', [TransactionController::class, 'index']);
 
     Route::post('filter-transactions-admin', [TransactionController::class, 'adminFilter']);
 
     Route::post('filter-users', [UserController::class, 'usersFilter']);
+
+    Route::post('send-bulk-email', [AdminController::class, 'bulkEmail']);
+
+    Route::get('get-activities', [ActivityController::class, 'index']);
+
+    Route::post('filter-activities', [ActivityController::class, 'filter']);
 
 });
 
@@ -151,6 +163,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('transfer-fund', [UserController::class, 'adminCreditUser']);
 
     Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
+
+    Route::get('get-notification', [UserController::class, 'getNotification']);
 });
 
 

@@ -7,13 +7,13 @@ import swal from "sweetalert";
 function EditUser(props){
     const user_id = props.match.params.id;
     const [loading, setLoading] = useState(true);
-    const [textInput, setTextIput] = useState({
+    const [textInput, setTextInput] = useState({
         status: false
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextIput({ ...textInput, [e.target.name]: e.target.value });
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
     const handleProfileUpdate = (e) => {        
@@ -24,7 +24,7 @@ function EditUser(props){
         axios.post(`api/update-user/${textInput.id}`, textInput).then((res) => {
             if (res.data.status === 200) {
 
-                swal('Sucess!', 'Profile data successfully updated', 'success').then(() => {
+                swal('Success!', 'Profile data successfully updated', 'success').then(() => {
                     window.location.reload();
                 });
 
@@ -40,7 +40,7 @@ function EditUser(props){
         setLoading(true);
         axios.get(`api/get-user/${user_id}`).then((res) => {
             if (res.data.status === 200) {
-                setTextIput(res.data.data);
+                setTextInput(res.data.data);
             }
             setLoading(false);
         });
@@ -111,7 +111,7 @@ function EditUser(props){
                                                 name="status"
                                                 checked={textInput.status} 
                                                 onChange={e => 
-                                                    setTextIput({...textInput, status: e.target.checked})
+                                                    setTextInput({...textInput, status: e.target.checked})
                                                 } 
                                             />
                                             <br />
@@ -128,7 +128,7 @@ function EditUser(props){
                                                 className="custom-control-input" 
                                                 checked={textInput.role_as} 
                                                 onChange={e => 
-                                                    setTextIput({...textInput, role_as: e.target.checked})
+                                                    setTextInput({...textInput, role_as: e.target.checked})
                                                 } 
                                             />
                                             <br />
@@ -154,9 +154,9 @@ function EditUser(props){
                                                         dangerMode: true
                                                     }).then((willDelete) => {
                                                         if (willDelete) {
-                                                            setTextIput({...textInput, password: true});
+                                                            setTextInput({...textInput, password: true});
                                                         } else {
-                                                            setTextIput({...textInput, password: false});
+                                                            setTextInput({...textInput, password: false});
                                                         }
                                                     });
                                                 }}
