@@ -7,11 +7,10 @@ import Toastify from 'toastify-js';
 
 function RegistrationVerify(props) {
     const email = props.match.params.email;
-    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [textInput, setTextInput] = useState({
-        email: localStorage.getItem('registration_emil'),
+        email: localStorage.getItem('registration_email'),
         name: localStorage.getItem('registration_name'),
         password: localStorage.getItem('registration_password'),
         otp:'',
@@ -62,19 +61,17 @@ function RegistrationVerify(props) {
         setLoading(true);
         axios.put(`/api/verify-registration-otp`, textInput).then((res) => {
             if (res.data.status === 200) {
-                axios.get('/sanctum/csrf-cookie').then(() => {
-                    axios.post(`/api/register`, textInput).then(res=>{
-                        if(res.data.status===200){
-                            localStorage.setItem("auth_token",res.data.token);
-                            localStorage.setItem("auth_name",res.data.username);
-                            swal("success",res.data.message,"success").then(()=>{
-                                history.push("/user/dashboard");
-                            })
-                        }else{
-                            swal('Error!', res.data.validation_errors, 'error');
-                        }
-                        setLoading(false);
-                    })
+                axios.post(`/api/register`, textInput).then(res=>{
+                    if(res.data.status===200){
+                        localStorage.setItem("auth_token",res.data.token);
+                        localStorage.setItem("auth_name",res.data.username);
+                        swal("success",res.data.message,"success").then(()=>{
+                            history.push("/user/dashboard");
+                        })
+                    }else{
+                        swal('Error!', res.data.validation_errors, 'error');
+                    }
+                    setLoading(false);
                 });
             }else {
                 swal('Error!', res.data.errors, 'error');
@@ -91,7 +88,7 @@ function RegistrationVerify(props) {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
+                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
                             <h4>Enter OTP Sent to <span className='text-info'> {textInput.email}</span></h4>
                         </Link>                        
                         <div className='card-body'>

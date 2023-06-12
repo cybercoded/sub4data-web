@@ -6,7 +6,6 @@ import { Loader } from '../../Global';
 
 function Login() {
 
-    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [loginInput, setLogin] = useState({
@@ -58,7 +57,7 @@ function Login() {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
+                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
                             <h4>Login your account</h4>
                         </Link>                        
                         <div className='card-body'>

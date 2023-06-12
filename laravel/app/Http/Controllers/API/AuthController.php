@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\VerificationMail;
+use App\Models\Banks;
 use App\Models\User;
 use Dotenv\Exception\ValidationException;
 use App\Models\PasswordReset;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -28,11 +30,58 @@ class AuthController extends Controller
                 'validation_errors'=>$validator->errors()
             ]);
         }else{
+
+            $authorization  = base64_encode('MK_TEST_URAHPHAT77:78DLT2XQ6KFM2HYVRSAUPSR9LEHHWMAE');
+
+            $response = Http::withHeaders([
+                'Authorization' => "Basic ".$authorization,
+                'Content-Type' => 'application/json'
+            ])->post('https://api.monnify.com/api/v1/auth/login/');
+
+            $jsonData = $response->json();
+            $accessToken = $jsonData['responseBody']['accessToken'];
+
+            $apiPostArray = [
+                'accountReference' => strtoupper(substr($request->name, 0, 5)).time(),
+                'accountName' => $request->name,
+                'currencyCode' => 'NGN',
+                'contractCode' => '0426346591',
+                'customerEmail' => 'adexgyh@gmail.com',
+                'customerName' => $request->name,
+                'bvn' => '22161748511',
+                'getAllAvailableBanks' => false,
+                'preferredBanks' => ['50515','035', '058', '232']
+            ];
+            /* "232": "Sterling bank",
+            "035": "Wema bank",
+            "50515": "Moniepoint Microfinance Bank",
+            "058": "GTBank", */
+
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer ".$accessToken,
+                'Content-Type' => 'application/json'
+            ])->post('https://sandbox.monnify.com/api/v1/bank-transfer/reserved-accounts', $apiPostArray);
+
+            $jsonData = $response->json();
+            $result = $jsonData['responseBody'];
+
+            // print_r($jsonData);
             $user=User::create([
                 'name'=>$request->name,
                 'email'=>$request->email,
                 'password'=>Hash::make($request->password)
             ]);
+
+            if($jsonData['responseMessage'] == 'success' && $user){
+
+                Banks::create([
+                    'user_id' => $user->id,
+                    'bank_name'=>$result['bankName'],
+                    'account_name'=>$result['accountName'],
+                    'account_number'=>$result['accountNumber'],
+                    'reference'=>$result['accountReference'],
+                ]);
+            }
 
             $token=$user->createToken($user->email. '_Token')->plainTextToken;
             return response()->json([

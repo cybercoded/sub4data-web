@@ -157,6 +157,60 @@ const SideBar = () => {
                         </nav>
                     </div>
 
+                    <Link
+                        className="nav-link collapsed"
+                        to="#"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseApis"
+                        aria-expanded="false"
+                        aria-controls="collapseApis"
+                    >
+                        <div className="sb-nav-link-icon">
+                            <i class="fa fa-arrow-up-right-from-square"></i>
+                        </div>
+                            APIs
+                        <div className="sb-sidenav-collapse-arrow">
+                            <i className="fas fa-angle-down"></i>
+                        </div>
+                    </Link>
+                    <div className="collapse" id="collapseApis" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/view-apis">
+                                View APIs
+                            </Link>
+                            <Link className="nav-link" to="/admin/add-api">
+                                Add API
+                            </Link>
+                        </nav>
+                    </div>
+
+                    <Link
+                        className="nav-link collapsed"
+                        to="#"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseLevels"
+                        aria-expanded="false"
+                        aria-controls="collapseLevels"
+                    >
+                        <div className="sb-nav-link-icon">
+                            <i class="fa fa-sitemap"></i>
+                        </div>
+                            Levels 
+                        <div className="sb-sidenav-collapse-arrow">
+                            <i className="fas fa-angle-down"></i>
+                        </div>
+                    </Link>
+                    <div className="collapse" id="collapseLevels" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/view-levels">
+                                View Levels
+                            </Link>
+                            <Link className="nav-link" to="/admin/add-level">
+                                Add Level
+                            </Link>
+                        </nav>
+                    </div>
+
                     <div className="sb-sidenav-menu-heading">Admin Settings</div>
                     <Link
                         className="nav-link collapsed"
@@ -193,10 +247,6 @@ const SideBar = () => {
                         </nav>
                     </div>
                 </div>
-            </div>
-            <div className="sb-sidenav-footer">
-                {/* <div className="small">Logged in as:</div>
-                        Start Bootstrap */}
             </div>
         </nav>
     );

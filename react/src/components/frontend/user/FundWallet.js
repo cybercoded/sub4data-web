@@ -55,13 +55,13 @@ function FundWallet() {
                             </div>
                             <i className="fa fa-angle-right text-muted"></i>
                         </div>
-                        <div role="button" className="p-4 rounded d-flex bg-light text-decoration-none mb-3 justify-content-between align-items-center">
+                        <Link role="button" to="/user/merchant-pay" className="p-4 rounded d-flex bg-light text-decoration-none mb-3 justify-content-between align-items-center">
                             <div>
                                 <div className='my-text-primary font-weight-bold h5'>ATM Card</div>
                                 <div className='text-muted'>Fund your wallet using ATM Card</div>
                             </div>
                             <i className="fa fa-angle-right text-muted"></i>
-                        </div>
+                        </Link>
                     </div>
             </div>
             

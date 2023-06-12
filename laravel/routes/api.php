@@ -12,7 +12,10 @@ use App\Http\Controllers\API\ServicesController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VerificationController;
+use App\Http\Controllers\ApisController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\MonnifyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +42,11 @@ Route::put('send-otp', [AuthController::class, 'sendOTP']);
 Route::put('verify-otp-and-reset', [UserController::class, 'verifyOtpAndResetPassword']);
 
 Route::put('verify-registration-otp', [UserController::class, 'verifyRegistrationOtp']);
+
+Route::get('verify-monnify-merchant-payment', [MonnifyController::class, 'verifyPay']);
+
+Route::get('verify-monnify-atm-payment', [MonnifyController::class, 'verifyAtmPayment']);
+
 
 Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
@@ -106,6 +114,19 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::post('filter-activities', [ActivityController::class, 'filter']);
 
+    //Levels
+    Route::get('view-levels', [LevelController::class, 'index']);
+    Route::get('get-level/{id}', [LevelController::class, 'get']);
+    Route::post('update-level/{id}', [LevelController::class, 'update']);
+    Route::post('store-level', [LevelController::class, 'store']);
+
+    //Apis
+    Route::get('view-apis', [ApisController::class, 'index']);
+    Route::get('get-api/{id}', [ApisController::class, 'get']);
+    Route::post('update-api/{id}', [ApisController::class, 'update']);
+    Route::post('store-api', [ApisController::class, 'store']);
+    Route::delete('delete-api/{id}', [ApisController::class, 'delete']);
+
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -146,6 +167,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('user-discount', [UserController::class, 'getDiscount']);
 
+    Route::get('get-monnify-charges', [UserController::class, 'getMonnifyCharges']);
+
     //Purchases
     Route::post('airtime-purchase', [PurchaseController::class, 'airtime']);
 
@@ -165,6 +188,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
 
     Route::get('get-notification', [UserController::class, 'getNotification']);
+
+    Route::post('merchant-pay', [MonnifyController::class, 'initializePay']);
+
 });
 
 

@@ -89,8 +89,6 @@ function Dashboard(){
                 </div>
             </section>
 
-            <Loader isActive={loading} />
-
             <section className="row">
                 <div className="col-md-4">
                     <div className="card">
@@ -139,6 +137,7 @@ function Dashboard(){
                     </div>
                 </div>
             </section>
+            <Loader isActive={loading} />
         </div>
     );
 }

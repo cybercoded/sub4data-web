@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Mail\TransactionMail;
 use App\Models\Activities;
+use App\Models\Api;
 use App\Models\Category;
 use App\Models\Levels;
 use App\Models\Product;
@@ -12,6 +13,7 @@ use App\Models\Services;
 use App\Models\Transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Mail;
 
 class PurchaseController extends Controller
@@ -34,36 +36,16 @@ class PurchaseController extends Controller
                 'errors' => 'You do not have enough balance'
             ]);
         } else {
-            $curl = curl_init();
-            $url = "https://smartrecharge.ng/api/v2/airtime/";
-
-            $get_array = array(
-                'api_key' => '5yu3wd7jord06w4hvu54cadhju0y6f5bgs1',
+            $api = Api::where('api_name', 'smartrecharge')->first();
+            $response = Http::get($api['api_url'].'/airtime', [
+                'api_key' => $api['api_key'],
                 'product_code' => $product['api_product_id'],
                 'phone' => $request->phone,
-                'amount' => $request->amount,
-            );
+                'amount' => $request->amount
+            ]);
 
-            // print_r($get_array);
+            $result = $response->json();
 
-            $curl_url = $url . "?" . http_build_query($get_array);
-
-            curl_setopt_array(
-                $curl,
-                array(
-                    CURLOPT_URL => $curl_url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                )
-            );
-
-            $response = curl_exec($curl);
-            $result = json_decode($response, true);
             // print_r($result);
 
             if ($result['error_code'] === '1983') {
@@ -108,36 +90,15 @@ class PurchaseController extends Controller
                 'errors' => 'You do not have enough balance'
             ]);
         } else {
-            $curl = curl_init();
-            $url = "https://smartrecharge.ng/api/v2/datashare/";
 
-            $get_array = array(
-                'api_key' => '5yu3wd7jord06w4hvu54cadhju0y6f5bgs1',
+            $api = Api::where('api_name', 'smartrecharge')->first();
+            $response = Http::get($api['api_url'].'/datashare', [
+                'api_key' => $api['api_key'],
                 'product_code' => $service['api_service_id'],
-                'phone' => $request->phone,
-            );
+                'phone' => $request->phone
+            ]);
 
-            // print_r($get_array);
-
-            $curl_url = $url . "?" . http_build_query($get_array);
-
-            curl_setopt_array(
-                $curl,
-                array(
-                    CURLOPT_URL => $curl_url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                )
-            );
-
-            $response = curl_exec($curl);
-            $result = json_decode($response, true);
-            // print_r($result);
+            $result = $response->json();
 
             if ($result['error_code'] === '1983') {
                 $my_purchaser = new PurchaseController;
@@ -179,37 +140,15 @@ class PurchaseController extends Controller
                 'errors' => 'You do not have enough balance'
             ]);
         } else {
-
-            $curl = curl_init();
-            $url = "https://smartrecharge.ng/api/v2/tv/";
-
-            $get_array = array(
-                'api_key' => '5yu3wd7jord06w4hvu54cadhju0y6f5bgs1',
+            $api = Api::where('api_name', 'smartrecharge')->first();
+            $response = Http::get($api['api_url'].'/tv', [
+                'api_key' => $api['api_key'],
                 'product_code' => $service['api_service_id'],
-                'smartcard_number' => $request->smartcard_number,
-            );
+                'smartcard_number' => $request->smartcard_number
+            ]);
 
-            // print_r($get_array);
+            $result = $response->json();
 
-            $curl_url = $url . "?" . http_build_query($get_array);
-
-            curl_setopt_array(
-                $curl,
-                array(
-                    CURLOPT_URL => $curl_url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                )
-            );
-
-            $response = curl_exec($curl);
-            $result = json_decode($response, true);
-            // print_r($result);
 
             if ($result['error_code'] === '1983') {
 
@@ -254,37 +193,15 @@ class PurchaseController extends Controller
                 'errors' => 'You do not have enough balance'
             ]);
         } else {
-            $curl = curl_init();
-            $url = "https://smartrecharge.ng/api/v2/electric/";
-
-            $get_array = array(
-                'api_key' => '5yu3wd7jord06w4hvu54cadhju0y6f5bgs1',
+            $api = Api::where('api_name', 'smartrecharge')->first();
+            $response = Http::get($api['api_url'].'/electric', [
+                'api_key' => $api['api_key'],
                 'product_code' => $service['api_service_id'],
                 'meter_number' => $request->meter_number,
-                'amount' => $request->amount,
-            );
+                'amount' => $request->amount
+            ]);
 
-            // print_r($get_array);
-
-            $curl_url = $url . "?" . http_build_query($get_array);
-
-            curl_setopt_array(
-                $curl,
-                array(
-                    CURLOPT_URL => $curl_url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                )
-            );
-
-            $response = curl_exec($curl);
-            $result = json_decode($response, true);
-            // print_r($result);
+            $result = $response->json();
 
             if ($result['error_code'] === '1983') {
                 $my_purchaser = new PurchaseController;
@@ -343,8 +260,8 @@ class PurchaseController extends Controller
         ->send(new TransactionMail($title, $customer_details));
 
         Activities::create([
-            'type' => $request->type,
-            'title' => $request->title,
+            'type' => 'debit',
+            'title' => $request['description'],
             'log' => serialize($customer_details)
         ]);
 
@@ -356,7 +273,7 @@ class PurchaseController extends Controller
         $transaction->amount = $request['amount'];
         $transaction->reference = $request['reference'];
         $transaction->api_reference = $request['api_reference'];
-        ;
+
         $transaction->description = $request['description'];
         $transaction->status = $request['status'];
         $transaction->type = 'debit';

@@ -26,9 +26,3 @@ window.addEventListener('DOMContentLoaded', event => {
     
 
 });
-const sidebar = document.body.querySelector('a[hre^="#"]');
-    if (sidebar) {
-        sidebar.addEventListener('click', event => {
-            alert('You clicked on a sidebar link!');
-        });
-    }

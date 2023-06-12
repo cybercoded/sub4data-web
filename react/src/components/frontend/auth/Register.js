@@ -6,7 +6,6 @@ import { Loader } from '../../Global';
 
 function Register() {
 
-    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const [loading, setLoading] = useState(false);
 
     const history=useHistory();
@@ -60,21 +59,23 @@ function Register() {
             return;
         }
         setLoading(true);
-        axios.put(`/api/send-otp/`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                
-                localStorage.setItem("registration_name",textInput.name);
-                localStorage.setItem("registration_email",textInput.email);
-                localStorage.setItem("registration_password",textInput.password);
+        axios.get('/sanctum/csrf-cookie').then(() => {
+            axios.put(`/api/send-otp/`, textInput).then((res) => {
+                if (res.data.status === 200) {
+                    
+                    localStorage.setItem("registration_name",textInput.name);
+                    localStorage.setItem("registration_email",textInput.email);
+                    localStorage.setItem("registration_password",textInput.password);
 
-                swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
-                    history.push(`/verify-registration`);
-                });
-            }else {
-                swal('Error!', res.data.errors, 'error');
-            }
-            setLoading(false);
-        });        
+                    swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                        history.push(`/verify-registration`);
+                    });
+                }else {
+                    swal('Error!', res.data.errors, 'error');
+                }
+                setLoading(false);
+            });    
+        });    
     }
 
     return(
@@ -84,7 +85,7 @@ function Register() {
                     <div className='card'>
                         <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
+                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
                             <h4>register new account</h4>
                         </Link>
                         <div className='card-body'>

@@ -6,7 +6,6 @@ import { Loader } from '../../components/Global';
 
 const Navbar = () => {
 
-    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const [loading, setLoading] = useState();
     const history = useHistory();
 
@@ -39,7 +38,7 @@ const Navbar = () => {
         <nav className="sb-topnav navbar navbar-expand navbar-dark my-bg-primary">
             <Loader isActive={loading} />
             <Link className="navbar-brand ps-3" to="/collections">
-            <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60, height: 50 }} />
+            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60, height: 50 }} />
             </Link>
             <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" onClick={handleSideBar}>
                 <i className="fas fa-bars fa-2x"></i>

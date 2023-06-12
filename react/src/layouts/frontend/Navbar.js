@@ -5,8 +5,6 @@ import swal from 'sweetalert';
 import { Loader } from '../../components/Global';
 function Navbar() {
 
-
-    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
     const history = useHistory();
     const [loading, setLoading] = React.useState();
 
@@ -34,7 +32,7 @@ function Navbar() {
         <nav className="sb-topnav navbar navbar-expand navbar-dark my-bg-primary fixed-top">
             <Loader isActive={loading} />
             <Link className="navbar-brand ps-3" to="/dashboard">
-                <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60, height: 50 }} />
+                <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60, height: 50 }} />
             </Link>
             <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle">
                 <i className="fas fa-bars fa-2x"></i>

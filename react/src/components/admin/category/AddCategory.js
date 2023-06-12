@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Loader } from '../../Global';
 
-function Category() {
+function AddCategory() {
     const [loading, setLoading] = useState(false);
     const [categoryInput, setCategory] = useState({
         slug: '',
@@ -206,4 +206,4 @@ function Category() {
     );
 }
 
-export default Category;
+export default AddCategory;

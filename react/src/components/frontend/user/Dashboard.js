@@ -143,7 +143,7 @@ function Dashboard() {
                                             <div className='text-muted mb-2'>
                                                 {item.bank_name}
                                                 <span className="float-end">
-                                                    {item.account_name}
+                                                    <span className='me-4'>{item.account_name}</span>
                                                     <i className="fa fa-chevron-circle-right"></i>
                                                 </span>
                                             </div>

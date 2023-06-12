@@ -2,11 +2,11 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 function Home() {
-    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
 
     const scrolledRef = React.useRef(false);
     const { hash } = useLocation();
     const hashRef = React.useRef(hash);
+    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
 
     React.useEffect(() => {
         if (hash) {
@@ -50,17 +50,17 @@ function Home() {
                                 <div className="small">
                                     <Link className="my-text-primary text-decoration-underline" to="tel:07064967674">
                                         Call
-                                    </Link>{' '}
+                                    </Link>
                                     or
                                     <Link
                                         className="my-text-primary text-decoration-underline"
-                                        to="https://api.whatsapp.com/send?phone=2347064967674"
+                                        to={`https://api.whatsapp.com/send?phone=${process.env.REACT_APP_TEL}`}
                                     >
                                         Whatsapp
                                     </Link>
                                 </div>
                                 <div className="small mt-md-1">
-                                    <strong>07064967674</strong>
+                                    <strong>{process.env.REACT_APP_TEL}</strong>
                                 </div>
                             </div>
                         </div>
@@ -69,8 +69,8 @@ function Home() {
                 <nav className="navbar navbar-expand-lg navbar-light bg-white py-0 px-2" id="header">
                     <div className="container-fluid">
                         <Link className="navbar-brand fw-bold my-text-primary" to="#">
-                            <img src={`${imgRoot}logo.jpg`} alt="" style={{ width: 60 }} />
-                            SUB4DATA
+                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
+                            {process.env.REACT_APP_NAME}
                         </Link>
                         <button
                             className="navbar-toggler"
@@ -112,7 +112,7 @@ function Home() {
                         <div className="fs-4 ps-2" id="screen-page-text">
                             <div className="text-center">
                                 <div>Browse the internet seamlessly with</div>
-                                <div style={{ color: '#6BD2FF' }}>DEMODATA SOLUTIONS</div>
+                                <div style={{ color: '#6BD2FF' }}>{process.env.REACT_APP_NAME}</div>
                             </div>
                         </div>
                     </div>
@@ -277,12 +277,12 @@ function Home() {
                         <div className="float-start pl-1">
                             <ul className="list-inline">
                                 <li className="list-inline-item">
-                                    <Link className="text-light" to="https://web.facebook.com/gigngcom">
+                                    <Link className="text-light" to="https://web.facebook.com/#">
                                         <i className="fab fa-facebook"></i>
                                     </Link>
                                 </li>
                                 <li className="list-inline-item ml-2">
-                                    <Link className="text-light" to="https://twitter.com/">
+                                    <Link className="text-light" to="https://twitter.com/#">
                                         <i className="fab fa-twitter"></i>
                                     </Link>
                                 </li>
@@ -311,7 +311,7 @@ function Home() {
                                 </Link>
                             </div>
                             <div className="mt-2" style={{opacity: 0.7}}>
-                                Address: Bauchi State, Nigeria
+                                {process.env.REACT_APP_ADDRESS}
                             </div>
                         </div>
                     </div>
@@ -319,13 +319,13 @@ function Home() {
                         <div>
                             <div className="float-end">
                                 <div className="mt-1 small">
-                                    <i className="fa fa-envelope pr-2"></i> admin@demodata.com
+                                    <i className="fa fa-envelope pr-2"></i> {process.env.REACT_APP_EMAIL}
                                 </div>
                                 <div className="mt-1 small">
-                                    <i className="fa fa-phone pr-2"></i> +2347046618070
+                                    <i className="fa fa-phone pr-2"></i> {process.env.REACT_APP_TEL}
                                 </div>
                                 <div className="mt-1 small">
-                                    <Link className="text-white pr-2" to="https://api.whatsapp.com/send?phone=2347046618070">
+                                    <Link className="text-white pr-2" to={`https://api.whatsapp.com/send?phone=${process.env.REACT_APP_TEL}`}>
                                         <i className="fab fa-whatsapp"></i> Chat us on Whatsapp
                                     </Link>
                                 </div>
@@ -333,7 +333,7 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="text-center copyright mt-3 small">DEMODATA &copy; 2022. All Rights Reserved.</div>
+                <div className="text-center copyright mt-3 small">{process.env.REACT_APP_NAME} &copy; {process.env.REACT_APP_YEAR}. All Rights Reserved.</div>
             </footer>
         </div>
     );

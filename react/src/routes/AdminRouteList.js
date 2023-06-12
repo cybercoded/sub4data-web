@@ -1,6 +1,6 @@
 import Dashboard from '../components/admin/Dashboard';
 
-import Category from '../components/admin/category/Category';
+import AddCategory from '../components/admin/category/AddCategory';
 import ViewCategory from '../components/admin/category/ViewCategory';
 import EditCategory from '../components/admin/category/EditCategory';
 
@@ -20,12 +20,18 @@ import Transactions from '../components/admin/Transactions';
 import ViewUsers from '../components/admin/user/ViewUsers';
 import SendMessage from '../components/admin/settings/SendMessage';
 import ViewActivities from '../components/admin/settings/ViewActivities';
+import AddLevel from '../components/admin/level/AddLevel';
+import EditLevel from '../components/admin/level/EditLevel';
+import ViewLevels from '../components/admin/level/ViewLevels';
+import AddApi from '../components/admin/api/AddApi';
+import ViewApis from '../components/admin/api/ViewApis';
+import EditApi from '../components/admin/api/EditApi';
 
 const AdminRouteList =[
     { path: '/admin', exact: true, name: 'Admin' },
     { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },    
 
-    { path: '/admin/add-category', exact: true, name: 'Category', component: Category },
+    { path: '/admin/add-category', exact: true, name: 'AddCategory', component: AddCategory },
     { path: '/admin/edit-category/:id', exact: true, name: 'EditCategory', component: EditCategory },
     { path: '/admin/view-category', exact: true, name: 'ViewCategory', component: ViewCategory },
 
@@ -46,6 +52,12 @@ const AdminRouteList =[
     { path: '/admin/view-users', exact: true, name: 'ViewUsers', component: ViewUsers },
     { path: '/admin/send-message', exact: true, name: 'SendMessage', component: SendMessage },
     { path: '/admin/activities', exact: true, name: 'ViewActivities', component: ViewActivities },
+    { path: '/admin/add-level', exact: true, name: 'AddLevel', component: AddLevel },
+    { path: '/admin/edit-level/:id', exact: true, name: 'EditLevel', component: EditLevel },
+    { path: '/admin/view-levels', exact: true, name: 'ViewLevels', component: ViewLevels },
+    { path: '/admin/add-api', exact: true, name: 'AddApi', component: AddApi },
+    { path: '/admin/view-apis', exact: true, name: 'ViewApis', component: ViewApis },
+    { path: '/admin/edit-api/:id', exact: true, name: 'EditApi', component: EditApi },
     
     { path: '/admin/profile', exact: true, name: 'Profile', component: Profile }
 

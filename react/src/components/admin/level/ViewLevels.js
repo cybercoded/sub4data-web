@@ -5,15 +5,15 @@ import swal from "sweetalert";
 import $ from "jquery";
 import { Loader } from "../../Global";
 
-function ViewCategory(){
+function ViewLevels(){
 
     const [loading, setLoading] = useState(true);
-    const [categoryList, setCategoryList] = useState([]);
+    const [levelsList, setLevelsList] = useState([]);
 
     useEffect(()=>{
-        axios.get(`api/view-category`).then(res=>{
+        axios.get(`api/view-levels`).then(res=>{
             if(res.status===200){
-                setCategoryList(res.data.category);
+                setLevelsList(res.data.levels);
 
                 $(document).ready(function () {
                     $('table').DataTable();
@@ -28,8 +28,8 @@ function ViewCategory(){
             <div className="card mt-4">
                 <Loader isActive={loading} />
                 <div className="card-header">
-                    <h4>Category list</h4>
-                    <Link to="/admin/add-category" className="btn btn-primary btn-sm float-end">Add category</Link>
+                    <h4>Levels list</h4>
+                    <Link to="/admin/add-level" className="btn btn-primary btn-sm float-end">Add level</Link>
                 </div>
                 <div className="card-body table-responsive">
                     <table className="table table-bordered table-striped">
@@ -37,22 +37,22 @@ function ViewCategory(){
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Slug</th>                                
-                                <th>Image</th>
+                                <th>Level</th>                                
+                                <th>Percentage</th>
                                 <th>Status</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
-                            { categoryList.map((item)=> (
-                                    <tr key={item.id}>
+                            { levelsList.map((item, index)=> (
+                                    <tr key={index}>
                                         <td>{item.id}</td>
                                         <td>{item.name}</td>
-                                        <td>{item.slug}</td>
-                                        <td><img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name}/></td>
+                                        <td>{item.level}</td>
+                                        <td>{item.percentage}</td>
                                         <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
                                         <td>
-                                            <Link to={`edit-category/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
+                                            <Link to={`/admin/edit-level/${item.id}`} className="btn btn-primary btn-sm">Edit</Link>
                                         </td>
                                     </tr>
                                 ))
@@ -65,4 +65,4 @@ function ViewCategory(){
     );
 }
 
-export default ViewCategory;
+export default ViewLevels;

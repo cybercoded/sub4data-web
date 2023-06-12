@@ -7,6 +7,7 @@ use App\Mail\PasswordUpdateMail;
 use App\Mail\TransactionMail;
 use App\Mail\VerificationMail;
 use App\Models\Activities;
+use App\Models\Api;
 use App\Models\Banks;
 use App\Models\Levels;
 use App\Models\PasswordReset;
@@ -38,6 +39,23 @@ class UserController extends Controller
                 'title' => $notification['title'],
                 'message' => unserialize($notification['log'])['message']
             ]
+        ]);
+    }
+
+    public function getMonnifyCharges()
+    {
+        $api = Api::where('api_name', 'monnify')->first();
+
+        if(!$api) {
+            return response()->json([
+               'status' => 404,
+               'error' => 'API not found'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'charge' => $api['api_payment_charges']
         ]);
     }
 
