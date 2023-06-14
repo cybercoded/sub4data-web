@@ -126,7 +126,7 @@ function EditUser(props){
                                                 name="role_as"
                                                 type="checkbox"
                                                 className="custom-control-input" 
-                                                checked={textInput.role_as} 
+                                                checked={textInput.role_as  === 1} 
                                                 onChange={e => 
                                                     setTextInput({...textInput, role_as: e.target.checked})
                                                 } 

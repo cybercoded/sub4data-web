@@ -10,6 +10,35 @@ function ViewLevels(){
     const [loading, setLoading] = useState(true);
     const [levelsList, setLevelsList] = useState([]);
 
+    const handleDelete = (e)=>{
+        e.preventDefault();
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this imaginary level!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                setLoading(true);
+                axios.delete(`api/delete-level/${e.target.dataset.id}`).then(res=>{
+                    if(res.data.status===200){
+                        swal("Deleted!", "Your imaginary level has been deleted.", "success");
+                        setLevelsList(levelsList.filter(item=>item.id!==parseInt(e.target.dataset.id)));
+                    } else {
+                        swal("Cancelled", "Your imaginary level is safe :)", "error");
+
+                    }
+                });
+                setLoading(false);
+            } else {
+                swal("Your imaginary level is safe :)", "Your imaginary level is safe :)", "error");
+                setLoading(false);
+            }
+        });
+    };
+
     useEffect(()=>{
         axios.get(`api/view-levels`).then(res=>{
             if(res.status===200){
@@ -40,6 +69,7 @@ function ViewLevels(){
                                 <th>Level</th>                                
                                 <th>Percentage</th>
                                 <th>Status</th>
+                                <th>Delete</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
@@ -51,6 +81,9 @@ function ViewLevels(){
                                         <td>{item.level}</td>
                                         <td>{item.percentage}</td>
                                         <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
+                                        <td>
+                                            <button onClick={handleDelete} data-id={item.id} className="btn btn-danger btn-sm">Delete</button>
+                                        </td>
                                         <td>
                                             <Link to={`/admin/edit-level/${item.id}`} className="btn btn-primary btn-sm">Edit</Link>
                                         </td>

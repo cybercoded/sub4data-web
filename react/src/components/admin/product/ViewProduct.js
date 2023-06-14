@@ -42,7 +42,7 @@ function ViewProduct(){
             </div>
             <div className="card-body">
                 <div className="table-responsive">
-                    <table className="table table-boardered table-striped">
+                    <table className="table table-striped">
                         <thead>
                             <tr>
                                 <th>ID</th>

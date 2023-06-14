@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         'App\Console\Commands\DatabaseBackUp'
     ];
-    
+
     /**
      * Define the application's command schedule.
      *
@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('database:backup')->hourly();
+        $schedule->command('transactions:update')->everyMinute();
+
     }
 
     /**

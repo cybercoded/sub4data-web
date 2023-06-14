@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import ReactjsOverlayLoader from "reactjs-overlay-loader";
+import { useHistory } from "react-router-dom";
 import swal from "sweetalert";
+import { Loader } from "../../Global";
 
 function UpdatePin(){
     const history = useHistory();
@@ -80,9 +80,7 @@ function UpdatePin(){
                 <b>Transaction</b> PIN /
             </div>
             <div className="bg-light card card-body col-md-6">
-                <ReactjsOverlayLoader isActive={loading} 
-                    icon={<img alt='loader' width={50} src={'http://localhost/sub4data-web/react/src/assets/admin/assets/img/loading.gif' }/>} 
-                />
+                <Loader isActive={loading} />
 
                 <form onSubmit={handleTransactionPIN}>
 

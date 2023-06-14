@@ -57,12 +57,12 @@ const SideBar = () => {
                         </div>
                         Fund Wallet
                     </Link>
-                    <Link className={`nav-link ${ 'withdraw-fund' === window.location.href.split('/')[4] && 'active' }`} to="/user/withdraw-fund">
+                    {/* <Link className={`nav-link ${ 'withdraw-fund' === window.location.href.split('/')[4] && 'active' }`} to="/user/withdraw-fund">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-wallet"></i>
                         </div>
                         Withdraw Funds
-                    </Link>
+                    </Link> */}
                     
                     <Link className={`nav-link ${ 'transfer-fund' === window.location.href.split('/')[4] && 'active' }`} to="/user/transfer-fund">
                         <div className="sb-nav-link-icon">

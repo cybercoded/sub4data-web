@@ -142,40 +142,40 @@ class MonnifyController extends Controller
         $data = file_get_contents("php://input");
         $data = '{
             "eventData ": {
-                "transactionReference ": "MNFY|39|20230611200934|000621 ",
-                "paymentMethod ": "ACCOUNT_TRANSFER ",
-                "paidOn ": "2023-06-11 20:09:34.8 ",
-                "cardDetails ": {},
-                "paymentSourceInformation ": [
+              "transactionReference ": "MNFY|39|20230613160439|000884 ",
+              "paymentMethod ": "ACCOUNT_TRANSFER ",
+              "paidOn ": "2023-06-13 16:04:44.513 ",
+              "cardDetails ": {},
+              "paymentSourceInformation ": [
                 {
-                    "sessionId ": "ywHuriaihikq3IubagoGV9Olrjj8bOMw ",
-                    "accountNumber ": "0065432190 ",
-                    "bankCode ": " ",
-                    "amountPaid ": 10,
-                    "accountName ": "Monnify Limited "
+                  "sessionId ": "6AUAmFiPL9D7KvUchZBUA3hX9aoNvuHV ",
+                  "accountNumber ": "0065432190 ",
+                  "bankCode ": " ",
+                  "amountPaid ": 100,
+                  "accountName ": "Monnify Limited "
                 }
-                ],
-                "settlementAmount ": ".00 ",
-                "destinationAccountInformation ": {
-                    "accountNumber ": "5000358118 ",
-                    "bankName ": "Wema bank ",
-                    "bankCode ": "035 "
-                },
-                "amountPaid ": 10,
-                "customer ": {
-                    "email ": "adexgyh@gmail.com ",
-                    "name ": "Akinyemi Ajayi "
-                },
-                "metaData ": {},
-                "totalPayable ": 10,
-                "paymentDescription ": "Ele ",
-                "product ": {
-                    "reference ": "ELECT1686463044 ",
-                    "type ": "RESERVED_ACCOUNT "
-                },
-                "paymentReference ": "MNFY|39|20230611200934|000621 ",
-                "paymentStatus ": "PAID ",
-                "currency ": "NGN "
+              ],
+              "settlementAmount ": "90.00 ",
+              "destinationAccountInformation ": {
+                "accountNumber ": "5000390667 ",
+                "bankName ": "Wema bank ",
+                "bankCode ": "035 "
+              },
+              "amountPaid ": 100,
+              "customer ": {
+                "email ": "adexgyh@gmail.com ",
+                "name ": "Akinyemi Ajayi "
+              },
+              "metaData ": {},
+              "totalPayable ": 100,
+              "paymentDescription ": "Rem ",
+              "product ": {
+                "reference ": "REMIL1686661296 ",
+                "type ": "RESERVED_ACCOUNT "
+              },
+              "paymentReference ": "MNFY|39|20230613160439|000884 ",
+              "paymentStatus ": "PAID ",
+              "currency ": "NGN "
             },
             "eventType ": "SUCCESSFUL_TRANSACTION "
         }';
@@ -212,7 +212,7 @@ class MonnifyController extends Controller
 
         $eventData = (array) $result['eventData'];
         $destinationAccountInformation = (array) $eventData['destinationAccountInformation'];
-        $status = $eventData['paymentStatus'];
+        $status = strtolower($eventData['paymentStatus'] == 'PAID' ? 'success' :  $eventData['paymentStatus']);
         $amount = $eventData['amountPaid'];
         $transactionRef = $eventData['transactionReference'];
         $accountNumber = $destinationAccountInformation['accountNumber'];

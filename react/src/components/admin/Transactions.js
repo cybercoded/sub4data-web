@@ -44,11 +44,15 @@ function Transactions(props){
         console.log(dataArray);
         var table = document.createElement("div");
         table.style.textAlign = "left";
-        table.innerHTML = (`<table class="table align-left table-striped table-hover">
+        table.innerHTML = (`<table cellpadding="10" class="table align-left table-striped table-hover">
             <body style="align-text: left;">
                 <tr>
                     <th>Refernce</th>
                     <td>${dataArray.reference}</td>
+                </tr>
+                <tr>
+                    <th>API Reference</th>
+                    <td>${dataArray.api_reference || ''}</td>
                 </tr>
                 <tr>
                     <th>Name</th>
@@ -60,11 +64,11 @@ function Transactions(props){
                 </tr>
                 <tr>
                     <th>Product</th>
-                    <td>${dataArray.product}</td>
+                    <td>${dataArray.product || ''}</td>
                 </tr>
                 <tr>
                     <th>Service</th>
-                    <td>${dataArray.service}</td>
+                    <td>${dataArray.service || ''}</td>
                 </tr>
                 <tr>
                     <th>Description</th>
@@ -146,93 +150,138 @@ function Transactions(props){
                     <h4>View service | </h4>
                 </div>
                 <div className="card-body">
-                    <form onSubmit={handleTransactionFilter}>
-                        <div className="row">
-                            <div className="col-md-3 col-6">
-                                <div className="form-group">
-                                    <label htmlFor="type">Transaction Type</label>
-                                    <select className="form-select" onChange={handleInput} name="type" id="transaction-type">
-                                        <option value="">All</option>
-                                        <option value="debit">Debits</option>
-                                        <option value="credit">Credits</option>
-                                        <option value="debit_transfer">Debit Transfer</option>
-                                        <option value="credit_transfer">Transfer Transfer</option>
-                                    </select>
-                                </div>
-                            </div>
+                <div className="accordion mb-5" id="accordionExample">
+                        <div className="accordion-item">
+                            <h2 className="accordion-header" id="headingOne">
+                                <button
+                                    className="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne"
+                                    aria-expanded="true"
+                                    aria-controls="collapseOne"
+                                >
+                                    Filter Transactions
+                                </button>
+                            </h2>
+                            <div
+                                id="collapseOne"
+                                className="accordion-collapse collapse fade"
+                                aria-labelledby="headingOne"
+                                data-bs-parent="#accordionExample"
+                            >
+                                <div className="accordion-body">
+                                    <form onSubmit={handleTransactionFilter}>
+                                        <div className="row">
+                                            <div className="col-md-3 col-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="type">Transaction Type</label>
+                                                    <select
+                                                        className="form-select"
+                                                        onChange={handleInput}
+                                                        name="type"
+                                                        id="transaction-type"
+                                                    >
+                                                        <option value="">All</option>
+                                                        <option value="debit">Debits</option>
+                                                        <option value="credit">Credits</option>
+                                                        <option value="debit_transfer">Debit Transfer</option>
+                                                        <option value="credit_transfer">Transfer Transfer</option>
+                                                    </select>
+                                                </div>
+                                            </div>
 
-                            <div className="col-md-3 col-6">
-                                <div className="form-group mb-3">
-                                    <label>Products:</label>
-                                    <select
-                                    name="product_id"
-                                        onChange={handleProductSelection}
-                                        value={textInput.product_id}
-                                        className="form-select"
-                                    >
-                                        <option value="">--Choose Product--</option>
-                                        {productList?.map((item, index) => (
-                                            <option key={index} value={item.id}>
-                                                {item.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div className="col-md-3 col-6">
-                                <div className="form-group mb-3">
-                                    <label>Services:</label>
-                                    <select name="service_id" onChange={handleInput} className="form-select">
-                                        <option value="">--Choose Service--</option>
-                                        {serviceList?.map((item, index) => (
-                                            <option key={index} data-amount={item.amount} value={item.id}>
-                                                {item.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div className="col-md-3 col-6">
-                                <div className="form-group mb-3">
-                                    <label>Status:</label>
-                                    <select name="status" onChange={handleInput} className="form-select">
-                                        <option value="">--Choose Status--</option>
-                                        <option value="success">Success</option>
-                                        <option value="failed">Failed</option>
-                                        <option value="pending">Pending</option>
-                                    </select>
-                                </div>
-                            </div>
+                                            <div className="col-md-3 col-6">
+                                                <div className="form-group mb-3">
+                                                    <label>Products:</label>
+                                                    <select
+                                                        name="product_id"
+                                                        onChange={handleProductSelection}
+                                                        value={textInput.product_id}
+                                                        className="form-select"
+                                                    >
+                                                        <option value="">--Choose Product--</option>
+                                                        {productList?.map((item, index) => (
+                                                            <option key={index} value={item.id}>
+                                                                {item.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
 
-                            <div className="col-md-3 col-6">
-                                <div className="form-group">
-                                    <label htmlFor="from">Date from</label>                                    
-                                    <input type="date" onChange={handleInput} name="from" className="form-control" id="from" />    
-                                </div>                                
-                            </div>
-                            <div className="col-md-3 col-6">
-                                <div className="form-group">
-                                    <label htmlFor="to">Date to</label>                                    
-                                    <input type="date" name="to" onChange={handleInput} className="form-control" id="to" />
-                                </div>                                  
-                            </div>
-                            <div className="col-md-3 col-6">
-                                <div className="form-group">
-                                    <label htmlFor="to">Search</label>                                    
-                                    <input type="search" name="search" onChange={handleInput} className="form-control" id="search" placeholder="Search for key words" />
-                                </div>                                  
-                            </div>
-                            <div className="col-12">
-                                <div className="form-group">
-                                    <button type="submit" onChange={handleInput} className="btn btn-primary">Filter</button>
+                                            <div className="col-md-3 col-6">
+                                                <div className="form-group mb-3">
+                                                    <label>Services:</label>
+                                                    <select name="service_id" onChange={handleInput} className="form-select">
+                                                        <option value="">--Choose Service--</option>
+                                                        {serviceList?.map((item, index) => (
+                                                            <option key={index} data-amount={item.amount} value={item.id}>
+                                                                {item.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="col-md-3 col-6">
+                                                <div className="form-group mb-3">
+                                                    <label>Status:</label>
+                                                    <select name="status" onChange={handleInput} className="form-select">
+                                                        <option value="">--Choose Status--</option>
+                                                        <option value="success">Success</option>
+                                                        <option value="failed">Failed</option>
+                                                        <option value="pending">Pending</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="col-md-3 col-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="from">Date from</label>
+                                                    <input
+                                                        type="date"
+                                                        onChange={handleInput}
+                                                        name="from"
+                                                        className="form-control"
+                                                        id="from"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 col-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="to">Date to</label>
+                                                    <input type="date" name="to" onChange={handleInput} className="form-control" id="to" />
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 col-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="to">Search</label>
+                                                    <input
+                                                        type="search"
+                                                        name="search"
+                                                        onChange={handleInput}
+                                                        className="form-control"
+                                                        id="search"
+                                                        placeholder="Search for key words"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col-12">
+                                                <div className="form-group">
+                                                    <button type="submit" onChange={handleInput} className="btn btn-primary">
+                                                        Filter
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                     <div className="table-responsive">
-                        <table id="table" className="table table-boardered table-striped">
+                        <table id="table" className="table table-striped">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -261,6 +310,7 @@ function Transactions(props){
                                                 <button onClick={handleViewTransaction} 
                                                     className="btn btn-success btn-sm"
                                                     data-reference={item.reference}
+                                                    data-api_reference={item.api_reference}
                                                     data-amount={item.amount}
                                                     data-name={item.user.name}
                                                     data-product={item.product?.name}

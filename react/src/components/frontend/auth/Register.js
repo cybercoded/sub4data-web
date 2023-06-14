@@ -9,16 +9,21 @@ function Register() {
     const [loading, setLoading] = useState(false);
 
     const history=useHistory();
-    const [textInput, setRegister] = useState({
+    const [textInput, setTextInput] = useState({
         name:'',
         email:'',
         password: '',
+        checkbox: ''
     });
 
     const handleInput = (e)=>{
         e.persist();
-        setRegister({...textInput,[e.target.name]: e.target.value})
-
+        setTextInput({...textInput,[e.target.name]: e.target.value})
+    }
+    
+    const handleCheckBox = (e)=>{
+        e.persist();
+        setTextInput({...textInput,[e.target.name]: e.target.chcked})
     }
 
     const passwordValidator = (passwordInputValue) => {
@@ -37,15 +42,15 @@ function Register() {
         if(passwordLength===0){
             errMsg="Password is empty";
         }else if(!uppercasePassword){
-            errMsg="At least one Uppercase";
+            errMsg="Password should at least have one Uppercase";
         }else if(!lowercasePassword){
-            errMsg="At least one Lowercase";
+            errMsg="Password should at least have one Lowercase";
         }else if(!digitsPassword){
-            errMsg="At least one digit";
+            errMsg="Password should at least have one Digit";
         }else if(!specialCharPassword){
-            errMsg="At least one Special Characters";
+            errMsg="Password should at least have one Special Characters";
         }else if(!minLengthPassword){
-            errMsg="At least minumum of 8 characters";
+            errMsg="Password should at least have minimum of 8 characters";
         }
 
         return errMsg;
@@ -56,6 +61,10 @@ function Register() {
 
         if( passwordValidator(textInput.password) !== "" ) {
             swal('Error!', passwordValidator(textInput.password), 'error');
+            return;
+        }
+        if( textInput.checkbox ) {
+            swal('Error!', 'Agree with our Terms and Condition before continuing', 'error');
             return;
         }
         setLoading(true);
@@ -86,7 +95,7 @@ function Register() {
                         <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
-                            <h4>register new account</h4>
+                            <h4>Register new account</h4>
                         </Link>
                         <div className='card-body'>
                             <form onSubmit={registerSubmit}>
@@ -106,6 +115,13 @@ function Register() {
                                     <span>{textInput.error_list?.password}</span>
                                 </div>
                                 
+                                <div className="mb-4">
+                                    <input type="checkbox" onChange={handleCheckBox} className='me-4' name="checkbox" id="checkbox" required />
+                                    <label for="checkbox">
+                                        <span>I Agree with the <Link to="terms-and-condition"> terms and conditions.</Link></span>
+                                    </label>
+                                </div>
+
                                 <div className='form-group mb-3'>
                                     <button type='submit' className='btn btn-primary w-100'>Register</button>
                                 </div>
@@ -113,7 +129,7 @@ function Register() {
                                 <div className='form-group mb-3'>
                                     <div className="text-center mb-0">
                                         <div>Already have an account? <Link to="/login">Login</Link> or </div>
-                                        <div>you forgotten password? <Link to="/reset">Reset</Link></div>
+                                        <div>you forgot password? <Link to="/reset">Reset</Link></div>
                                     </div>
                                 </div>
                             </form>

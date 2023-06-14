@@ -14,9 +14,8 @@ function AddProduct() {
         api_product_id: '',
         name: '',
         description: '',
-        meta_title: '',
-        meta_keyword: '',
-        meta_description: '',
+        discount: '',
+        charges: '',
         status: true
     });
 
@@ -53,9 +52,8 @@ function AddProduct() {
         formData.append('api_product_id', productInput.api_product_id);
         formData.append('name', productInput.name);
         formData.append('description', productInput.description);
-        formData.append('meta_title', productInput.meta_title);
-        formData.append('meta_keyword', productInput.meta_keyword);
-        formData.append('meta_description', productInput.meta_description);
+        formData.append('discount', productInput.discount);
+        formData.append('charges', productInput.charges);
         formData.append('status', productInput.status);
 
         setLoading(true);
@@ -182,22 +180,44 @@ function AddProduct() {
                                 role="tabpanel"
                                 aria-labelledby="otherdetails-tab"
                             >
-                                <div className="row">
-                                    <div className="col-md-4 form-group mb-3">
-                                        <label>Image</label>
-                                        <input type="file" onChange={handleImage} name="image" className="form-control" />
-                                        <small className="text-danger">{errorList?.image}</small>
-                                    </div>
-                                    <div className="col-md-4 form-group mb-3">
-                                        <label>Status (Checked=avialable)</label>
-                                        <input
-                                            type="checkbox"
-                                            name="status"
-                                            onChange={handleInput}
-                                            value={productInput.status}
-                                            defaultChecked={productInput.status}
-                                        />
-                                    </div>
+                                <div className="form-group mb-3">
+                                    <label>Discount</label>
+                                    <input
+                                        type="text"
+                                        name="discount"
+                                        step="any"
+                                        onChange={handleInput}
+                                        value={productInput.discount}
+                                        className="form-control"
+                                    />
+                                    <small className="text-danger">{errorList?.discount}</small>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Charges</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        name="charges"
+                                        onChange={handleInput}
+                                        value={productInput.charges}
+                                        className="form-control"
+                                    />
+                                    <small className="text-danger">{errorList?.discount}</small>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Image</label>
+                                    <input type="file" onChange={handleImage} name="image" className="form-control" />
+                                    <small className="text-danger">{errorList?.image}</small>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Status (Checked=avialable)</label>
+                                    <input
+                                        type="checkbox"
+                                        name="status"
+                                        onChange={handleInput}
+                                        value={productInput.status}
+                                        defaultChecked={productInput.status}
+                                    />
                                 </div>
                             </div>
                         </div>

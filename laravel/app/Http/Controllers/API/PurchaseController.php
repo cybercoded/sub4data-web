@@ -27,7 +27,7 @@ class PurchaseController extends Controller
         $user = User::find($user_id);
         $level = Levels::where('level', $user_level)->first();
         $product = Product::where('id', $request->input('product_id'))->first();
-        $discountedAmount = $request->input('amount') - ($request->input('amount') * $level['percentage']) / 100;
+        $discountedAmount = ($request->input('amount') - ($request->input('amount') * $level['percentage']) / 100) + ($product['charges'] - $product['discount']);
         $afterBalance = $user->balance - $discountedAmount;
 
         if ($afterBalance - $discountedAmount < 0) {
@@ -48,7 +48,7 @@ class PurchaseController extends Controller
 
             // print_r($result);
 
-            if ($result['error_code'] === '1983') {
+            if ($result['error_code'] == '1986' || $result['error_code'] == '1981') {
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
                     'user' => $user,
@@ -57,16 +57,16 @@ class PurchaseController extends Controller
                     'service_id' => null,
                     'amount' => $discountedAmount,
                     'reference' => 'SUB' . rand(),
-                    'api_reference' => '',
+                    'api_reference' => $result['data']['recharge_id'],
                     'description' => "₦" . number_format($discountedAmount) . " " . $product['name'],
                     'after_balance' => $afterBalance,
-                    'status' => 'success',
+                    'status' => strtolower($result['data']['text_status'] == 'COMPLETED' ? 'success' :  $result['data']['text_status'])
                 ]);
 
             } else {
                 return response()->json([
                     'status' => 400,
-                    'errors' => 'Something went wrong'
+                    'errors' => 'Something went wrong: '. $result['error_code']
                 ]);
             }
         }
@@ -100,7 +100,7 @@ class PurchaseController extends Controller
 
             $result = $response->json();
 
-            if ($result['error_code'] === '1983') {
+            if ($result['error_code'] == '1986' || $result['error_code'] == '1981') {
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
                     'user' => $user,
@@ -109,15 +109,15 @@ class PurchaseController extends Controller
                     'service_id' => $service['id'],
                     'amount' => $discountedAmount,
                     'reference' => 'SUB' . rand(),
-                    'api_reference' => '',
+                    'api_reference' => $result['data']['recharge_id'],
                     'description' => "₦" . number_format($discountedAmount) . " " . $service['name'],
                     'after_balance' => $afterBalance,
-                    'status' => 'success',
+                    'status' => strtolower($result['data']['text_status'] == 'COMPLETED' ? 'success' :  $result['data']['text_status'])
                 ]);
             } else {
                 return response()->json([
                     'status' => 400,
-                    'errors' => 'Something went wrong'
+                    'errors' => 'Something went wrong: '. $result['error_code']
                 ]);
             }
         }
@@ -150,7 +150,7 @@ class PurchaseController extends Controller
             $result = $response->json();
 
 
-            if ($result['error_code'] === '1983') {
+            if ($result['error_code'] == '1986' || $result['error_code'] == '1981') {
 
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
@@ -160,15 +160,15 @@ class PurchaseController extends Controller
                     'service_id' => $service['id'],
                     'amount' => $discountedAmount,
                     'reference' => 'SUB' . rand(),
-                    'api_reference' => '',
+                    'api_reference' => $result['data']['recharge_id'],
                     'description' => "₦" . number_format($discountedAmount) . " " . $service['name'] . " for " . $request->smartcard_number,
                     'after_balance' => $afterBalance,
-                    'status' => 'success',
+                    'status' => strtolower($result['data']['text_status'] == 'COMPLETED' ? 'success' :  $result['data']['text_status'])
                 ]);
             } else {
                 return response()->json([
                     'status' => 400,
-                    'errors' => 'Something went wrong'
+                    'errors' => 'Something went wrong: '. $result['error_code']
                 ]);
             }
         }
@@ -184,7 +184,7 @@ class PurchaseController extends Controller
         $level = Levels::where('level', $user_level)->first();
         $product = Product::where('id', $request->input('product_id'))->first();
         $service = Services::where('id', $request->input('service_id'))->first();
-        $discountedAmount = $request->input('amount') - ($request->input('amount') * $level['percentage']) / 100;
+        $discountedAmount = ($request->input('amount') - ($request->input('amount') * $level['percentage']) / 100) + ($product['charges'] - $product['discount']);
         $afterBalance = $user->balance - $discountedAmount;
 
         if ($afterBalance - $discountedAmount < 0) {
@@ -203,7 +203,7 @@ class PurchaseController extends Controller
 
             $result = $response->json();
 
-            if ($result['error_code'] === '1983') {
+            if ($result['error_code'] == '1986' || $result['error_code'] == '1981') {
                 $my_purchaser = new PurchaseController;
                 return $my_purchaser->purchaser([
                     'user' => $user,
@@ -212,16 +212,16 @@ class PurchaseController extends Controller
                     'service_id' => null,
                     'amount' => $discountedAmount,
                     'reference' => 'SUB' . rand(),
-                    'api_reference' => '',
+                    'api_reference' => $result['data']['recharge_id'],
                     'description' => "₦" . number_format($discountedAmount) . " " . $product['name'] . " for " . $request->meter_number,
                     'after_balance' => $afterBalance,
-                    'status' => 'success',
+                    'status' => strtolower($result['data']['text_status'] == 'COMPLETED' ? 'success' :  $result['data']['text_status'])
                 ]);
 
             } else {
                 return response()->json([
                     'status' => 400,
-                    'errors' => 'Something went wrong'
+                    'errors' => 'Something went wrong: '. $result['error_code']
                 ]);
             }
         }
@@ -229,21 +229,6 @@ class PurchaseController extends Controller
 
     public function purchaser($request)
     {
-        //Live transactions
-        /* if ($result['text_status'] == 'VERIFICATION SUCCESSFUL') {
-            return response()->json([
-                'status'=>200,
-                'name'=> $result['data']['name']
-            ]);
-        }else {
-            return response()->json([
-                'status'=>400,
-                'errors'=> $result['server_message']
-            ]);
-        } */
-
-        //Demo transactions
-
         $title = '[Debit Transaction] Thank you for your purchase';
         $customer_details = [
             'name' => $request['user']['name'],

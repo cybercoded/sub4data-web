@@ -95,7 +95,20 @@ class LevelController extends Controller
                 'message' => "Level updated successfully"
             ]);
         }
+    }
 
-
+    public function delete($id) {
+        $level = Levels::where('id', $id)->first();
+        if (!$level) {
+            return response()->json([
+              'status' => 404,
+               'errors' => 'Level not found.'
+            ]);
+        }
+        $level->delete();
+        return response()->json([
+           'status' => 200,
+           'message' => 'Level deleted successfully'
+        ]);
     }
 }

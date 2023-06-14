@@ -22,8 +22,7 @@ class ProductController extends Controller
         $validator=Validator::make($request->all(),[
             'name'=>'required|string',
             'category_id'=>'required|integer',
-            'api_product_id'=>'required|string',
-            'meta_title'=>'required',
+            'api_product_id'=>'required|string'
         ]);
 
         if($validator->fails()){
@@ -37,10 +36,10 @@ class ProductController extends Controller
             $product->api_product_id= $request->input('api_product_id');
             $product->name= $request->input('name');
             $product->description= $request->input('description');
-            $product->meta_title= $request->input('meta_title');
-            $product->meta_keyword= $request->input('meta_keyword');
-            $product->meta_description= $request->input('meta_description');
-            $product->status= $request->input('status') ==true? 1:0;
+            $product->discount= $request->input('discount');
+            $product->charges= $request->input('charges');
+            $status = $request->input('status') == 'true' ? 1 : 0;
+            $product->status= $status;
 
 
             if($request->hasFile('image')){
@@ -67,8 +66,7 @@ class ProductController extends Controller
         $validator=Validator::make($request->all(),[
             'category_id'=>'required|integer',
             'name'=>'required|string',
-            'api_product_id'=>'required|string',
-            'meta_title'=>'required',
+            'api_product_id'=>'required|string'
         ]);
 
         if($validator->fails()){
@@ -84,11 +82,10 @@ class ProductController extends Controller
                 $product->api_product_id= $request->input('api_product_id');
                 $product->name= $request->input('name');
                 $product->description= $request->input('description');
-                $product->meta_title= $request->input('meta_title');
-                $product->meta_keyword= $request->input('meta_keyword');
-                $product->meta_description= $request->input('meta_description');
-                $product->status= $request->input('status') ==true? 1:0;
-
+                $product->discount= $request->input('discount');
+                $product->charges= $request->input('charges');
+                $status = $request->input('status') == 'true' ? 1 : 0;
+                $product->status= $status;
 
                 if($request->hasFile('image')){
                     $path=$product->image;
@@ -107,7 +104,7 @@ class ProductController extends Controller
                 $product->update();
                 return response()->json([
                     'status'=>200,
-                    'message'=>"Product updates successfully",
+                    'message'=>"Product updated successfully",
                 ]);
             }
             else
@@ -143,7 +140,7 @@ class ProductController extends Controller
 
     public function view($id)
     {
-        $products=Product::where('category_id', $id)->get();
+        $products=Product::where('category_id', $id)->where('status', 1)->get();
 
         if($products)
         {

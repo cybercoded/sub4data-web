@@ -7,6 +7,7 @@ import { Loader } from '../../Global';
 function EditLevel(props) {
     let level_id = props.match.params.id;
     const [loading, setLoading] = useState(false);
+    const [checkbox, setCheckbox] = useState();
     const [textInput, setTextInput] = useState({
         name: '',
         level: '',
@@ -20,8 +21,7 @@ function EditLevel(props) {
 
     const handleCheckBox = (e) => {
         e.persist();
-        console.log(e.target.checked);
-        setTextInput({ ...textInput, [e.target.name]: e.target.checked });
+        setCheckbox(e.target.checked);
     };
 
 
@@ -29,7 +29,7 @@ function EditLevel(props) {
         e.preventDefault();
 
         setLoading(true);
-        axios.post(`/api/update-level/${level_id}`, textInput).then((res) => {
+        axios.post(`/api/update-level/${level_id}`, {...textInput, status: checkbox}).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() => {
                     window.location.reload();
@@ -47,6 +47,7 @@ function EditLevel(props) {
         axios.get(`/api/get-level/${level_id}`).then((res) => {
             if (res.data.status === 200) {
                 setTextInput({...textInput, ...res.data.level});
+                setCheckbox(res.data.level.status === 1 ? true : false);
             } else {
                 swal('Error', res.data.errors, 'error');
             }
@@ -107,13 +108,13 @@ function EditLevel(props) {
                                 </div>
                                 
                                 <div className="form-group mb-3">
-                                    <label>Percentage</label>
+                                    <label>Status</label>
                                     <input
                                         type="checkbox"
                                         name="status"
                                         onChange={handleCheckBox}
-                                        value={textInput.status}
-                                        defaultChecked={setTextInput.status === 1 ? true : false}
+                                        onClick={handleCheckBox}
+                                        defaultChecked={checkbox}
                                     />
                                 </div>
 

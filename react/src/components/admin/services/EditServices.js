@@ -7,6 +7,7 @@ import { Loader } from '../../Global';
 function EditServices(props) {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
+    const [checkbox, setCheckbox] = useState();
     const [servicesInput, setservices] = useState([]);
     const [productData, setProductData] = useState([]);
     const [error, setError] = useState([]);
@@ -24,7 +25,7 @@ function EditServices(props) {
         axios.get(`/api/edit-services/${services_id}`).then((res) => {
             if (res.data.status === 200) {
                 setservices(res.data.service);
-                console.log(res.data.service);
+                setCheckbox(res.data.service.status === 1? true : false);
             } else if (res.data.status === 404) {
                 swal('Error', res.data.message, 'error');
                 history.pushState('/admin/view-services');
@@ -40,16 +41,15 @@ function EditServices(props) {
    
     const handleCheckBox = (e) => {
         e.persist();
-        setservices({ ...servicesInput, [e.target.name]: e.target.checked });
+        setCheckbox(e.target.checked);
     };
 
     const updateservices = (e) => {
         e.preventDefault();
         const services_id = props.match.params.id;
-        const data = servicesInput;
 
         setLoading(true);
-        axios.put(`api/update-services/${services_id}`, data).then((res) => {
+        axios.put(`api/update-services/${services_id}`, {...servicesInput, status: checkbox}).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() =>{
                     window.location.reload();
@@ -116,7 +116,7 @@ function EditServices(props) {
                         </ul>
                         <div className="tab-content" id="myTabContent">
                             <div
-                                className="tab-pane card-body border fade show active"
+                                className="tab-pane card-body border show active"
                                 id="home"
                                 role="tabpanel"
                                 aria-labelledby="home-tab"
@@ -173,11 +173,11 @@ function EditServices(props) {
                                         <input
                                             type="text"
                                             onChange={handleInput}
-                                            value={servicesInput?.api_servie_id}
-                                            name="api_servie_id"
+                                            value={servicesInput?.api_service_id}
+                                            name="api_service_id"
                                             className="form-control"
                                         />
-                                        <small className="text-danger">
+                                        <small className="text-info">
                                             {error.price ? error.price : "Copy this from the API server's end"}
                                         </small>
                                     </div>
@@ -185,6 +185,7 @@ function EditServices(props) {
                                         <label>Price</label>
                                         <input
                                             type="number"
+                                            step="any"
                                             onChange={handleInput}
                                             name="price"
                                             value={servicesInput?.price}
@@ -193,13 +194,13 @@ function EditServices(props) {
                                         <small className="text-danger">{error?.price}</small>
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
-                                        <label>Status (Checked=avialable)</label>
+                                        <label>Status (Checked=available)</label>
                                         <input
                                             type="checkbox"
                                             name="status"
                                             onChange={handleCheckBox}
-                                            value={servicesInput?.status}
-                                            defaultChecked={servicesInput.status == '1'}
+                                            onClick={handleCheckBox}
+                                            defaultChecked={checkbox}
                                         />
                                     </div>
                                 </div>

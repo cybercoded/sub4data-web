@@ -48,12 +48,12 @@ function Home() {
                             </div>
                             <div className="col-md-4 col-6">
                                 <div className="small">
-                                    <Link className="my-text-primary text-decoration-underline" to="tel:07064967674">
+                                    <Link className="my-text-primary text-decoration-underline me-2" to={`tel:${process.env.REACT_APP_TEL}`}>
                                         Call
                                     </Link>
                                     or
                                     <Link
-                                        className="my-text-primary text-decoration-underline"
+                                        className="my-text-primary text-decoration-underline ms-2"
                                         to={`https://api.whatsapp.com/send?phone=${process.env.REACT_APP_TEL}`}
                                     >
                                         Whatsapp
@@ -70,7 +70,6 @@ function Home() {
                     <div className="container-fluid">
                         <Link className="navbar-brand fw-bold my-text-primary" to="#">
                             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
-                            {process.env.REACT_APP_NAME}
                         </Link>
                         <button
                             className="navbar-toggler"
@@ -96,8 +95,13 @@ function Home() {
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link mx-md-3" to="#">
-                                        Contact us
+                                    <Link className="nav-link mx-md-3" to="privacy-policy">
+                                        Privacy Policy
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link mx-md-3" to="terms-and-condition">
+                                        Terms and Condition
                                     </Link>
                                 </li>
                             </ul>
@@ -107,17 +111,18 @@ function Home() {
             </div>
             <div className="content">
                 <main className="">
-                    <div className="position-relative" style={{ backgroundColor: '#15002B' }}>
-                        <img src={`${imgRoot}/banner.jpg`} alt="GigNg banner" className="img-fluid" style={{ minHeight: 200 }} />
+                    <div className="position-relative">
+                        <img src={`${imgRoot}/banner.jpg`} alt="GigNg banner" className="img-responsive img-fluid" style={{ minHeight: 250 }} />
                         <div className="fs-4 ps-2" id="screen-page-text">
                             <div className="text-center">
                                 <div>Browse the internet seamlessly with</div>
                                 <div style={{ color: '#6BD2FF' }}>{process.env.REACT_APP_NAME}</div>
+                                <Link to="register" role='button' className='btn btn-primary btn-lg mt-4 rounded'>Get Started Now</Link>
                             </div>
                         </div>
                     </div>
-                    <div className="px-3 px-md-5 py-4 bg-secondary">
-                        <div className="container py-3 bg-transparent">
+                    <div className="px-3 px-md-5 py-4">
+                        <div className="container py-3">
                             <div className="my-text-primary text-center mb-4" style={{ fontSize: 26 }}>
                                 <strong>
                                     Buy Data and Airtime of every Nigerian Network (MTN, Glo, Airtel and 9mobile) at cheap rates.
@@ -147,11 +152,12 @@ function Home() {
                             </div>
                         </div>
                     </div>
-                    <div className="my-bg-primary">
-                        <div className="container bg-transparent py-5">
+                    <hr />
+                    <div className="">
+                        <div className="container py-5">
                             <div className="row my-md-3">
                                 <div className="col-md-6">
-                                    <div className="py-3 text-white">
+                                    <div className="py-3 my-text-primary fw-bold h5">
                                         <br className="d-none d-md-block" />
                                         <br className="d-none d-md-block" />
                                         <div>
@@ -168,38 +174,38 @@ function Home() {
                         </div>
                     </div>
                 </main>
-                <section id="our-services" className="px-3 px-md-5 py-3 bg-secondary">
+                <hr /> 
+                <section id="our-services" className="px-3 px-md-5 py-3">
                     <div className="container bg-transparent py-5">
                         <div className="h3 fw-bold text-center my-text-primary m-0">Our Services</div>
                         <div className="mx-auto mb-3 mb-md-5" style={{ width: 155 }}>
-                            <div className="bg-primary" style={{ width: 60, height: 4, borderRadius: 2 }}></div>
+                            <div className="my-bg-primary" style={{ width: 60, height: 4, borderRadius: 2 }}></div>
                         </div>
                         <div className="row">
                             <div className="col-md-4 text-center mt-4 mt-md-0">
                                 <div className="px-3">
-                                    <div className="circle-point mx-auto bg-primary">
+                                    <div className="circle-point mx-auto my-bg-primary">
                                         <img src={`${imgRoot}/security.svg`} alt="" className="img-fluid" />
                                     </div>
                                     <div>
-                                        Demodata is the final bus stop for cheap MTN, GLO, Airtel and 9Mobile data bundles and Airtime
-                                        Topups across Nigeria
+                                        {process.env.REACT_APP_NAME} 
+                                        is the final bus stop for cheap MTN, GLO, Airtel and 9Mobile data bundles and Airtime Topups across Nigeria
                                     </div>
                                 </div>
                             </div>
                             <div className="col-md-4 text-center mt-4 mt-md-0">
                                 <div className="px-3">
-                                    <div className="circle-point mx-auto bg-primary">
+                                    <div className="circle-point mx-auto my-bg-primary">
                                         <img src={`${imgRoot}/award.svg`} alt="" className="img-fluid" />
                                     </div>
                                     <div>
-                                        We offer the cheapest rates for all the Networks in Nigeria. You can also generate data pins and
-                                        sell offline.
+                                        We offer the cheapest rates for all the Networks in Nigeria. You can also generate data pins and sell offline.
                                     </div>
                                 </div>
                             </div>
                             <div className="col-md-4 text-center mt-4 mt-md-0">
                                 <div className="px-3">
-                                    <div className="circle-point mx-auto bg-primary">
+                                    <div className="circle-point mx-auto my-bg-primary">
                                         <img src={`${imgRoot}/receipt.svg`} alt="" className="img-fluid" />
                                     </div>
                                     <div>
@@ -211,12 +217,13 @@ function Home() {
                         </div>
                     </div>
                 </section>
-
-                <section id="how-it-works" className="px-3 px-md-5 py-3 bg-primary text-white">
+                <hr />
+                <section id="how-it-works" className="px-3 px-md-5 py-3">
                     <div className="container bg-transparent">
-                        <br />
-                        <br />
-                        <div className="h3 fw-bold text-center text-white mb-3 mb-md-5">How it Works</div>
+                        <div className="h3 fw-bold text-center my-text-primary">How it Works</div>
+                        <div className="mx-auto mb-3 mb-md-5" style={{ width: 155 }}>
+                            <div className="my-bg-primary" style={{ width: 60, height: 4, borderRadius: 2 }}></div>
+                        </div>
                         <div className="row">
                             <div className="col-md-4 text-center mt-5 mt-md-0">
                                 <div className="px-3">
@@ -298,15 +305,15 @@ function Home() {
                                 </li>
                             </ul>
                             <div className="mt-1">
-                                <Link className="text-white" to="index.html">
+                                <Link className="text-white" to="#">
                                     <small>Home</small>
                                 </Link>
                                 <span className="divider">|</span>
-                                <Link className="text-white" to="privacy-policy.html">
+                                <Link className="text-white" to="privacy-policy">
                                     <small>Privacy Policy</small>
                                 </Link>
                                 <span className="divider">|</span>
-                                <Link className="text-white" to="index.html">
+                                <Link className="text-white" to="terms-and-condition">
                                     <small>Terms and Conditions</small>
                                 </Link>
                             </div>
@@ -318,9 +325,9 @@ function Home() {
                     <div className="col-md-6 clearfix mt-3 mt-md-0">
                         <div>
                             <div className="float-end">
-                                <div className="mt-1 small">
+                                <Link onClick={() => window.location = `mailto:${process.env.REACT_APP_EMAIL}`} to='#' className="mt-1 small text-white">
                                     <i className="fa fa-envelope pr-2"></i> {process.env.REACT_APP_EMAIL}
-                                </div>
+                                </Link>
                                 <div className="mt-1 small">
                                     <i className="fa fa-phone pr-2"></i> {process.env.REACT_APP_TEL}
                                 </div>

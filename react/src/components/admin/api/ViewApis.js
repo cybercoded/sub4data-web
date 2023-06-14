@@ -37,9 +37,7 @@ function ViewApis(){
                 setLoading(false);
             }
         });
-    };
-
-            
+    };            
 
     useEffect(()=>{
         axios.get(`api/view-apis`).then(res=>{

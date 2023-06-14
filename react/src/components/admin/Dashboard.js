@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import $ from "jquery";
 import { Loader } from "../Global";
 
 function Dashboard(){
@@ -9,6 +8,7 @@ function Dashboard(){
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState([]);
     const [transactionData, setTransactionData] = useState([]);
+    const [panelData, setPanelData] = useState([]);
     
 
     useEffect(()=>{
@@ -27,62 +27,71 @@ function Dashboard(){
             }
             setLoading(false);
         });
+        
+        axios.get(`api/get-panel-value-admin`).then(res=>{
+            if(res.status===200){
+                setPanelData(res.data);
+            }
+            setLoading(false);
+        });
     },[]);
 
     return (
         <div className="container-fluid my-5">                
             <section className="row mb-5">
                 <div className="col-md-3 col-6 mb-3">
-                    <Link className="card text-decoration-none" to="">
+                    <Link className="card text-decoration-none" to="/admin/view-users">
                         <div className="card-body text-center">
                             <div className="mb-3">
-                                <i className="fas fa-users fa-4x text-danger"></i>
+                                <i className="fas fa-users fa-4x text-primary"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">200</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData.users_count}</div>
                             <small className="text-muted font-weight-bold">
-                                Users
+                                Registered Users
                             </small>
                         </div>
                     </Link>
                 </div>
 
                 <div className="col-md-3 col-6 mb-3">
-                    <Link className="card text-decoration-none" to="">
+                    <Link className="card text-decoration-none" to="/admin/transactions">
                         <div className="card-body text-center">
                             <div className="mb-3">
                                 <i className="fas fa-list-alt fa-4x text-success"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">200</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">
+                                ₦{ new Intl.NumberFormat().format(panelData.users_balance)}
+                            </div>
                             <small className="text-muted font-weight-bold">
-                                Transactions
+                                Users Balance
                             </small>
                         </div>
                     </Link>
                 </div>
 
                 <div className="col-md-3 col-6 mb-3">
-                    <Link className="card text-decoration-none" to="">
+                    <Link to="https://smartrechargeapi.com/v/login/" className="card text-decoration-none">
                         <div className="card-body text-center">
                             <div className="mb-3">
                                 <i className="fas fa-wallet fa-4x text-info"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">200</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">Click here to check</div>
                             <small className="text-muted font-weight-bold">
-                                Total
+                                API Balance
                             </small>
                         </div>
                     </Link>
                 </div>
 
                 <div className="col-md-3 col-6 mb-3">
-                    <Link className="card text-decoration-none" to="">
+                    <Link className="card text-decoration-none" to="/admin/transactions">
                         <div className="card-body text-center">
                             <div className="mb-3">
-                                <i className="far fa-bell fa-4x text-primary"></i>
+                                <i className="fa fa-triangle-exclamation text-danger fa-4x"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">200</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData.unsuccessful_transactions}</div>
                             <small className="text-muted font-weight-bold">
-                                Notification
+                                Unsuccessful Transactions
                             </small>
                         </div>
                     </Link>

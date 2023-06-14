@@ -9,18 +9,14 @@ function EditProduct(props) {
     const [categoryList, setCategoryList] = useState([]);
     const [errorList, setError] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [checkbox, setCheckbox] = useState();
     const [productInput, setProduct] = useState({
         category_id: '',
         api_product_id: '',
         name: '',
         description: '',
-        meta_title: '',
-        meta_keyword: '',
-        meta_description: '',
-        selling_price: '',
-        original_price: '',
-        quantity: '',
-        brand: ''
+        discount: '',
+        charges: ''
     });
 
     const handleInput = (e) => {
@@ -33,10 +29,9 @@ function EditProduct(props) {
         setPicture({ image: e.target.files[0] });
     };
 
-    const [allCheckBox, setChecBoxes] = useState([]);
     const handleCheckBox = (e) => {
         e.persist();
-        setChecBoxes({ ...allCheckBox, [e.target.name]: e.target.checked });
+        setCheckbox(e.target.checked);
     };
 
     useEffect(() => {
@@ -51,7 +46,7 @@ function EditProduct(props) {
         axios.get(`api/edit-product/${product_id}`).then((res) => {
             if (res.data.status === 200) {
                 setProduct(res.data.product);
-                setChecBoxes(res.data.product);
+                setCheckbox(res.data.product.status === 1 ? true : false);
             } else if (res.data.status === 404) {
                 swal('Error', res.data.message, 'error');
                 history.push('admin/view-product');
@@ -70,6 +65,9 @@ function EditProduct(props) {
         formData.append('api_product_id', productInput.api_product_id);
         formData.append('name', productInput.name);
         formData.append('description', productInput.description);
+        formData.append('discount', productInput.discount);
+        formData.append('charges', productInput.charges);
+        formData.append('status', checkbox);
 
         const product_id = props.match.params.id;
 
@@ -199,22 +197,45 @@ function EditProduct(props) {
                                 role="tabpanel"
                                 aria-labelledby="otherdetails-tab"
                             >
-                                <div className="row">
-                                    <div className="col-md-8 form-group mb-3">
-                                        <label>Image</label>
-                                        <input type="file" onChange={handleImage} name="image" className="form-control" />
-                                        <img src={`http://localhost:8000/${productInput.image}`} width="50" height="50" alt="img" />
-                                        <small className="text-danger">{errorList?.image}</small>
-                                    </div>
+                                <div className="form-group mb-3">
+                                    <label>Discount</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        name="discount"
+                                        onChange={handleInput}
+                                        value={productInput.discount}
+                                        className="form-control"
+                                    />
+                                    <small className="text-danger">{errorList?.discount}</small>
                                 </div>
-                                <div className="col-md-4 form-group mb-3">
-                                    <label>Status (Checked=avialable)</label>
+                                
+                                <div className="form-group mb-3">
+                                    <label>Charges</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        name="charges"
+                                        onChange={handleInput}
+                                        value={productInput.charges}
+                                        className="form-control"
+                                    />
+                                    <small className="text-danger">{errorList?.discount}</small>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Image</label>
+                                    <input type="file" onChange={handleImage} name="image" className="form-control" />
+                                    <img src={`http://localhost:8000/${productInput.image}`} width="50" height="50" alt="img" />
+                                    <small className="text-danger">{errorList?.image}</small>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Status (Checked=available)</label>
                                     <input
                                         type="checkbox"
                                         name="status"
-                                        onChange={handleInput}
-                                        value={productInput.status}
-                                        defaultChecked={productInput.status}
+                                        onChange={handleCheckBox}
+                                        onClick={handleCheckBox}
+                                        defaultChecked={checkbox}
                                     />
                                 </div>
                             </div>

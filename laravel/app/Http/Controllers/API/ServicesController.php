@@ -119,16 +119,16 @@ class ServicesController extends Controller
 
     public function view($id)
     {
-        $services = Services::where('product_id', $id)->get();
+        $services = Services::where('product_id', $id)->orderBy('price')->get();
 
-        $user_id=auth('sanctum')->user()->id;        
+        $user_id=auth('sanctum')->user()->id;
         $user_level = User::where('id', $user_id)->first()->level;
         $percentage = Levels::where('level', $user_level)->first()->percentage;
-        
+
         $my_services = [];
         foreach ($services as $service) {
             $discounted_price = $service->price - ($service->price * $percentage) / 100;
-            
+
             $my_services[] = array(
                 'id' => $service->id,
                 'product_id' => $service->product_id,
@@ -142,7 +142,7 @@ class ServicesController extends Controller
         }
 
         if($my_services)
-        {            
+        {
             return response()->json([
                 'status'=>200,
                 'services'=>$my_services

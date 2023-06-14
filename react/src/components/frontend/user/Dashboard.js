@@ -64,10 +64,10 @@ function Dashboard() {
         console.log(dataArray);
         var table = document.createElement("div");
         table.style.textAlign = "left";
-        table.innerHTML = (`<table className="table align-left table-striped table-hover">
+        table.innerHTML = (`<table cellpadding="10" className="table align-left table-striped table-hover">
             <body style="align-text: left;">
                 <tr>
-                    <th>Refernce</th>
+                    <th>Reference</th>
                     <td>${dataArray.reference}</td>
                 </tr>
                 <tr>
@@ -80,11 +80,11 @@ function Dashboard() {
                 </tr>
                 <tr>
                     <th>Product</th>
-                    <td>${dataArray.product}</td>
+                    <td>${dataArray.product || ''}</td>
                 </tr>
                 <tr>
                     <th>Service</th>
-                    <td>${dataArray.service}</td>
+                    <td>${dataArray.service || ''}</td>
                 </tr>
                 <tr>
                     <th>Description</th>
@@ -96,7 +96,7 @@ function Dashboard() {
                 </tr>
                 <tr>
                     <th>Date</th>
-                    <td>${dataArray.date}</td>
+                    <td>${dataArray?.date}</td>
                 </tr>
             </body>
         </table>`);
@@ -199,31 +199,18 @@ function Dashboard() {
                 </div>
             </div>
 
-            <div className='mt-2 d-none d-md-block'>
+            <div className='mt-2'>
                 <div className="text-muted h5 mb-4 pb-4 border-bottom">
-                    <b>Transaction</b> records |
+                    <b>Recent</b> transactions |
                     <Link to="/user/transactions" className="btn btn-primary btn-sm float-end">All Transaction</Link>
                 </div>
                 <div className="table-responsive">
-                    <table className="table table-boardered table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Status</th>
-                                <th>Amount</th>
-                                <th>Reference</th>
-                                <th>Description</th>
-                                <th><span className='float-end'>View</span></th>
-                            </tr>
-                        </thead>
+                    <table className="table">
                         <tbody>
                             {transactionList.map((item, index)=> {
                                 let formater = new Intl.NumberFormat();
                                 return (
                                     <tr key={index}>
-                                        <td>{index+1}</td>
-                                        <td><span className='badge bg-info'>{item.status}</span></td>
-                                        <td>₦{formater.format(item.amount)}</td>
                                         <td>{item.reference}</td>
                                         <td>{item.description}</td>
                                         <td>

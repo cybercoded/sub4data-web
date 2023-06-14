@@ -50,38 +50,42 @@ function Airtime(props) {
                 closeModal: false
             }
         })
-            .then((pin) => {
-                return axios.get(`/api/verify-pin/${pin}`);
-            })
-            .then((results) => {
-                let result = results.data;
-
-                if (result.status === 200) {
-                    swal({
-                        title: 'Are you sure?',
-                        text: 'Are you sure to proceed with your transaction!',
-                        icon: 'warning',
-                        buttons: true,
-                        dangerMode: true
-                    }).then((willDelete) => {
-                        if (willDelete) {
-                            setLoading(true);
-                            axios.post(`/api/airtime-purchase/`, textInput).then((res) => {
-                                if (res.data.status === 200) {
-                                    swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
-                                        history.push('/user/dashboard');
-                                    });
-                                }else {
-                                    swal('Error!', res.data.errors, 'error');
-                                }
-                                setLoading(false);
-                            });
-                        }
-                    });
-                } else {
-                    swal('Oh noes!', result.message, 'error');
-                }
-            });
+        .then((pin) => {
+            return axios.get(`/api/verify-pin/${pin}`);
+        })
+        .then((results) => {
+            
+            let result = results.data;
+            if (result.status === 200) {
+                swal({
+                    title: 'Are you sure?',
+                    text: 'Are you sure to proceed with your transaction!',
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        setLoading(true);
+                        axios.post(`/api/airtime-purchase/`, textInput).then((res) => {
+                            if (res.data.status === 200) {
+                                swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
+                                    history.push('/user/dashboard');
+                                });
+                            }else {
+                                swal('Error!', res.data.errors, 'error');
+                            }
+                            setLoading(false);
+                        });
+                    }
+                });
+            } else {
+                swal('Oh noes!', result.message, 'error');
+            }                
+        })
+        .catch(() => {
+            swal.stopLoading();
+            swal.close();
+        });
     };
 
     useEffect(() => {
@@ -93,12 +97,6 @@ function Airtime(props) {
                 setProductList(res.data.product);
             }
             setLoading(false);
-        });
-
-        axios.get(`api/user-discount`).then((res) => {
-            if (res.status === 200) {
-                setDiscount(res.data.percentage);
-            }
         });
 
         axios.get(`api/user/`).then((res) => {
@@ -130,7 +128,7 @@ function Airtime(props) {
                                     onClick={() => {
                                         setProductActive(item.id);
                                         setTextInput({...textInput, product_id: item.id });
-                                        console.log(textInput.product_id);
+                                        setDiscount(item.discount);
                                     }}
                                     style={{ margin: 2 }}
                                 >
@@ -157,10 +155,10 @@ function Airtime(props) {
                             type="number"
                             name="amount_to_charged"
                             disabled
-                            value={textInput.amount - (discount * textInput.amount) / 100 || 0}
+                            value={(textInput.amount - (discount * textInput.amount) / 100).toFixed(2)  || 0}
                             className="form-control"
                         ></input>
-                        <small className="text-info">{discount} % on all of your airtime recharge</small>
+                        <small className="text-info fw-bold">{discount && `${discount} % discount on all of your airtime recharge`}</small>
                     </div>
 
                     <div className="form-group mb-3">

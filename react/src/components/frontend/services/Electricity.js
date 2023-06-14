@@ -10,6 +10,8 @@ function Electricity(props) {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
     const [discount, setDiscount] = useState();
+    const [charges, setCharges] = useState();
+    const [filteredAmount, setFilteredAmount] = useState();
     const [productActive, setProductActive] = useState();
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
@@ -41,13 +43,18 @@ function Electricity(props) {
 
     const handleProductSelection2 = (e) => {
         var product_id = e.target.value;
+        var dataset = e.target.selectedOptions[0].dataset;
 
         setTextInput({ ...textInput, product_id: product_id, service_id: '' });
+        setCharges(dataset.charges);
+        setDiscount(dataset.discount);
+
 
         setLoading(true);
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
+                
             }
             setLoading(false);
         });
@@ -91,7 +98,7 @@ function Electricity(props) {
     const handleAmount = (e) => {
         var value = e.target.value;
         setTextInput({ ...textInput, [e.target.name]: value });
-
+        var changed_amount;
         var response = '';
         if (value < 500) {
             response = 'Amount should not be lesser than 500';
@@ -99,6 +106,13 @@ function Electricity(props) {
         if (value > 10000) {
             response = 'Amount should not be greater than 10,000';
         }
+        if (discount > 0) {
+            changed_amount = value - (Number(discount) * value) / 100;
+        } else if(charges > 0) {
+            changed_amount = Number(charges) + Number(value)
+        }
+        setFilteredAmount(changed_amount);
+
 
         setErrorList({ ...errorList, amount: response });
     };
@@ -116,39 +130,43 @@ function Electricity(props) {
                 closeModal: false
             }
         })
-            .then((pin) => {
-                return axios.get(`/api/verify-pin/${pin}`);
-            })
-            .then((results) => {
-                let result = results.data;
+        .then((pin) => {
+            return axios.get(`/api/verify-pin/${pin}`);
+        })
+        .then((results) => {
+            let result = results.data;
 
-                if (result.status === 200) {
-                    swal({
-                        title: 'Are you sure?',
-                        text: 'Are you sure to proceed with your transaction!',
-                        icon: 'warning',
-                        buttons: true,
-                        dangerMode: true,
-                        closeOnClickOutside: false
-                    }).then((willDelete) => {
-                        if (willDelete) {
-                            setLoading(true);
-                            axios.post(`/api/electricity-purchase/`, textInput).then((res) => {
-                                if (res.data.status === 200) {
-                                    swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
-                                        history.push('/user/dashboard');
-                                    });
-                                }else {
-                                    swal('Error!', res.data.errors, 'error');
-                                }
-                                setLoading(false);
-                            });
-                        }
-                    });
-                } else {
-                    swal('Oh noes!', result.message, 'error');
-                }
-            });
+            if (result.status === 200) {
+                swal({
+                    title: 'Are you sure?',
+                    text: 'Are you sure to proceed with your transaction!',
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                    closeOnClickOutside: false
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        setLoading(true);
+                        axios.post(`/api/electricity-purchase/`, textInput).then((res) => {
+                            if (res.data.status === 200) {
+                                swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
+                                    history.push('/user/dashboard');
+                                });
+                            }else {
+                                swal('Error!', res.data.errors, 'error');
+                            }
+                            setLoading(false);
+                        });
+                    }
+                });
+            } else {
+                swal('Oh noes!', result.message, 'error');
+            }
+        })
+        .catch(() => {
+            swal.stopLoading();
+            swal.close();
+        });
     };
 
     useEffect(() => {
@@ -156,14 +174,10 @@ function Electricity(props) {
         axios.get(`api/view-product/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setProductList(res.data.product);
+                setCharges(res.data.product.charges);
+                setDiscount(res.data.product.discount);
             }
             setLoading(false);
-        });
-
-        axios.get(`api/user-discount`).then((res) => {
-            if (res.status === 200) {
-                setDiscount(res.data.percentage);
-            }
         });
     }, [props.match.params.id, history]);
 
@@ -185,6 +199,8 @@ function Electricity(props) {
                                     className={`btn btn-outline-primary ${productActive === item.id && 'active'}`}
                                     onClick={() => {
                                         handleProductSelection(item.id, item.id);
+                                        setCharges(item.charges);
+                                        setDiscount(item.discount);
                                     }}
                                     style={{ margin: 2 }}
                                 >
@@ -199,7 +215,7 @@ function Electricity(props) {
                         <select name="product_id" onChange={handleProductSelection2} value={textInput.product_id} className="form-select">
                             <option value="">--Choose Data Service--</option>
                             {productList?.map((item, index) => (
-                                <option key={index} value={item.id}>
+                                <option key={index} data-discount={item.discount} data-charges={item.charges} value={item.id}>
                                     {item.name}
                                 </option>
                             ))}
@@ -241,10 +257,11 @@ function Electricity(props) {
                             type="number"
                             name="amount_to_charged"
                             disabled
-                            value={textInput.amount - (discount * textInput.amount) / 100 || 0}
+                            value={filteredAmount}
                             className="form-control"
                         ></input>
-                        <small className="text-info">{discount} % on all of your airtime recharge</small>
+                       <small className="text-info fw-bold">{discount > 0 && `${discount} % discount on all of your Electricity payment`}</small>
+                       <small className="text-info fw-bold">{charges && `${charges} % charges on all of your Electricity payment`}</small>
                     </div>
                     
                     <div id='proceed-btn' className="form-group mb-3">

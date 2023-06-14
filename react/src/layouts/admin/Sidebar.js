@@ -166,7 +166,7 @@ const SideBar = () => {
                         aria-controls="collapseApis"
                     >
                         <div className="sb-nav-link-icon">
-                            <i class="fa fa-arrow-up-right-from-square"></i>
+                            <i className="fa fa-arrow-up-right-from-square"></i>
                         </div>
                             APIs
                         <div className="sb-sidenav-collapse-arrow">
@@ -193,7 +193,7 @@ const SideBar = () => {
                         aria-controls="collapseLevels"
                     >
                         <div className="sb-nav-link-icon">
-                            <i class="fa fa-sitemap"></i>
+                            <i className="fa fa-sitemap"></i>
                         </div>
                             Levels 
                         <div className="sb-sidenav-collapse-arrow">

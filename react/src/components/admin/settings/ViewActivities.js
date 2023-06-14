@@ -30,7 +30,7 @@ function ViewActivities(){
             `);
         }        
         divElement.innerHTML = (`
-            <table class="table table-bordered">
+            <table className="table table-bordered">
                 <tbody>
                     ${view}
                 </tbody>

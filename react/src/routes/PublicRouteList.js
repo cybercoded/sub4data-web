@@ -7,6 +7,8 @@ import Reset from "../components/frontend/auth/Reset";
 import NewPassword from "../components/frontend/auth/NewPassword";
 import VerifyOtp from "../components/frontend/auth/VerifyOtp";
 import RegistrationVerify from "../components/frontend/auth/RegistrationVerify";
+import TermsAndCondition from "../components/frontend/auth/TermsAndCondition";
+import PrivacyPolicy from "../components/frontend/auth/PrivacyPolicy";
 
 
 const PublicRouteList =[
@@ -18,7 +20,9 @@ const PublicRouteList =[
     { path: '/reset', exact: true, name: 'Reset', component: Reset },
     { path: '/new-password/:email/:otp', exact: true, name: 'NewPassword', component: NewPassword },
     { path: '/verify-otp/:email', exact: true, name: 'VerifyOtp', component: VerifyOtp },
-    { path: '/verify-registration', exact: true, name: 'RegistrationVerify', component: RegistrationVerify }
+    { path: '/verify-registration', exact: true, name: 'RegistrationVerify', component: RegistrationVerify },
+    { path: '/terms-and-condition', exact: true, name: 'TermsAndCondition', component: TermsAndCondition },
+    { path: '/privacy-policy', exact: true, name: 'PrivacyPolicy', component: PrivacyPolicy }
 
 ];
 

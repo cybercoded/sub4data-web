@@ -74,39 +74,43 @@ function Data(props) {
                 closeModal: false
             }
         })
-            .then((pin) => {
-                return axios.get(`/api/verify-pin/${pin}`);
-            })
-            .then((results) => {
-                let result = results.data;
+        .then((pin) => {
+            return axios.get(`/api/verify-pin/${pin}`);
+        })
+        .then((results) => {
+            let result = results.data;
 
-                if (result.status === 200) {
-                    swal({
-                        title: 'Are you sure?',
-                        text: 'Are you sure to proceed with your transaction!',
-                        icon: 'warning',
-                        buttons: true,
-                        dangerMode: true,
-                        closeOnClickOutside: false
-                    }).then((willDelete) => {
-                        if (willDelete) {
-                            setLoading(true);
-                            axios.post(`/api/data-purchase/`, textInput).then((res) => {
-                                if (res.data.status === 200) {
-                                    swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
-                                        history.push('/user/dashboard');
-                                    });
-                                }else {
-                                    swal('Error!', res.data.errors, 'error');
-                                }
-                                setLoading(false);
-                            });
-                        }
-                    });
-                } else {
-                    swal('Oh noes!', result.message, 'error');
-                }
-            });
+            if (result.status === 200) {
+                swal({
+                    title: 'Are you sure?',
+                    text: 'Are you sure to proceed with your transaction!',
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                    closeOnClickOutside: false
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        setLoading(true);
+                        axios.post(`/api/data-purchase/`, textInput).then((res) => {
+                            if (res.data.status === 200) {
+                                swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
+                                    history.push('/user/dashboard');
+                                });
+                            }else {
+                                swal('Error!', res.data.errors, 'error');
+                            }
+                            setLoading(false);
+                        });
+                    }
+                });
+            } else {
+                swal('Oh noes!', result.message, 'error');
+            }
+        })
+        .catch(() => {
+            swal.stopLoading();
+            swal.close();
+        });
     };
 
     useEffect(() => {

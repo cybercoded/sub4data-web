@@ -387,7 +387,7 @@ class UserController extends Controller
                     'balance' => $from->balance,
                     'reference' =>  $transactionFrom->reference,
                     'price' => number_format($request['amount']),
-                    'description' => $from->description,
+                    'description' => $transactionFrom->description,
                     'order_date' => date('Y-m-d H:i:s')
                 ];
 
@@ -396,8 +396,8 @@ class UserController extends Controller
 
                 //Recording receiver
                 Activities::create([
-                    'type' => $request->type,
-                    'title' => $request->title,
+                    'type' => 'credit_transfer',
+                    'title' => $transactionTo->description,
                     'log' => serialize($customer_details)
                 ]);
 
@@ -410,7 +410,7 @@ class UserController extends Controller
                     'balance' => $to->balance,
                     'reference' =>  $transactionTo->reference,
                     'price' => number_format($request['amount']),
-                    'description' => $to->description,
+                    'description' => $transactionTo->description,
                     'order_date' => date('Y-m-d H:i:s')
                 ];
 
@@ -419,8 +419,8 @@ class UserController extends Controller
 
                 //Recording sender
                 Activities::create([
-                    'type' => $request->type,
-                    'title' => $request->title,
+                    'type' => 'debit_transfer',
+                    'title' => $transactionFrom->description,
                     'log' => serialize($customer_details)
                 ]);
 

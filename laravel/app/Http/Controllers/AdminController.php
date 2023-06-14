@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\BulkMail;
 use App\Models\Activities;
+use App\Models\Transactions;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Mail;
@@ -16,6 +17,20 @@ class AdminController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      */
+
+    public function index(Request $request)
+    {
+        $users_count = User::count();
+        $users_balance = User::sum('balance');
+        $failed_transactions = Transactions::where('status', '!=', 'success')->count();
+
+        return response()->json([
+            'users_count' => $users_count,
+            'users_balance' => $users_balance,
+            'unsuccessful_transactions' => $failed_transactions
+        ]);
+
+    }
     public function bulkEmail(Request $request)
     {
         //
@@ -59,5 +74,10 @@ class AdminController extends Controller
            'status' => 200,
            'message' => 'Message successfully sent to all users',
         ]);
+    }
+
+    public function purchaser()
+    {
+        $this->info('Hello world from controller!');
     }
 }

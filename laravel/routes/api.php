@@ -54,6 +54,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
         return response()->json(["message" => "You are in", 'status' => 200], 200);
     });
 
+    //Categories
     Route::post('store-category', [CategoryController::class, 'store']);
 
     Route::get('view-category', [CategoryController::class, 'index']);
@@ -119,6 +120,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('get-level/{id}', [LevelController::class, 'get']);
     Route::post('update-level/{id}', [LevelController::class, 'update']);
     Route::post('store-level', [LevelController::class, 'store']);
+    Route::delete('delete-level/{id}', [LevelController::class, 'delete']);
 
     //Apis
     Route::get('view-apis', [ApisController::class, 'index']);
@@ -126,6 +128,9 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::post('update-api/{id}', [ApisController::class, 'update']);
     Route::post('store-api', [ApisController::class, 'store']);
     Route::delete('delete-api/{id}', [ApisController::class, 'delete']);
+
+    //Dashboard
+    Route::get('get-panel-value-admin', [AdminController::class, 'index']);
 
 });
 

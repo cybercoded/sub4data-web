@@ -114,7 +114,7 @@ function ViewUsers(props){
                         </div>
                     </form>
                     <div className="table-responsive">
-                        <table id="table" className="table table-boardered table-striped">
+                        <table id="table" className="table table-striped">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -133,7 +133,7 @@ function ViewUsers(props){
                                             <td>{item.name}</td>
                                             <td>{item.email}</td>                                            
                                             <td>₦{ new Intl.NumberFormat().format(item.balance)}</td>                                            
-                                            <td><span className="badge bg-success">{item.levels.level === 1 ? 'Basic' : 'Agent'}</span></td>
+                                            <td><span className="badge bg-success">{item.levels[0]['name']}</span></td>
                                             <td><span className="badge bg-info">{item.status === 1 ? 'Active' : 'Inactive'}</span></td>
                                             <td>
                                                 <Link className="btn btn-primary btn-sm float-end" to={`/admin/edit-user/${item.id}`}>View</Link>
@@ -144,7 +144,7 @@ function ViewUsers(props){
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colSpan={6}>
+                                    <td colSpan={7}>
                                         <button onClick={handleLoadMoreUsers} className="btn btn-primary btn-sm float-end">Load more users</button>
                                     </td>
                                 </tr>

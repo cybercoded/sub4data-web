@@ -51,14 +51,14 @@ class User extends Authenticatable
     }
 
     public function levels(){
-        return $this->hasMany(Levels::class, 'level', 'id');
+        return $this->hasMany(Levels::class, 'level', 'level');
     }
 
 
    /*  public function data()
     {
         return $this->hasManyThrough(
-            Banks::class, 
+            Banks::class,
             Levels::class,
             'user_id',
             'level_id',
