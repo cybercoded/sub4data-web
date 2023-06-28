@@ -3,11 +3,11 @@ import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import $ from "jquery";
-import { Loader } from "../../Global";
+
 
 function ViewCategory(){
 
-    const [loading, setLoading] = useState(true);
+    
     const [categoryList, setCategoryList] = useState([]);
 
     useEffect(()=>{
@@ -19,14 +19,14 @@ function ViewCategory(){
                     $('table').DataTable();
                 });
             }
-            setLoading(false);
+            
         })
     },[]);
 
     return(
         <div className="container px-4">
             <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>Category list</h4>
                     <Link to="/admin/add-category" className="btn btn-primary btn-sm float-end">Add category</Link>
@@ -49,7 +49,7 @@ function ViewCategory(){
                                         <td>{item.id}</td>
                                         <td>{item.name}</td>
                                         <td>{item.slug}</td>
-                                        <td><img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name}/></td>
+                                        <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" height="50" alt={item.name}/></td>
                                         <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
                                         <td>
                                             <Link to={`edit-category/${item.id}`} className="btn btn-success btn-sm">Edit</Link>

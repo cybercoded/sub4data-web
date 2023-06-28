@@ -3,11 +3,9 @@ import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import $ from "jquery";
-import { Loader } from "../../Global";
 
 function ViewApis(){
-
-    const [loading, setLoading] = useState(true);
+    
     const [apisList, setApisList] = useState([]);
 
     const handleDelete = (e)=>{
@@ -21,7 +19,7 @@ function ViewApis(){
         })
         .then((willDelete) => {
             if (willDelete) {
-                setLoading(true);
+                
                 axios.delete(`api/delete-api/${e.target.dataset.id}`).then(res=>{
                     if(res.data.status===200){
                         swal("Deleted!", "Your imaginary api has been deleted.", "success");
@@ -31,10 +29,10 @@ function ViewApis(){
 
                     }
                 });
-                setLoading(false);
+                
             } else {
                 swal("Your imaginary api is safe :)", "Your imaginary api is safe :)", "error");
-                setLoading(false);
+                
             }
         });
     };            
@@ -48,14 +46,14 @@ function ViewApis(){
                     $('table').DataTable();
                 });
             }
-            setLoading(false);
+            
         })
     },[]);
 
     return(
         <div className="container px-4">
             <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>Apis list</h4>
                     <Link to="/admin/add-api" className="btn btn-primary btn-sm float-end">Add Api</Link>

@@ -2,13 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function EditProduct(props) {
     const history = useHistory();
     const [categoryList, setCategoryList] = useState([]);
     const [errorList, setError] = useState([]);
-    const [loading, setLoading] = useState(true);
+    
     const [checkbox, setCheckbox] = useState();
     const [productInput, setProduct] = useState({
         category_id: '',
@@ -51,7 +51,7 @@ function EditProduct(props) {
                 swal('Error', res.data.message, 'error');
                 history.push('admin/view-product');
             }
-            setLoading(false);
+            
         });
     }, [props.match.params.id, history]);
 
@@ -83,14 +83,14 @@ function EditProduct(props) {
                 swal('Erro', res.data.message, 'error');
                 history.push('admin/view-product');
             }
-            setLoading(false);
+            
         });
     };
 
     return (
         <div className="container-fluid px-4">
             <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>
                         Edit product |
@@ -225,7 +225,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Image</label>
                                     <input type="file" onChange={handleImage} name="image" className="form-control" />
-                                    <img src={`http://localhost:8000/${productInput.image}`} width="50" height="50" alt="img" />
+                                    <img src={`${process.env.REACT_APP_URL}${productInput.image}`} width="50" height="50" alt="img" />
                                     <small className="text-danger">{errorList?.image}</small>
                                 </div>
                                 <div className="form-group mb-3">

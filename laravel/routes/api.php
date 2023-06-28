@@ -4,7 +4,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\API\ActivityController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\PinController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\PurchaseController;
@@ -16,7 +15,6 @@ use App\Http\Controllers\ApisController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MonnifyController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,15 +27,19 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('register', [AuthController::class, 'register']);
+
 
 Route::post('login', [AuthController::class, 'login']);
+
+Route::post('register', [AuthController::class, 'register']);
 
 Route::get('verify-user-email/{email}', [UserController::class, 'adminVerifyEmail']);
 
 Route::put('password-reset', [UserController::class, 'resetPassword']);
 
 Route::put('send-otp', [AuthController::class, 'sendOTP']);
+
+Route::put('resend-otp', [AuthController::class, 'resendOTP']);
 
 Route::put('verify-otp-and-reset', [UserController::class, 'verifyOtpAndResetPassword']);
 
@@ -47,6 +49,59 @@ Route::get('verify-monnify-merchant-payment', [MonnifyController::class, 'verify
 
 Route::get('verify-monnify-atm-payment', [MonnifyController::class, 'verifyAtmPayment']);
 
+Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
+    //user
+    Route::get('get-user', [UserController::class, 'view']);
+
+    Route::post('update-user', [UserController::class, 'userUpdate']);
+
+    Route::put('update-password', [UserController::class, 'updatePassword']);
+
+    Route::get('verify-password/{password}', [UserController::class, 'verifyPassword']);
+
+    Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
+
+    Route::put('transfer-fund', [UserController::class, 'adminCreditUser']);
+
+
+    //Products
+
+    Route::get('view-product/{slug}', [ProductController::class, 'viewWithSlug']);
+
+    Route::get('view-product', [ProductController::class, 'index']);
+
+    //Services
+    Route::get('view-services/{id}', [ServicesController::class, 'view']);
+
+
+    //Verifications
+    Route::post('meternumber-verification', [VerificationController::class, 'meternumber']);
+
+    Route::post('smartcard-verification', [VerificationController::class, 'smartnumber']);
+
+    //Pins
+    Route::put('update-pin', [PinController::class, 'update']);
+
+    Route::get('reset-pin', [PinController::class, 'resetPin']);
+
+    Route::get('verify-pin/{pin}', [PinController::class, 'verify']);
+
+    Route::get('verify-otp-for-pin/{pin}', [PinController::class, 'verifyOtpForPin']);
+
+    //Transactions
+    Route::post('filter-transactions', [TransactionController::class, 'filter']);
+
+    Route::get('view-transactions/{limit}', [TransactionController::class, 'get']);
+
+    //Payment
+    Route::post('merchant-pay', [MonnifyController::class, 'initializePay']);
+
+    //Levels
+    Route::get('view-levels', [LevelController::class, 'index']);
+
+    Route::post('upgrade-user', [UserController::class, 'userUpgrade']);
+
+});
 
 Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
@@ -132,22 +187,25 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     //Dashboard
     Route::get('get-panel-value-admin', [AdminController::class, 'index']);
 
+    //Backups
+    Route::get('database-backup', [BackupController::class, 'backup']);
+
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    //Users
-
-    Route::post('logout', [AuthController::class, 'logout']);
-
+    //Categories
     Route::get('view-category', [CategoryController::class, 'index']);
 
+    //Products
     Route::get('view-product/{id}', [ProductController::class, 'view']);
 
     Route::get('view-product', [ProductController::class, 'index']);
 
+    //Services
     Route::get('view-services/{id}', [ServicesController::class, 'view']);
 
+    //Transaction Pins
     Route::get('verify-pin/{pin}', [PinController::class, 'verify']);
 
     Route::put('update-pin', [PinController::class, 'update']);
@@ -156,17 +214,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::put('verify-otp-and-reset-pin', [PinController::class, 'verifyOtpAndResetPin']);
 
+    //API Verifications
     Route::post('smartcard-verification', [VerificationController::class, 'smartnumber']);
 
     Route::post('meternumber-verification', [VerificationController::class, 'meternumber']);
+
+
+    //User
+    Route::post('logout', [AuthController::class, 'logout']);
+
+    Route::get('user', [UserController::class, 'view']);
 
     Route::post('update-user', [UserController::class, 'userUpdate']);
 
     Route::put('update-password', [UserController::class, 'updatePassword']);
 
     Route::get('verify-password/{password}', [UserController::class, 'verifyPassword']);
-
-    Route::get('database-backup', [BackupController::class, 'backup']);
 
     Route::get('user-banks', [UserController::class, 'viewBanks']);
 
@@ -196,9 +259,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('merchant-pay', [MonnifyController::class, 'initializePay']);
 
-});
+    //Levels
+    Route::get('view-levels', [LevelController::class, 'index']);
 
+    Route::post('upgrade-user', [UserController::class, 'userUpgrade']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
 });

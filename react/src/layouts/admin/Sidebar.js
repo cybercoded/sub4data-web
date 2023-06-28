@@ -2,21 +2,21 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../components/Global';
+
 import $ from 'jquery';
 
 const SideBar = () => {
 
-    const [loading, setLoading] = useState();
+    
     const handleBackUp = (e) => {
         e.persist();
 
-        setLoading(true);
+        
         axios.get(`api/database-backup`).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success');
             }
-            setLoading(false);
+            
         });
     };
 
@@ -28,7 +28,7 @@ const SideBar = () => {
 
     return (
         <nav className="sb-sidenav border border-top-0 border-bottom-0 border-secondary sb-sidenav-light" id="my-admin-sidebar" data-bs-target="#navbarDropdown2">
-            <Loader isActive={loading} />
+            
             <div className="sb-sidenav-menu">
                 <div className="nav">
                     <div className="sb-sidenav-menu-heading">Menu</div>

@@ -2,11 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory} from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function AddServices() {
     const history = useHistory();
-    const [loading, setLoading] = useState(false);
     const [productList, setproductList] = useState([]);
     const [errorList, setError] = useState([]);
     const [servicesInput, setservices] = useState({
@@ -24,12 +23,12 @@ function AddServices() {
     };
 
     useEffect(() => {
-        setLoading(true);
+        
         axios.get(`api/view-product`).then((res) => {
             if (res.data.status === 200) {
                 setproductList(res.data.product);
             }
-            setLoading(false);
+            
         });
 
         return () => {};
@@ -38,7 +37,7 @@ function AddServices() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`api/store-services`, servicesInput).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() =>{
@@ -56,14 +55,14 @@ function AddServices() {
                 swal('Error', res.data.message, 'error');
                 history.push('admin/view-services');
             }
-            setLoading(false);
+            
         });
     };
 
     return (
         <div className="container-fluid px-4">
             <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>
                         Add services |

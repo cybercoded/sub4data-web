@@ -2,11 +2,10 @@ import React, {useState} from 'react';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Loader } from '../../Global';
+
 import Toastify from 'toastify-js';
 
 function VerifyPinOtp(props) {
-    const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [textInput, setTextInput] = useState({
         otp:''
@@ -18,24 +17,22 @@ function VerifyPinOtp(props) {
     }
 
    const handleResend = (e)=>{                   
-        setLoading(true);
-        if(loading === false){
-            axios.get(`/api/reset-pin/`).then((res) => {
-                Toastify({
-                    text: "OTP was resent to you",
-                    duration: 3000,
-                    className: "info",
-                    close: true,
-                    gravity: "top", // `top` or `bottom`
-                    position: "center", // `left`, `center` or `right`
-                    stopOnFocus: true, // Prevents dismissing of toast on hover
-                    offset: {
-                        y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-                    },
-                }).showToast();
-                setLoading(false);
-            });
-        }
+        
+        axios.get(`/api/reset-pin/`).then((res) => {
+            Toastify({
+                text: "OTP was resent to you",
+                duration: 3000,
+                className: "info",
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                offset: {
+                    y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                },
+            }).showToast();
+            
+        });
     }
     
     const handleVerify = (e)=>{   
@@ -50,7 +47,7 @@ function VerifyPinOtp(props) {
             return;
         }
         
-        setLoading(true);
+        
         axios.put(`/api/verify-otp-and-reset-pin/`, textInput).then((res) => {
             if (res.data.status === 200) {
                 swal.stopLoading();
@@ -60,18 +57,18 @@ function VerifyPinOtp(props) {
             }else {
                 swal('Error!', res.data.errors, 'error');
             }
-            setLoading(false);
+            
         });
     }
 
 
     return(
         <div className="container mt-5">
-            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+            <div className="text-muted mb-4 pb-4 border-bottom">
                 <b>OTP</b> Verification |
             </div>
             <div className="bg-light card card-body col-md-6">
-                <Loader isActive={loading} />               
+                               
                 <div className='card-body'>
                     <form onSubmit={handleVerify}>
                         <div className='form-group mb-3'>

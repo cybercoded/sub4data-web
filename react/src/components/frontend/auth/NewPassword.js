@@ -2,17 +2,16 @@ import React, {useState} from 'react';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Loader } from '../../Global';
+
 
 function NewPassword(props) {
 
     const email = props.match.params.email;
     const otp = props.match.params.otp;
 
-    const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [textInput, setTextInput] = useState({
-        password:'kunleY247++',
+        password:'',
         password2:'',
         email: email,
         otp: otp
@@ -66,7 +65,7 @@ function NewPassword(props) {
             return;
         }
         
-        setLoading(true);
+        
         axios.put(`/api/verify-otp-and-reset/`, textInput).then((res) => {
             if (res.data.status === 200) {
                 swal('Success!', `You can proceed to login`,'success').then(() => {
@@ -75,7 +74,7 @@ function NewPassword(props) {
             }else {
                 swal('Error!', res.data.errors, 'error');
             }
-            setLoading(false);
+            
         });
     }
     
@@ -83,7 +82,7 @@ function NewPassword(props) {
     const handleResend = (e)=>{
         e.preventDefault();
 
-        setLoading(true);
+        
         
         axios.put(`/api/password-reset/`, {email: email}).then((res) => {
             if (res.data.status === 200) {
@@ -93,7 +92,7 @@ function NewPassword(props) {
             }else {
                 swal('Error!', res.data.errors, 'error');
             }
-            setLoading(false);
+            
         });
     }
 
@@ -102,7 +101,7 @@ function NewPassword(props) {
             <div className='my-bg-primary'>                
                 <div className="d-flex align-items-center justify-content-center vh-100">                                 
                     <div className='card col-md-4 col-lg-3 col-10'>
-                        <Loader isActive={loading} />
+                        
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
                             <h4>Regain your account</h4>

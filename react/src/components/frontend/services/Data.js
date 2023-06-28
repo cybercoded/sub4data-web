@@ -2,11 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function Data(props) {
     const history = useHistory();
-    const [loading, setLoading] = useState(true);
+    
     const [productActive, setProductActive] = useState('');
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
@@ -29,12 +29,12 @@ function Data(props) {
         setProductActive(product_id);
         setTextInput({ ...textInput, product_id: product_id.toString(), service_id: '' });
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
             }
-            setLoading(false);
+            
         });
 
     };
@@ -44,12 +44,12 @@ function Data(props) {
 
         setTextInput({ ...textInput, product_id: product_id, service_id: '' });
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
             }
-            setLoading(false);
+            
         });
         setProductActive(Number(product_id));
 
@@ -90,7 +90,7 @@ function Data(props) {
                     closeOnClickOutside: false
                 }).then((willDelete) => {
                     if (willDelete) {
-                        setLoading(true);
+                        
                         axios.post(`/api/data-purchase/`, textInput).then((res) => {
                             if (res.data.status === 200) {
                                 swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
@@ -99,7 +99,7 @@ function Data(props) {
                             }else {
                                 swal('Error!', res.data.errors, 'error');
                             }
-                            setLoading(false);
+                            
                         });
                     }
                 });
@@ -119,17 +119,17 @@ function Data(props) {
             if (res.status === 200) {
                 setProductList(res.data.product);
             }
-            setLoading(false);
+            
         });
     }, [props.match.params.id, history]);
 
     return (
         <div className="container mt-5">
-            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+            <div className="text-muted mb-4 pb-4 border-bottom">
                 <b>Data</b> Purchase |
             </div>
             <div className="bg-light card card-body col-md-6">
-                <Loader isActive={loading} />
+                
                 <form onSubmit={handlePurchaseData} className="">
                     <div className="form-group mb-3">
                         {productList.map((item, index) => {
@@ -137,13 +137,13 @@ function Data(props) {
                                 <button
                                     type="button"
                                     key={index}
-                                    className={`btn btn-outline-primary ${productActive === item.id && 'active'}`}
+                                    className={`btn btn-outline-primary btn-sm ${productActive === item.id && 'active'}`}
                                     onClick={() => {
                                         handleProductSelection(item.id);
                                     }}
                                     style={{ margin: 2 }}
                                 >
-                                    <img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name} />
+                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} className='img-fluid' width="40" height="45" alt={item.name} />
                                 </button>
                             );
                         })}

@@ -3,12 +3,12 @@ import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import $ from "jquery";
-import { Loader } from "../../Global";
+
 
 function ViewUsers(props){
     const [usersData, setUsersData] = useState([]);
 
-    const [loading, setLoading] = useState(true);
+    
     const [textInput, setTextInput] = useState({
         limit: 10,
     });
@@ -21,14 +21,14 @@ function ViewUsers(props){
     const handleUsersFilter = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/filter-users`, textInput).then((res) => {
             if(res.data.status === 200) {
                 setUsersData(res.data.users);
             } else {
                 swal("Error", res.data.errors, "error");
             }
-            setLoading(false);
+            
         });
 
     };
@@ -36,7 +36,7 @@ function ViewUsers(props){
     const handleLoadMoreUsers = (e) => {
         e.preventDefault();
        
-        setLoading(true);
+        
         axios.post(`api/view-users`).then(res=>{
             if(res.data.status===200)
             {
@@ -45,7 +45,7 @@ function ViewUsers(props){
                     $('#table').DataTable();
                 });
                 setTextInput({...textInput, limit: textInput.limit + 10 });
-                setLoading(false);
+                
             }
         });
 
@@ -53,7 +53,7 @@ function ViewUsers(props){
 
     useEffect(() => {
 
-        setLoading(true);
+        
         axios.post(`api/view-users`).then(res=>{
             if(res.data.status===200)
             {
@@ -62,7 +62,7 @@ function ViewUsers(props){
                     $('#table').DataTable();
                 });
                 setTextInput({...textInput, limit: textInput.limit + 10 });
-                setLoading(false);
+                
             }
         });
     }, []);
@@ -71,7 +71,7 @@ function ViewUsers(props){
     return(
         <div className="container py-5">
             <div className="card">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>View Users | </h4>
                 </div>

@@ -5,8 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
-class APIAdminMiddleware
+class APIPublicVerification
 {
     /**
      * Handle an incoming request.
@@ -16,23 +17,18 @@ class APIAdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::check())
-        {
-            if(auth()->user()->tokenCan('server:admin')){
-                return $next($request);
-            }else{
-                return response()->json([
+        $user = User::where('access_token', $request->bearerToken())->first();
 
-                    'message'=>'Access denied, Admins only'
-                ],403);
-            }
-        }
-        else{
+        if(!$user)
+        {
             return response()->json([
-                'status'=>401,
-                'message'=>'Please login first'
+                'status' => 401,
+                'errors' => 'Access token error'
             ]);
         }
 
+        $request->merge(['user'=> $user]);
+
+        return $next($request);
     }
 }

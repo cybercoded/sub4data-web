@@ -2,10 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function AddCategory() {
-    const [loading, setLoading] = useState(false);
     const [categoryInput, setCategory] = useState({
         slug: '',
         name: '',
@@ -40,7 +39,7 @@ function AddCategory() {
         formData.append('meta_description', categoryInput.meta_description);
         formData.append('meta_keyword', categoryInput.meta_keyword);
 
-        setLoading(true);
+        
         axios.post(`/api/store-category`, formData).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() => {
@@ -49,7 +48,7 @@ function AddCategory() {
             } else if (res.data.status === 400) {
                 setCategory({ ...categoryInput, error_list: res.data.errors });
             }
-            setLoading(false);
+            
         });
     };
 
@@ -69,7 +68,7 @@ function AddCategory() {
             })}
 
             <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>
                         Add Category |
@@ -190,7 +189,7 @@ function AddCategory() {
                                 <div className="form-group mb-3">
                                     <label>Image</label>
                                     <input type="file" onChange={handleImage} name="image" className="form-control" />
-                                    <img src={`http://localhost:8000/${categoryInput.image}`} width="50" height="50" alt="Img" />
+                                    <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} width="50" height="50" alt="Img" />
                                     <small className="text-danger">{categoryInput?.error_list.image}</small>
                                 </div>
                             </div>

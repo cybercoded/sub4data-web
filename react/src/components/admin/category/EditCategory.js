@@ -2,12 +2,12 @@ import axios from "axios";
 import React,{useState,useEffect} from "react";
 import { Link, useHistory } from "react-router-dom";
 import swal from "sweetalert";
-import { Loader } from "../../Global";
+
 
 function EditCategory(props){
 
     const history=useHistory();
-    const [loading, setLoading] = useState(true);
+    
     const [categoryInput, setCategory] = useState([]);
     const [error, setError] = useState([]);
 
@@ -24,7 +24,7 @@ function EditCategory(props){
                 swal('Error',res.data.message,"error");
                 history.pushState('/admin/view-category')
             }
-            setLoading(false);
+            
         });
     
       return () => {
@@ -76,7 +76,7 @@ function EditCategory(props){
     return(
         <div className="container px-4">
              <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>Edit Category | 
                         <Link to="/admin/view-category" className="btn btn-primary btn-sm float-end">Back</Link>
@@ -132,7 +132,7 @@ function EditCategory(props){
                             <div className="form-group mb-3">
                                 <label>Image</label>
                                 <input type="file" onChange={handleImage}  name="image" className="form-control" />
-                                <img src={`http://localhost:8000/${categoryInput.image}`} width="50" height="50" />
+                                <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} width="50" height="50" />
                                 <small className="text-danger">{error?.image}</small>
                             </div>                            
                         </div>  

@@ -53,7 +53,7 @@
             var options = {
                 whatsapp: '971582546208', // WhatsApp number
                 call_to_action: 'Hi', // Call to action
-                position: 'left' // Position may be 'right' or 'left'
+                position: 'right' // Position may be 'right' or 'left'
             };
             var proto = document.location.protocol,
                 host = 'getbutton.io',
@@ -68,5 +68,15 @@
             var x = document.getElementsByTagName('script')[0];
             x.parentNode.insertBefore(s, x);
         })();
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2NEVN43WXL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-2NEVN43WXL');
     </script>
 </html>

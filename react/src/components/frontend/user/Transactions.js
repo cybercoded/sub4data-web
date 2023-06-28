@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import $ from 'jquery';
-import { Loader } from '../../Global';
+
 
 function Transactions(props) {
     const user_id = props.match.params.id;
@@ -11,7 +11,7 @@ function Transactions(props) {
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
 
-    const [loading, setLoading] = useState(true);
+    
     const [textInput, setTextInput] = useState({
         limit: 10,
         user_id: user_id
@@ -25,14 +25,14 @@ function Transactions(props) {
     const handleTransactionFilter = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/filter-transactions`, textInput).then((res) => {
             if (res.data.status === 200) {
                 setTransactionData(res.data.data);
             } else {
                 swal('Error', res.data.errors, 'error');
             }
-            setLoading(false);
+            
         });
     };
 
@@ -92,19 +92,19 @@ function Transactions(props) {
 
         setTextInput({ ...textInput, product_id: product_id });
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
             }
-            setLoading(false);
+            
         });
     };
 
     const handleLoadMoreTransaction = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/filter-transactions`, textInput).then((res) => {
             if (res.data.status === 200) {
                 setTransactionData(res.data.data);
@@ -112,17 +112,17 @@ function Transactions(props) {
                     $('#table').DataTable();
                 });
                 setTextInput({ ...textInput, limit: textInput.limit + 10 });
-                setLoading(false);
+                
             }
         });
     };
 
     useEffect(() => {
-        setLoading(true);
+        
         axios.get(`/api/view-product`).then((res) => {
             if (res.data.status === 200) {
                 setProductList(res.data.product);
-                setLoading(false);
+                
             }
         });
 
@@ -133,7 +133,7 @@ function Transactions(props) {
                     $('#table').DataTable();
                 });
                 setTextInput({ ...textInput, limit: textInput.limit + 10 });
-                setLoading(false);
+                
             }
         });
     }, []);
@@ -168,7 +168,7 @@ function Transactions(props) {
                                 <div className="accordion-body">
                                     <form onSubmit={handleTransactionFilter}>
                                         <div className="row">
-                                            <div className="col-md-3 col-6">
+                                            <div className="col-md-3">
                                                 <div className="form-group">
                                                     <label htmlFor="type">Transaction Type</label>
                                                     <select
@@ -186,7 +186,7 @@ function Transactions(props) {
                                                 </div>
                                             </div>
 
-                                            <div className="col-md-3 col-6">
+                                            <div className="col-md-3">
                                                 <div className="form-group mb-3">
                                                     <label>Products:</label>
                                                     <select
@@ -205,7 +205,7 @@ function Transactions(props) {
                                                 </div>
                                             </div>
 
-                                            <div className="col-md-3 col-6">
+                                            <div className="col-md-3">
                                                 <div className="form-group mb-3">
                                                     <label>Services:</label>
                                                     <select name="service_id" onChange={handleInput} className="form-select">
@@ -219,7 +219,7 @@ function Transactions(props) {
                                                 </div>
                                             </div>
 
-                                            <div className="col-md-3 col-6">
+                                            <div className="col-md-3">
                                                 <div className="form-group mb-3">
                                                     <label>Status:</label>
                                                     <select name="status" onChange={handleInput} className="form-select">
@@ -231,7 +231,7 @@ function Transactions(props) {
                                                 </div>
                                             </div>
 
-                                            <div className="col-md-3 col-6">
+                                            <div className="col-md-3">
                                                 <div className="form-group">
                                                     <label htmlFor="from">Date from</label>
                                                     <input
@@ -243,13 +243,13 @@ function Transactions(props) {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="col-md-3 col-6">
+                                            <div className="col-md-3">
                                                 <div className="form-group">
                                                     <label htmlFor="to">Date to</label>
                                                     <input type="date" name="to" onChange={handleInput} className="form-control" id="to" />
                                                 </div>
                                             </div>
-                                            <div className="col-md-3 col-6">
+                                            <div className="col-md-3">
                                                 <div className="form-group">
                                                     <label htmlFor="to">Search</label>
                                                     <input
@@ -334,7 +334,7 @@ function Transactions(props) {
                     </div>
                 </div>
             </div>
-            <Loader isActive={loading} />
+            
         </div>
     );
 }

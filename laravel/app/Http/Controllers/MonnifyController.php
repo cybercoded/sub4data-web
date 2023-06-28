@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\TransactionMail;
 use App\Models\Api;
 use App\Models\Banks;
+use App\Models\InitiatedMerchantPayment;
 use App\Models\Transactions;
 use App\Models\User;
 use App\Models\Activities;
@@ -34,7 +35,7 @@ class MonnifyController extends Controller
         $jsonData = $response->json();
         $accessToken = $jsonData['responseBody']['accessToken'];
 
-        $user = User::where('id', auth('sanctum')->user()->id)->first();
+        $user = User::where('id', auth('sanctum')->user()?->id ?: $request->user->id)->first();
         $charges = $api['api_payment_charges'];
         $amountPlusCharges = ($request->input('amount') * $charges / 100) + $request->input('amount');
         $ref = 'SUB' . rand();
@@ -47,19 +48,32 @@ class MonnifyController extends Controller
             "paymentDescription" => $user->name . " " . $request->amount . " deposit",
             "currencyCode" => "NGN",
             "contractCode" => $api['api_contract_code'],
-            "redirectUrl" => "http://localhost:8000/api/verify-monnify-merchant-payment?amount=$request->amount&user_id=$user->id&paymentReference=$ref",
+            "redirectUrl" => env('APP_URL')."api/verify-monnify-merchant-payment",
             "paymentMethods" => ["CARD"]
         ];
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer " . $accessToken,
             'Content-Type' => 'application/json'
-        ])->post('https://sandbox.monnify.com/api/v1/merchant/transactions/init-transaction', $apiPostArray);
+        ])->post($api['api_url'].'/merchant/transactions/init-transaction', $apiPostArray);
 
         if ($response['responseMessage'] != 'success') {
             return response()->json([
                 'status' => 200,
-                'errors' => 'Payment could not be initiated'
+                'errors' => 'Payment could not be initiated: '.$response['responseMessage']
+            ]);
+        }
+
+        $initial_payment = InitiatedMerchantPayment::create([
+            'user_id' => auth('sanctum')->user()->id,
+            'amount' => $request->input('amount'),
+            'payment_reference' => $ref
+        ]);
+
+        if (!$initial_payment) {
+            return response()->json([
+                'status' => 200,
+                'errors' => 'Payment could not be recorded to local DB'
             ]);
         }
 
@@ -75,9 +89,7 @@ class MonnifyController extends Controller
     public function verifyPay(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'amount' => 'required|numeric|min:0',
-            'user_id' => 'required|numeric|exists:users,id',
-            'paymentReference' => 'required|'
+            'paymentReference' => 'required|exists:merchants_initiated_transactions,payment_reference'
         ]);
 
         if ($validator->fails()) {
@@ -87,8 +99,9 @@ class MonnifyController extends Controller
             ]);
         }
 
-        $user = User::where('id', $request->user_id)->first();
-        $afterBalance = $user->balance + $request->amount;
+        $initial_reference = InitiatedMerchantPayment::where('payment_reference', $request->input('paymentReference'))->first();
+        $user = User::where('id', $initial_reference->user_id)->first();
+        $afterBalance = $user->balance + $initial_reference->amount;
         $title = '[Credit Transaction] Payment received';
         $ref = 'SUB' . rand();
         $customer_details = [
@@ -97,8 +110,8 @@ class MonnifyController extends Controller
             'title' => $title,
             'balance' => $afterBalance,
             'reference' => $ref,
-            'price' => number_format($request->amount),
-            'description' => "₦" . number_format($request->amount) . " Credit to your account via Monnify",
+            'price' => number_format($initial_reference->amount),
+            'description' => "₦" . number_format($initial_reference->amount) . " Credit to your account via Monnify",
             'order_date' => date('Y-m-d H:i:s')
         ];
 
@@ -113,15 +126,23 @@ class MonnifyController extends Controller
 
         $transaction = new Transactions();
         $transaction->user_id = $user->id;
-        $transaction->amount = $request->amount;
+        $transaction->amount = $initial_reference->amount;
         $transaction->reference = $ref;
-        $transaction->api_reference = $request->paymentReference;
+        $transaction->api_reference =  $request->paymentReference;
         $transaction->description = $customer_details['description'];
         $transaction->status = 'success';
         $transaction->type = 'credit';
 
         $user = User::find($user->id);
         $user->balance = $afterBalance;
+
+        $existing_reference = Transactions::where('api_reference',  $request->paymentReference)->first();
+        if($existing_reference) {
+            return [
+                'status' => 422,
+                'errors' => 'Transaction already exists'
+            ];
+        }
 
         if ($transaction->save() && $user->save()) {
             return [
@@ -139,8 +160,8 @@ class MonnifyController extends Controller
     public $monnifyResult = [];
     public function verifyAtmPayment(Request $request)
     {
-        $data = file_get_contents("php://input");
-        $data = '{
+        $data = $request->all();
+        /* $data = '{
             "eventData ": {
               "transactionReference ": "MNFY|39|20230613160439|000884 ",
               "paymentMethod ": "ACCOUNT_TRANSFER ",
@@ -178,7 +199,7 @@ class MonnifyController extends Controller
               "currency ": "NGN "
             },
             "eventType ": "SUCCESSFUL_TRANSACTION "
-        }';
+        }'; */
 
         function computeSHA512TransactionHash($stringifiedData, $clientSecret)
         {

@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Toastify from 'toastify-js';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function FundWallet() {
-    const [loading, setLoading] = useState(true);
+    
     const [userDataList, setUserDataList] = useState([]);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ function FundWallet() {
             if (res.status === 200) {
                 setUserDataList(res.data);
             }
-            setLoading(false);
+            
         });
 
     }, []);
@@ -41,31 +41,32 @@ function FundWallet() {
 
     return (
         <div className="container mt-5">
-            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+            <div className="text-muted mb-4 pb-4 border-bottom">
                 <b>Fund</b> Wallet |
             </div>
             
-            <div className=" card col-md-4 bg-white">
-                <div style={{height: '70vh'}}>
-                    <div className='card-body'>                    
-                        <div role="button" className="p-4 rounded d-flex bg-light text-decoration-none mb-4 justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <div>
-                                <div className='my-text-primary font-weight-bold h5'> Automated Banks</div>
-                                <div className='text-muted'>Fund your wallet using Automated Banks</div>
+            <div className="card col-md-4 bg-light" style={{height: '50vh'}}>
+                <div className='card-body'>
+                    <ol className="list-group list-group-numbered">                  
+                        <li className="list-group-item d-flex justify-content-between align-items-start p-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <div className="ms-2 me-auto">
+                                <div className="fw-bold">Automated Banks</div>
+                                Fund your wallet using Automated Banks
                             </div>
                             <i className="fa fa-angle-right text-muted"></i>
-                        </div>
-                        <Link role="button" to="/user/merchant-pay" className="p-4 rounded d-flex bg-light text-decoration-none mb-3 justify-content-between align-items-center">
-                            <div>
-                                <div className='my-text-primary font-weight-bold h5'>ATM Card</div>
-                                <div className='text-muted'>Fund your wallet using ATM Card</div>
+                        </li>
+                        <br />
+                        <Link role="button" to="/user/merchant-pay" className="list-group-item d-flex justify-content-between align-items-start p-4">
+                            <div className="ms-2 me-auto">
+                                <div className="fw-bold">ATM Card</div>
+                                Fund your wallet using accepted ATM Card
                             </div>
                             <i className="fa fa-angle-right text-muted"></i>
                         </Link>
-                    </div>
+                    </ol>
+                </div>
             </div>
             
-            <Loader isActive={loading} />
             
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -101,7 +102,6 @@ function FundWallet() {
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     );

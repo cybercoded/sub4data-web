@@ -27,10 +27,10 @@ class PurchaseController extends Controller
         $user = User::find($user_id);
         $level = Levels::where('level', $user_level)->first();
         $product = Product::where('id', $request->input('product_id'))->first();
-        $discountedAmount = ($request->input('amount') - ($request->input('amount') * $level['percentage']) / 100) + ($product['charges'] - $product['discount']);
+        $discountedAmount = ($request->input('amount') - ($request->input('amount') * $level['percentage']) / 100) - ($product['discount'] - $product['charges']);
         $afterBalance = $user->balance - $discountedAmount;
-
-        if ($afterBalance - $discountedAmount < 0) {
+        echo $discountedAmount;
+        /* if ($afterBalance - $discountedAmount < 0) {
             return response()->json([
                 'status' => 400,
                 'errors' => 'You do not have enough balance'
@@ -69,7 +69,7 @@ class PurchaseController extends Controller
                     'errors' => 'Something went wrong: '. $result['error_code']
                 ]);
             }
-        }
+        } */
     }
 
     public function data(Request $request)

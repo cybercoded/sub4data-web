@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\VerificationMail;
+use App\Models\Api;
 use App\Models\Banks;
 use App\Models\User;
 use Dotenv\Exception\ValidationException;
@@ -31,7 +32,8 @@ class AuthController extends Controller
             ]);
         }else{
 
-            $authorization  = base64_encode('MK_TEST_URAHPHAT77:78DLT2XQ6KFM2HYVRSAUPSR9LEHHWMAE');
+            $api = Api::where('api_name', 'monnify')->first();
+            $authorization = base64_encode($api['api_key'] . ':' . $api['api_secret']);
 
             $response = Http::withHeaders([
                 'Authorization' => "Basic ".$authorization,
@@ -60,7 +62,7 @@ class AuthController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer ".$accessToken,
                 'Content-Type' => 'application/json'
-            ])->post('https://sandbox.monnify.com/api/v1/bank-transfer/reserved-accounts', $apiPostArray);
+            ])->post($api['api_url']."/bank-transfer/reserved-accounts", $apiPostArray);
 
             $jsonData = $response->json();
             $result = $jsonData['responseBody'];
@@ -69,6 +71,7 @@ class AuthController extends Controller
             $user=User::create([
                 'name'=>$request->name,
                 'email'=>$request->email,
+                'user_ip' => $request->ip(),
                 'password'=>Hash::make($request->password)
             ]);
 
@@ -103,7 +106,7 @@ class AuthController extends Controller
                 'validation_errors'=>$validator->errors()
             ]);
         }else{
-            $user= User::where('email',$request->email)->first();
+            $user= User::where('email',$request->email)->where('status', 1)->first();
 
             if(! $user || ! Hash::check($request->password,$user->password)){
                 return response()->json([
@@ -121,6 +124,11 @@ class AuthController extends Controller
                     $role='user';
                     $token=$user->createToken($user->email. '_Token', [''])->plainTextToken;
                 }
+
+                $user->access_token = $token;
+
+                $user->save();
+
                 return response()->json([
                     'status'=>200,
                     'username'=>$user->name,
@@ -153,6 +161,49 @@ class AuthController extends Controller
                 'errors' => "Email already registered",
             ]);
         }
+        $password_reset = new PasswordReset();
+        $otp = rand ( 10000 , 99999 );
+        $password_reset->token = $otp;
+        $password_reset->email = $request->input('email');
+
+        if ($password_reset->save()) {
+
+            $email_title = "[Verification] Password Reset";
+            $email_message = [
+                'name' => "Dear customer",
+                'otp' => $otp,
+                'title' => $email_title,
+            ];
+            Mail::to($request->input('email'))
+            ->send(new VerificationMail($email_title, $email_message));
+
+            return response()->json([
+                'status' => 200,
+                'message' => "OTP sent successfully",
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'errors' => "Unable to send OTP",
+            ]);
+        }
+
+    }
+
+    public function resendOTP(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
         $password_reset = new PasswordReset();
         $otp = rand ( 10000 , 99999 );
         $password_reset->token = $otp;

@@ -1,18 +1,18 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../components/Global';
+
 
 const Navbar = () => {
 
-    const [loading, setLoading] = useState();
+    
     const history = useHistory();
 
     const logoutSubmit = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.get('/sanctum/csrf-cookie').then((response) => {
             axios.post(`api/logout`).then((res) => {
                 if (res.data.status === 200) {
@@ -23,7 +23,7 @@ const Navbar = () => {
                     });
                    
                 }
-                setLoading(false);
+                
             });
         });
     };
@@ -36,7 +36,7 @@ const Navbar = () => {
 
     return (
         <nav className="sb-topnav navbar navbar-expand navbar-dark my-bg-primary">
-            <Loader isActive={loading} />
+            
             <Link className="navbar-brand ps-3" to="/collections">
             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60, height: 50 }} />
             </Link>

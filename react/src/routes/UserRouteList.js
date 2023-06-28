@@ -13,6 +13,7 @@ import TransferFund from "../components/frontend/user/TransferFund";
 import FundWallet from "../components/frontend/user/FundWallet";
 import VerifyPinOtp from "../components/frontend/user/VerifyPinOtp";
 import MerchantPay from "../components/frontend/user/MerchantPay";
+import UpgradeAccount from "../components/frontend/user/upgradeAccount";
 
 const UserRouteList =[
     { path: '/user/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
@@ -30,7 +31,8 @@ const UserRouteList =[
     { path: '/user/transfer-fund', exact: true, name: 'TransferFund', component: TransferFund },
     { path: '/user/fund-wallet', exact: true, name: 'FundWallet', component: FundWallet },
     { path: '/user/merchant-pay', exact: true, name: 'MerchantPay', component: MerchantPay },
-    { path: '/user/pin-verify-otp', exact: true, name: 'VerifyPinOtp', component: VerifyPinOtp }
+    { path: '/user/pin-verify-otp', exact: true, name: 'VerifyPinOtp', component: VerifyPinOtp },
+    { path: '/user/upgrade-account', exact: true, name: 'UpgradeAccount', component: UpgradeAccount }
 
 
 ];

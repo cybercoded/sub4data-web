@@ -2,12 +2,13 @@ import React, {useState} from 'react';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Loader } from '../../Global';
+
 import Toastify from 'toastify-js';
+import { Context } from '../../../contexts/globalContext';
 
 function RegistrationVerify(props) {
+    const { globalValues, setGlobalValues } = React.useContext(Context);
     const email = props.match.params.email;
-    const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [textInput, setTextInput] = useState({
         email: localStorage.getItem('registration_email'),
@@ -22,28 +23,26 @@ function RegistrationVerify(props) {
     }
 
    const handleResend = (e)=>{                   
-        setLoading(true);
-        if(loading === false){
-            axios.put(`/api/send-otp/`, textInput).then((res) => {
-                if (res.data.status === 200) {
-                    Toastify({
-                        text: "OTP was resent to you",
-                        duration: 3000,
-                        className: "info",
-                        close: true,
-                        gravity: "top", // `top` or `bottom`
-                        position: "center", // `left`, `center` or `right`
-                        stopOnFocus: true, // Prevents dismissing of toast on hover
-                        offset: {
-                            y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-                        },
-                    }).showToast();                    
-                }else {
-                    swal('Error!', res.data.errors, 'error');
-                }
-                setLoading(false);
-            });
-        }
+        
+        axios.put(`/api/send-otp/`, textInput).then((res) => {
+            if (res.data.status === 200) {
+                Toastify({
+                    text: "OTP was resent to you",
+                    duration: 3000,
+                    className: "info",
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "center", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    offset: {
+                        y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                    },
+                }).showToast();                    
+            }else {
+                swal('Error!', res.data.errors, 'error');
+            }
+            
+        });
     }
     
     const handleVerify = (e)=>{   
@@ -58,7 +57,7 @@ function RegistrationVerify(props) {
             return;
         }
         
-        setLoading(true);
+        
         axios.put(`/api/verify-registration-otp`, textInput).then((res) => {
             if (res.data.status === 200) {
                 axios.post(`/api/register`, textInput).then(res=>{
@@ -71,11 +70,11 @@ function RegistrationVerify(props) {
                     }else{
                         swal('Error!', res.data.validation_errors, 'error');
                     }
-                    setLoading(false);
+                    
                 });
             }else {
                 swal('Error!', res.data.errors, 'error');
-                setLoading(false);
+                
             }
         });
     }
@@ -86,7 +85,7 @@ function RegistrationVerify(props) {
             <div className='my-bg-primary'>                
                 <div className="d-flex align-items-center justify-content-center vh-100">                                 
                     <div className='card col-md-4 col-lg-3 col-10'>
-                        <Loader isActive={loading} />
+                        
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
                             <h4>Enter OTP Sent to <span className='text-info'> {textInput.email}</span></h4>

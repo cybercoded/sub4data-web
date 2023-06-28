@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -141,6 +142,27 @@ class ProductController extends Controller
     public function view($id)
     {
         $products=Product::where('category_id', $id)->where('status', 1)->get();
+
+        if($products)
+        {
+            return response()->json([
+                'status'=>200,
+                'product'=>$products
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No product found'
+            ]);
+        }
+    }
+
+    public function viewWithSlug($slug)
+    {
+        $category = Category::where('slug', $slug)->first();
+        $products=Product::where('category_id', $category->id)->where('status', 1)->get();
 
         if($products)
         {

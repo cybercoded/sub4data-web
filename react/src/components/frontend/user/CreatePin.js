@@ -2,11 +2,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import swal from "sweetalert";
 import { useHistory } from 'react-router-dom';
-import { Loader } from "../../Global";
+
 
 function CreatePin(){
     const history = useHistory();
-    const [loading, setLoading] = useState(false);
     const [textInput, setTextInput] = useState({
         newPin: ''
     });
@@ -28,7 +27,7 @@ function CreatePin(){
             return;
         }
            
-        setLoading(true);
+        
         
         axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
             if (res.data.status === 200) {
@@ -36,17 +35,17 @@ function CreatePin(){
                    history.push('/user/dashboard');
                 });
             }
-            setLoading(false);
+            
         });
     };
 
     return (
         <div className="container mt-5">
-            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+            <div className="text-muted mb-4 pb-4 border-bottom">
                 <b>Transaction</b> PIN /
             </div>
             <div className="bg-light card card-body col-md-6">
-                <Loader isActive={loading} />
+                
 
                 <form onSubmit={handleTransactionPIN}>
                     <div className='form-group mb-3'>

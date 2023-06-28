@@ -3,11 +3,11 @@ import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import $ from "jquery";
-import { Loader } from "../../Global";
+
 
 function ViewLevels(){
 
-    const [loading, setLoading] = useState(true);
+    
     const [levelsList, setLevelsList] = useState([]);
 
     const handleDelete = (e)=>{
@@ -21,7 +21,7 @@ function ViewLevels(){
         })
         .then((willDelete) => {
             if (willDelete) {
-                setLoading(true);
+                
                 axios.delete(`api/delete-level/${e.target.dataset.id}`).then(res=>{
                     if(res.data.status===200){
                         swal("Deleted!", "Your imaginary level has been deleted.", "success");
@@ -31,10 +31,10 @@ function ViewLevels(){
 
                     }
                 });
-                setLoading(false);
+                
             } else {
                 swal("Your imaginary level is safe :)", "Your imaginary level is safe :)", "error");
-                setLoading(false);
+                
             }
         });
     };
@@ -48,14 +48,14 @@ function ViewLevels(){
                     $('table').DataTable();
                 });
             }
-            setLoading(false);
+            
         })
     },[]);
 
     return(
         <div className="container px-4">
             <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>Levels list</h4>
                     <Link to="/admin/add-level" className="btn btn-primary btn-sm float-end">Add level</Link>

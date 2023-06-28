@@ -12,15 +12,28 @@ class TransactionController extends Controller
     public function index()
     {
         $transactions = Transactions::orderByDesc('id')->take(10)->get();
+
         return response()->json([
             'status' => 200,
             'data' => $transactions
         ]);
     }
 
-    public function get()
+    public function get(Request $request)
     {
-        $transactions = Transactions::where('user_id', '=', auth()->user()->id)->orderByDesc('id')->take(10)->get();
+        $numberOfRows = 10;
+        $transactions = Transactions::where('user_id', '=',  auth()->user()?->id ?: $request->user->id)
+            ->skip($request->limit-$numberOfRows)
+            ->take($numberOfRows)
+            ->orderByDesc('id')
+            ->get();
+        if(count($transactions) == 0) {
+            return response()->json([
+                'status' => 402,
+                'errors' => 'No more transactions'
+            ]);
+        }
+
         return response()->json([
             'status' => 200,
             'data' => $transactions
@@ -30,7 +43,7 @@ class TransactionController extends Controller
     public function filter(Request $request)
     {
         $transactions = Transactions::query()
-        ->where('user_id', '=', auth()->user()->id)
+        ->where('user_id', '=', auth()->user()?->id ?: $request->user->id)
         ->when($request->input('from'), fn ($query, $from) => $query->where('created_at', '>=', $from))
         ->when($request->input('to'), fn ($query, $to) => $query->where('created_at', '<=', $to))
         ->when($request->input('status'), fn ($query, $status) => $query->where('status', '=', $status))

@@ -7,15 +7,14 @@ import MasterLayout from './layouts/admin/MasterLayout';
 function AdminPrivateRoute({ ...rest }) {
     const history = useHistory();
     const [Authenticated, setAuthenticated] = useState(false);
-
-    const [loading, setLoading] = useState(true);
+    
 
     useEffect(() => {
         axios.get(`api/checkingAuthenticated`).then((res) => {
             if (res.status === 200) {
                 setAuthenticated(true);
             }
-            setLoading(false);
+            
         });
 
         return () => {
@@ -25,15 +24,12 @@ function AdminPrivateRoute({ ...rest }) {
 
     axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
         if (err.response.status === 401) {
-            swal('Unauthorized', err.response.data.message, 'warning');
-            history.push('/');
+            swal('Unauthorized', err.response.data.message, 'warning').then(() => {
+                history.push('/');
+            });
         }
         return Promise.reject(err);
     });
-
-    if (loading) {
-        return <h1>Authenticating Access to the Administration...</h1>;
-    }
 
     return (
         <Route

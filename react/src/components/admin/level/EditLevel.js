@@ -2,11 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function EditLevel(props) {
     let level_id = props.match.params.id;
-    const [loading, setLoading] = useState(false);
     const [checkbox, setCheckbox] = useState();
     const [textInput, setTextInput] = useState({
         name: '',
@@ -28,7 +27,7 @@ function EditLevel(props) {
     const submitLevel = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/update-level/${level_id}`, {...textInput, status: checkbox}).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() => {
@@ -37,12 +36,12 @@ function EditLevel(props) {
             } else {
                 swal('Error', JSON.stringify(res.data.errors), 'error');
             }
-            setLoading(false);
+            
         });
     };
 
     useEffect(() => {
-        setLoading(true);
+        
 
         axios.get(`/api/get-level/${level_id}`).then((res) => {
             if (res.data.status === 200) {
@@ -51,7 +50,7 @@ function EditLevel(props) {
             } else {
                 swal('Error', res.data.errors, 'error');
             }
-            setLoading(false);
+            
         });
     }, [level_id]);
 
@@ -60,7 +59,7 @@ function EditLevel(props) {
             <div className='row'>
                 <div className="col-md-6">
                     <div className="card mt-4">
-                        <Loader isActive={loading} />
+                        
                         <div className="card-header">
                             <h4>
                                 Edit Level |

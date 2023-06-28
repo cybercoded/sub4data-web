@@ -1,23 +1,16 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import $ from 'jquery';
 
 const SideBar = () => {
 
-    const [categoryList, setCategoryList] = useState([]);
-
-    useEffect(()=>{
-        axios.get(`api/view-category`).then(res=>{
-            if(res.status===200){
-                setCategoryList(res.data.category);
-            }
-        })
-    },[]);
+    const [categoryList] = React.useState(
+        JSON.parse(localStorage.getItem('category')) || []
+    );
 
     $('#my-sidebar').on('click', function() {
-        if ($(window).width() < 768) {
+        if ($(window).width() < 768 ) {
             document.body.classList.remove('sb-sidenav-toggled');            
         }
     });
@@ -40,7 +33,7 @@ const SideBar = () => {
                         <div className="nav-item" key={index}>
                             <Link className={`nav-link ${ item.slug === window.location.href.split('/')[5] && 'active' }`}to={`/user/services/${item.slug}/${item.id}`} >
                                 <div className="sb-nav-link-icon">
-                                    <img src={`http://localhost:8000/${item.image}`} width="20" height="20" alt={item.name}/>
+                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} width="20" height="20" alt={item.name}/>
                                 </div>
                                 {item.name}
                             </Link>
@@ -51,6 +44,12 @@ const SideBar = () => {
                     <div className="sb-sidenav-menu-heading">
                         Menu
                     </div>
+                    <Link className={`nav-link ${ 'upgrade-account' === window.location.href.split('/')[4] && 'active' }`} to="/user/upgrade-account">
+                        <div className="sb-nav-link-icon">
+                            <i className="fas fa-user-plus"></i>
+                        </div>
+                        Upgrade Account
+                    </Link>
                     <Link className={`nav-link ${ 'fund-wallet' === window.location.href.split('/')[4] && 'active' }`} to="/user/fund-wallet">
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-bank"></i>
@@ -91,6 +90,7 @@ const SideBar = () => {
                         data-bs-target="#collapseSettings"
                         aria-expanded="false"
                         aria-controls="collapseSettings"
+                        id='settings-nav'
                     >
                         <div className="sb-nav-link-icon">
                             <i className="fas fa-cog"></i>

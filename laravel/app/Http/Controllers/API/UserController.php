@@ -17,6 +17,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\API\PurchaseController;
 use Mail;
 
 class UserController extends Controller
@@ -27,6 +28,15 @@ class UserController extends Controller
         return response()->json([
             'status' => 200,
             'users' => $users
+        ]);
+    }
+
+    public function view(Request $request)
+    {
+        $user = User::find($request->user?->id ?: auth('sanctum')->user()->id);
+        return response()->json([
+            'status' => 200,
+            'data' => $user
         ]);
     }
 
@@ -105,6 +115,44 @@ class UserController extends Controller
                     'errors' => "Unable to update user",
                 ]);
             }
+        }
+    }
+
+    public function userUpgrade(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'level' => 'required|integer|min:1'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $user_id = auth('sanctum')->user()->id;
+            $user = User::find($user_id);
+            $level = Levels::where('level', $request->input('level'))->first();
+            $afterBalance = $user->balance - $level['upgrade_fee'];
+
+            $user->level = $request->input('level');
+            $user->update();
+
+            $my_purchaser = new PurchaseController;
+            return $my_purchaser->purchaser([
+                'user' => $user,
+                'category_id' => null,
+                'product_id' => null,
+                'service_id' => null,
+                'amount' => $level['upgrade_fee'],
+                'reference' => 'SUB' . rand(),
+                'api_reference' => null,
+                'description' => "₦" . number_format($level['upgrade_fee']) . " for account upgrade to " . $level['name'],
+                'after_balance' => $afterBalance,
+                'status' => 'success'
+            ]);
+
         }
     }
 
@@ -190,8 +238,8 @@ class UserController extends Controller
                         ->send(new PasswordUpdateMail($email_title, $email_message));
 
                         Activities::create([
-                            'type' => $request->type,
-                            'title' => $request->title,
+                            'type' => 'password_reset',
+                            'title' => "Password reset",
                             'log' => serialize($email_message)
                         ]);
 

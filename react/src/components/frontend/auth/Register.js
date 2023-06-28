@@ -2,11 +2,10 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
-import { Loader } from '../../Global';
+
 
 function Register() {
 
-    const [loading, setLoading] = useState(false);
 
     const history=useHistory();
     const [textInput, setTextInput] = useState({
@@ -67,7 +66,7 @@ function Register() {
             swal('Error!', 'Agree with our Terms and Condition before continuing', 'error');
             return;
         }
-        setLoading(true);
+        
         axios.get('/sanctum/csrf-cookie').then(() => {
             axios.put(`/api/send-otp/`, textInput).then((res) => {
                 if (res.data.status === 200) {
@@ -82,7 +81,7 @@ function Register() {
                 }else {
                     swal('Error!', res.data.errors, 'error');
                 }
-                setLoading(false);
+                
             });    
         });    
     }
@@ -92,7 +91,7 @@ function Register() {
             <div className="d-flex align-items-center justify-content-center vh-100">
                 <div className='col-md-4 col-lg-3 col-10'>
                     <div className='card'>
-                        <Loader isActive={loading} />
+                        
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
                             <h4>Register new account</h4>

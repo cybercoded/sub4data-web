@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader } from "../Global";
+
 
 function Dashboard(){
 
-    const [loading, setLoading] = useState(true);
+    
     const [userData, setUserData] = useState([]);
     const [transactionData, setTransactionData] = useState([]);
     const [panelData, setPanelData] = useState([]);
@@ -13,26 +13,26 @@ function Dashboard(){
 
     useEffect(()=>{
 
-        setLoading(true);
+        
         axios.get(`api/view-users`).then(res=>{
             if(res.status===200){
                 setUserData(res.data.users);
             }
-            setLoading(false);
+            
         });
 
         axios.get(`api/view-transactions-admin`).then(res=>{
             if(res.status===200){
                 setTransactionData(res.data.data);
             }
-            setLoading(false);
+            
         });
         
         axios.get(`api/get-panel-value-admin`).then(res=>{
             if(res.status===200){
                 setPanelData(res.data);
             }
-            setLoading(false);
+            
         });
     },[]);
 
@@ -146,7 +146,7 @@ function Dashboard(){
                     </div>
                 </div>
             </section>
-            <Loader isActive={loading} />
+            
         </div>
     );
 }

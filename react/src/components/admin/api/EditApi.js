@@ -2,11 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function EditApi(props) {
     let api_id = props.match.params.id;
-    const [loading, setLoading] = useState(false);
     const [textInput, setTextInput] = useState([]);
 
     const handleInput = (e) => {
@@ -18,7 +17,7 @@ function EditApi(props) {
     const submitApi = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/update-api/${api_id}`, textInput).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() => {
@@ -27,12 +26,12 @@ function EditApi(props) {
             } else {
                 swal('Error', JSON.stringify(res.data.errors), 'error');
             }
-            setLoading(false);
+            
         });
     };
 
     useEffect(() => {
-        setLoading(true);
+        
 
         axios.get(`/api/get-api/${api_id}`).then((res) => {
             if (res.data.status === 200) {
@@ -40,7 +39,7 @@ function EditApi(props) {
             } else {
                 swal('Error', res.data.errors, 'error');
             }
-            setLoading(false);
+            
         });
     }, [api_id]);
 
@@ -49,7 +48,7 @@ function EditApi(props) {
             <div className='row'>
                 <div className="col-md-6">
                     <div className="card mt-4">
-                        <Loader isActive={loading} />
+                        
                         <div className="card-header">
                             <h4>
                                 Edit Api |

@@ -3,7 +3,7 @@ import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import $ from "jquery";
-import { Loader } from "../Global";
+
 
 function Transactions(props){
     const user_id = props.match.params.id;
@@ -12,7 +12,7 @@ function Transactions(props){
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
 
-    const [loading, setLoading] = useState(true);
+    
     const [textInput, setTextInput] = useState({
         limit: 10,
         user_id: user_id
@@ -26,14 +26,14 @@ function Transactions(props){
     const handleTransactionFilter = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/filter-transactions`, textInput).then((res) => {
             if(res.data.status === 200) {
                 setTransactionData(res.data.data);
             } else {
                 swal("Error", res.data.errors, "error");
             }
-            setLoading(false);
+            
         });
 
     };
@@ -98,19 +98,19 @@ function Transactions(props){
 
         setTextInput({ ...textInput, product_id: product_id });
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
             }
-            setLoading(false);
+            
         });
     };
 
     const handleLoadMoreTransaction = (e) => {
         e.preventDefault();
        
-        setLoading(true);
+        
         axios.post(`/api/filter-transactions${!user_id ? '-admin' : ''}`, textInput).then((res) => {
             if(res.data.status===200)
             {
@@ -119,7 +119,7 @@ function Transactions(props){
                     $('#table').DataTable();
                 });
                 setTextInput({...textInput, limit: textInput.limit + 10 });
-                setLoading(false);
+                
             }
         });
 
@@ -127,7 +127,7 @@ function Transactions(props){
 
     useEffect(() => {
 
-        setLoading(true);
+        
         axios.post(`/api/filter-transactions${!user_id ? '-admin' : ''}`, textInput).then((res) => {
             if(res.data.status===200)
             {
@@ -136,7 +136,7 @@ function Transactions(props){
                     $('#table').DataTable();
                 });
                 setTextInput({...textInput, limit: textInput.limit + 10 });
-                setLoading(false);
+                
             }
         });
     }, []);
@@ -145,7 +145,7 @@ function Transactions(props){
     return(
         <div className="container py-5">
             <div className="card">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>View service | </h4>
                 </div>

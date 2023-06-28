@@ -6,7 +6,7 @@ function Home() {
     const scrolledRef = React.useRef(false);
     const { hash } = useLocation();
     const hashRef = React.useRef(hash);
-    const imgRoot = 'http://localhost/sub4data-web/react/src/assets/admin/assets/img/';
+    const imgRoot = process.env.REACT_APP_URL+'img/';
 
     React.useEffect(() => {
         if (hash) {
@@ -48,13 +48,13 @@ function Home() {
                             </div>
                             <div className="col-md-4 col-6">
                                 <div className="small">
-                                    <Link className="my-text-primary text-decoration-underline me-2" to={`tel:${process.env.REACT_APP_TEL}`}>
+                                    <Link className="my-text-primary text-decoration-underline me-2" to="#"  onClick={() => window.location = `tel:${process.env.REACT_APP_TEL}`}>
                                         Call
                                     </Link>
                                     or
                                     <Link
                                         className="my-text-primary text-decoration-underline ms-2"
-                                        to={`https://api.whatsapp.com/send?phone=${process.env.REACT_APP_TEL}`}
+                                        to="#"  onClick={() => window.location = `https://api.whatsapp.com/send?phone=${process.env.REACT_APP_TEL}`}
                                     >
                                         Whatsapp
                                     </Link>
@@ -84,6 +84,16 @@ function Home() {
                         </button>
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav ms-auto me-2 mb-2 mb-lg-0">
+                                <li className="nav-item">
+                                    <Link className="nav-link mx-md-3 active" to="login">
+                                       Login
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link mx-md-3 active" to="register">
+                                       Register
+                                    </Link>
+                                </li>
                                 <li className="nav-item">
                                     <Link className="nav-link mx-md-3 active" to="#our-services">
                                         Our Services
@@ -308,11 +318,11 @@ function Home() {
                                 <Link className="text-white" to="#">
                                     <small>Home</small>
                                 </Link>
-                                <span className="divider">|</span>
+                                <span className="divider mx-2">|</span>
                                 <Link className="text-white" to="privacy-policy">
                                     <small>Privacy Policy</small>
                                 </Link>
-                                <span className="divider">|</span>
+                                <span className="divider mx-2">|</span>
                                 <Link className="text-white" to="terms-and-condition">
                                     <small>Terms and Conditions</small>
                                 </Link>
@@ -329,10 +339,12 @@ function Home() {
                                     <i className="fa fa-envelope pr-2"></i> {process.env.REACT_APP_EMAIL}
                                 </Link>
                                 <div className="mt-1 small">
-                                    <i className="fa fa-phone pr-2"></i> {process.env.REACT_APP_TEL}
+                                    <Link to="#" onClick={() => window.location = `tel:${process.env.REACT_APP_TEL}`} className="mt-1 small text-white">
+                                        <i className="fa fa-phone pr-2"></i> {process.env.REACT_APP_TEL}
+                                    </Link>
                                 </div>
                                 <div className="mt-1 small">
-                                    <Link className="text-white pr-2" to={`https://api.whatsapp.com/send?phone=${process.env.REACT_APP_TEL}`}>
+                                    <Link className="text-white pr-2" to="#"  onClick={() => window.location = `https://api.whatsapp.com/send?phone=${process.env.REACT_APP_TEL}`}>
                                         <i className="fab fa-whatsapp"></i> Chat us on Whatsapp
                                     </Link>
                                 </div>

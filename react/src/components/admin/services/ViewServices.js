@@ -2,14 +2,14 @@ import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
-import { Loader } from "../../Global";
+
 import $ from "jquery";
 
 function ViewServices(){
 
     const [serviceList, setservice] = useState([]);
 
-    const [loading, setLoading] = useState(true);
+    
     useEffect(() => {
         let isMounted= true;
         document.title="View service";
@@ -24,7 +24,7 @@ function ViewServices(){
                     });
                 }
             }
-            setLoading(false);
+            
         });
         return ()=>{
             isMounted = false;
@@ -52,7 +52,7 @@ function ViewServices(){
     
     return(
         <div className="card px-3">
-            <Loader isActive={loading} />
+            
             <div className="card-header">
                 <h4>View service | 
                     <Link to="/admin/add-services" className="btn btn-primary btn-sm float-end">Add service</Link>

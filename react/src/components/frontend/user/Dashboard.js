@@ -3,38 +3,52 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Toastify from 'toastify-js';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function Dashboard() {
-    const [loading, setLoading] = useState(true);
-    const [categoryList, setCategoryList] = useState([]);
-    const [transactionList, setTransactionList] = useState([]);
-    const [userDataList, setUserDataList] = useState([]);
-    const [notification, setNotification] = useState('');
+    
+    const [categoryList, setCategoryList] = useState(
+        JSON.parse(localStorage.getItem('category')) || []
+    );
+    const [transactionList, setTransactionList] = useState(
+        JSON.parse(localStorage.getItem('transactions')) || []
+    );
+    const [userDataList, setUserDataList] = useState(
+        JSON.parse(localStorage.getItem('user')) || []
+    );
+    
+    const [notification, setNotification] = useState(
+        JSON.parse(localStorage.getItem('notification')) || ''
+    );
 
     useEffect(() => {
+        localStorage.setItem('isBackgroundLoader', true);
         axios.get(`api/view-category`).then((res) => {
             if (res.data.status === 200) {
                 setCategoryList(res.data.category);
+                localStorage.setItem('category', JSON.stringify(res.data.category));
+            }            
+        });
+        
+        axios.get(`api/get-notification`).then((res) => {
+            if (res.data.status === 200) {
+                setNotification(res.data.notification);
+                localStorage.setItem('notification', JSON.stringify(res.data.notification));
             }
-            setLoading(false);
+        });
+        
+        axios.get(`api/user`).then((res) => {
+            if (res.status === 200) {
+                setUserDataList(res.data.data);
+                localStorage.setItem('user', JSON.stringify(res.data.data));
+            }
         });
 
         axios.get(`api/view-transactions`).then((res) => {
             if (res.data.status === 200) {
                 setTransactionList(res.data.data);
-            }
-        });
-
-        axios.get(`api/get-notification`).then((res) => {
-            if (res.data.status === 200) {
-                setNotification(res.data.notification);
-            }
-        });
-
-        axios.get(`api/user/`).then((res) => {
-            if (res.status === 200) {
-                setUserDataList(res.data);
+                localStorage.setItem('transactions', JSON.stringify(res.data.data));
+                localStorage.setItem('isBackgroundLoader', false);
             }
         });
 
@@ -61,7 +75,6 @@ function Dashboard() {
     const handleViewTransaction = (e) => {
         e.preventDefault();
         var dataArray = e.target.dataset;
-        console.log(dataArray);
         var table = document.createElement("div");
         table.style.textAlign = "left";
         table.innerHTML = (`<table cellpadding="10" className="table align-left table-striped table-hover">
@@ -115,14 +128,19 @@ function Dashboard() {
 
             <div className='mb-4'>
                 <div className='row'>
-                    <div className='col-md-3 mb-2'>
+                    <div className='col-md-4 mb-2'>
                         <div className='card text-white my-bg-primary'>
                             <div className="card-body">
-                                <div className='mb-2 font-weight-bold'>
-                                    {userDataList.name}
-                                    <span className="float-end">                                       
-                                        <i className={`fa ${userDataList.level === 1 ? 'fa-user-o' : 'fa-certificate'}`}></i>
-                                    </span>
+                                <div className='mb-2 d-flex justify-content-between  font-weight-bold'>
+                                    <div className='text-truncate me-3 fw-bold'>{userDataList.name}</div>
+                                    <div className="float-end">                                       
+                                        { userDataList.levels?.map((item, index) => (
+                                            <span key={index} className='badge bg-secondary'>
+                                                <i className={`fa ${item.level === 1 ? 'fa-user' : 'fa-certificate'}`}></i><br />
+                                                {item.name}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                                 <div className='h1 font-weight-bold my-3'>₦{ new Intl.NumberFormat().format(userDataList.balance)}</div>
                                 <div className='mt-3'>
@@ -136,7 +154,7 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
-                        { userDataList.banks?.map((item, index) => (
+                        { userDataList.banks.map((item, index) => (
                                 <div className='col-md-3 mb-2 d-none d-md-block'>
                                     <div key={index} className='card bg-light'>
                                         <div className="card-body py-4">
@@ -160,21 +178,22 @@ function Dashboard() {
                         }
                 </div>
             </div>
-
-            <section>
-                <div className="alert alert-primary d-flex alert-dismissible fade show" role="alert">
-                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    <div style={{height: 70, overflow: 'hidden', marginLeft: 10}}>
-                        <strong>{notification.title}</strong>  {notification.message} 
-                        <span className='btn btn-secondary btn-sm' onClick={() => swal(notification.message) } style={{position: 'absolute', bottom: 10, right: 10}}>Read more</span>
+            {/* 
+                <section>
+                    <div className="alert alert-primary d-flex alert-dismissible fade show" role="alert">
+                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div style={{height: 70, overflow: 'hidden', marginLeft: 10}}>
+                            <strong>{notification.title}</strong>  {notification.message} 
+                            <span className='btn btn-secondary btn-sm' onClick={() => swal(notification.message) } style={{position: 'absolute', bottom: 10, right: 10}}>Read more</span>
+                        </div>
+                        
                     </div>
-                    
-                </div>
-            </section>
-            <Loader isActive={loading} />
+                </section> 
+            */}
+            
             
             <div>
-                <div className="text-muted h5 mb-4 pb-4 border-bottom d-none d-md-block">
+                <div className="text-muted mb-4 pb-4 border-bottom d-none d-md-block">
                     <b>Instant</b> | Services
                 </div>
                 <div className="row">
@@ -184,7 +203,7 @@ function Dashboard() {
                                 <div className="card-body text-center">
                                     <div>
                                         <img
-                                            src={`http://localhost:8000/${item.image}`}
+                                            src={`${process.env.REACT_APP_URL}${item.image}`}
                                             className="mb-2"
                                             width="50"
                                             height="50"
@@ -200,18 +219,17 @@ function Dashboard() {
             </div>
 
             <div className='mt-2'>
-                <div className="text-muted h5 mb-4 pb-4 border-bottom">
+                <div className="text-muted mb-4 md:fs-5 pb-4 border-bottom">
                     <b>Recent</b> transactions |
-                    <Link to="/user/transactions" className="btn btn-primary btn-sm float-end">All Transaction</Link>
+                    <Link to="/user/transactions" className="float-end">View All</Link>
                 </div>
                 <div className="table-responsive">
                     <table className="table">
                         <tbody>
                             {transactionList.map((item, index)=> {
-                                let formater = new Intl.NumberFormat();
                                 return (
                                     <tr key={index}>
-                                        <td>{item.reference}</td>
+                                        <td className='d-none d-md-block' >{item.reference}</td>
                                         <td>{item.description}</td>
                                         <td>
                                             <button onClick={handleViewTransaction} 

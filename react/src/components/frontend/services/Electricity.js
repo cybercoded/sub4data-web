@@ -4,11 +4,11 @@ import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import Toastify from 'toastify-js';
 import $ from 'jquery';
-import { Loader } from '../../Global';
+
 
 function Electricity(props) {
     const history = useHistory();
-    const [loading, setLoading] = useState(true);
+    
     const [discount, setDiscount] = useState();
     const [charges, setCharges] = useState();
     const [filteredAmount, setFilteredAmount] = useState();
@@ -32,12 +32,12 @@ function Electricity(props) {
         setProductActive(product_id);
         setTextInput({ ...textInput, product_id: product_id.toString(), service_id: '' });
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
             }
-            setLoading(false);
+            
         });
     };
 
@@ -50,13 +50,13 @@ function Electricity(props) {
         setDiscount(dataset.discount);
 
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
                 
             }
-            setLoading(false);
+            
         });
         setProductActive(Number(product_id));
     };
@@ -66,7 +66,7 @@ function Electricity(props) {
 
         if(textInput.meter_number !== '' && textInput.product !== '' && textInput.service_id !== '') {
 
-            setLoading(true);
+            
             axios.post(`api/meternumber-verification`, {meter_number: textInput.meter_number, service_id: textInput.service_id}).then((res) => {
                 if (res.data.status === 200) {
                     $('#beneficiary-name').val(res.data.name);
@@ -88,7 +88,7 @@ function Electricity(props) {
                 }else {
                     swal('Unable to verify!', 'Please check your smartcard number and try again', 'error');
                 }
-                setLoading(false);
+                
             });
         }else {
             swal('All fields are required!', 'Fill and select all fields', 'error');
@@ -146,7 +146,7 @@ function Electricity(props) {
                     closeOnClickOutside: false
                 }).then((willDelete) => {
                     if (willDelete) {
-                        setLoading(true);
+                        
                         axios.post(`/api/electricity-purchase/`, textInput).then((res) => {
                             if (res.data.status === 200) {
                                 swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
@@ -155,7 +155,7 @@ function Electricity(props) {
                             }else {
                                 swal('Error!', res.data.errors, 'error');
                             }
-                            setLoading(false);
+                            
                         });
                     }
                 });
@@ -177,18 +177,18 @@ function Electricity(props) {
                 setCharges(res.data.product.charges);
                 setDiscount(res.data.product.discount);
             }
-            setLoading(false);
+            
         });
     }, [props.match.params.id, history]);
 
     return (
         
         <div className="container mt-5">
-            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+            <div className="text-muted mb-4 pb-4 border-bottom">
                 <b>Electricity</b> Payment |
             </div>
             <div className="bg-light card card-body col-md-6">
-                <Loader isActive={loading} />
+                
                 <form onSubmit={handlePurchaseElectricity} className="">
                 <div className="form-group mb-3">
                         {productList.map((item, index) => {
@@ -196,15 +196,15 @@ function Electricity(props) {
                                 <button
                                     type="button"
                                     key={index}
-                                    className={`btn btn-outline-primary ${productActive === item.id && 'active'}`}
+                                    className={`btn btn-outline-primary btn-sm ${productActive === item.id && 'active'}`}
                                     onClick={() => {
                                         handleProductSelection(item.id, item.id);
                                         setCharges(item.charges);
                                         setDiscount(item.discount);
                                     }}
-                                    style={{ margin: 2 }}
+                                    style={{ margin: 1 }}
                                 >
-                                    <img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name} />
+                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} className='img-fluid' width="35" height="40" alt={item.name} />
                                 </button>
                             );
                         })}
@@ -261,7 +261,7 @@ function Electricity(props) {
                             className="form-control"
                         ></input>
                        <small className="text-info fw-bold">{discount > 0 && `${discount} % discount on all of your Electricity payment`}</small>
-                       <small className="text-info fw-bold">{charges && `${charges} % charges on all of your Electricity payment`}</small>
+                       <small className="text-info fw-bold">{charges && `₦${charges} charges on all of your Electricity payment`}</small>
                     </div>
                     
                     <div id='proceed-btn' className="form-group mb-3">

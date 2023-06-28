@@ -2,11 +2,11 @@ import axios from "axios";
 import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
-import { Loader } from "../../Global";
+
 
 function ViewActivities(){
 
-    const [loading, setLoading] = useState(true);
+    
     const [activityList, setActivityList] = useState([]);
     const [textInput, setTextInput] = useState({
         limit: 10,
@@ -42,27 +42,27 @@ function ViewActivities(){
     }
 
     const handleLoadMoreLogs = ()=>{
-        setLoading(true);
+        
         axios.get(`api/get-activities`, textInput).then(res=>{
             if(res.status===200){
                 setActivityList([...activityList,...res.data.activities]);
                 setTextInput({...textInput, limit: textInput.limit + 10 });
             }
-            setLoading(false);
+            
         })
     }
 
     const handleUsersFilter = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/filter-activities`, textInput).then((res) => {
             if(res.data.status === 200) {
                 setActivityList([...activityList,...res.data.activities]);
             } else {
                 swal("Error", res.data.errors, "error");
             }
-            setLoading(false);
+            
         });
 
     };
@@ -72,14 +72,14 @@ function ViewActivities(){
             if(res.status===200){
                 setActivityList(res.data.activities);
             }
-            setLoading(false);
+            
         })
     },[]);
     return(
     
         <div className="container px-4">
             <div className="card mt-4">
-                <Loader isActive={loading} />
+                
                 <div className="card-header">
                     <h4>Activity Logs</h4>
                 </div>

@@ -2,10 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Loader } from '../../Global';
+
 
 function AddApi() {
-    const [loading, setLoading] = useState(false);
     const [textInput, setTextInput] = useState([]);
 
     const handleInput = (e) => {
@@ -17,7 +16,7 @@ function AddApi() {
     const submitApi = (e) => {
         e.preventDefault();
 
-        setLoading(true);
+        
         axios.post(`/api/store-api`, textInput).then((res) => {
             if (res.data.status === 200) {
                 swal('Success', res.data.message, 'success').then(() => {
@@ -26,7 +25,7 @@ function AddApi() {
             } else {
                 swal('Error', JSON.stringify(res.data.errors), 'error');
             }
-            setLoading(false);
+            
         });
     };
 
@@ -35,7 +34,7 @@ function AddApi() {
             <div className='row'>
                 <div className="col-md-6">
                     <div className="card mt-4">
-                        <Loader isActive={loading} />
+                        
                         <div className="card-header">
                             <h4>
                                 Add API |

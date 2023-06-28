@@ -15,7 +15,6 @@ import "toastify-js/src/toastify.css";
 
 //Template dependencies
 import './assets/admin/css/styles.css';
-import './assets/admin/js/scripts';
 
 ReactDOM.render(
   <React.StrictMode>

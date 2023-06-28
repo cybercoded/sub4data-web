@@ -2,11 +2,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import swal from "sweetalert";
-import { Loader } from "../../Global";
+
 
 function UpdatePin(){
     const history = useHistory();
-    const [loading, setLoading] = useState(false);
     const [textInput, setTextInput] = useState({
         oldPin: '',
         newPin: ''
@@ -18,7 +17,7 @@ function UpdatePin(){
     };
 
     const handleReset = (e) => {
-        setLoading(true);
+        
         axios.get(`/api/reset-pin/`).then((res) => {
             if (res.data.status === 200) {
                 swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
@@ -27,7 +26,7 @@ function UpdatePin(){
             }else {
                 swal('Error!', res.data.errors, 'error');
             }
-            setLoading(false);
+            
         });
     }
 
@@ -44,7 +43,7 @@ function UpdatePin(){
             return;
         }
            
-        setLoading(true);
+        
         axios.get(`/api/verify-pin/${textInput.oldPin}`).then((res) => {
             if (res.data.status === 200) {
                 
@@ -56,31 +55,31 @@ function UpdatePin(){
                     dangerMode: true
                 }).then((willDelete) => {
                     if (willDelete) {
-                        setLoading(true);
+                        
                         axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
                             if (res.data.status === 200) {
                                 swal('Success!', 'Transaction PIN successfully updated','success').then((result) => {
                                     window.location.reload();
                                 });
                             }
-                            setLoading(false);
+                            
                         });
                     }
                 });
             }else {
                 swal('Error!', 'Incorrect Old PIN, try again', 'error');
             }
-            setLoading(false);
+            
         });
     };
 
     return (
         <div className="container mt-5">
-            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+            <div className="text-muted mb-4 pb-4 border-bottom">
                 <b>Transaction</b> PIN /
             </div>
             <div className="bg-light card card-body col-md-6">
-                <Loader isActive={loading} />
+                
 
                 <form onSubmit={handleTransactionPIN}>
 

@@ -2,11 +2,8 @@ import React, {useState} from 'react';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Loader } from '../../Global';
 
 function Login() {
-
-    const [loading, setLoading] = useState(false);
     const history=useHistory();
     const [loginInput, setLogin] = useState({
         email:'',
@@ -14,10 +11,13 @@ function Login() {
         error_list:[]
     });
 
+    const [notification] = useState(
+        JSON.parse(localStorage.getItem('notification')) || ''
+    );
+
     const handleInput = (e)=>{
         e.persist();
         setLogin({...loginInput,[e.target.name]: e.target.value});
-
     }
 
     const loginSubmit= (e)=>{
@@ -28,24 +28,29 @@ function Login() {
             password: loginInput.password,
         }
 
-        setLoading(true);
         axios.get('/sanctum/csrf-cookie').then(response => {
             axios.post(`api/login`,data).then(res =>{
                 if(res.data.status === 200){
                     localStorage.setItem("auth_token",res.data.token);
                     localStorage.setItem("auth_name",res.data.username);
-                    swal("success",res.data.message,"success");
+                    swal({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.data.message,
+                        timer: 2000
+                    }).then(() => {
+                        swal( swal(notification.message) )
+                    });
                     if(res.data.role==='admin'){
                         history.push("/admin/dashboard");
                     }else{
                         history.push("/user/dashboard");
                     }
                 }else if(res.data.status === 401) {
-                    swal('Warning', res.data.message,'warning');
+                    swal('Warning', res.data.errors,'warning');
                 }else{
                     setLogin({...loginInput,error_list: res.data.validation_erros});
                 }
-                setLoading(false);
             });
         });
     }
@@ -55,7 +60,6 @@ function Login() {
             <div className='my-bg-primary'>                
                 <div className="d-flex align-items-center justify-content-center vh-100">                                 
                     <div className='card col-md-4 col-lg-3 col-10'>
-                        <Loader isActive={loading} />
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
                             <h4>Login your account</h4>

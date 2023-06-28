@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const TermsAndCondition = () => {
     return (
         <div>
-            <nav className="navbar navbar-expand-lg navbar-light my-bg-primary text-white py-0 px-2" id="header">
+            <nav className="navbar navbar-expand-lg navbar-light text-white py-0 px-2" id="header">
                     <div className="container-fluid">
                         <Link className="navbar-brand fw-bold my-text-primary" to="#">
                             <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />

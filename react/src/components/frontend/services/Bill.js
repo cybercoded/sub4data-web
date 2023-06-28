@@ -4,11 +4,11 @@ import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import Toastify from 'toastify-js';
 import $ from 'jquery';
-import { Loader } from '../../Global';
+
 
 function Bill(props) {
     const history = useHistory();
-    const [loading, setLoading] = useState(true);
+    
     const [productActive, setProductActive] = useState();
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
@@ -28,12 +28,12 @@ function Bill(props) {
         setProductActive(product_id);
         setTextInput({ ...textInput, product_id: product_id.toString(), service_id: '' });
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
             }
-            setLoading(false);
+            
         });
     };
 
@@ -42,12 +42,12 @@ function Bill(props) {
 
         setTextInput({ ...textInput, product_id: product_id, service_id: '' });
 
-        setLoading(true);
+        
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res.status === 200) {
                 setServiceList(res.data.services);
             }
-            setLoading(false);
+            
         });
         setProductActive(Number(product_id));
     };
@@ -56,7 +56,7 @@ function Bill(props) {
         e.persist();
 
         if (textInput.smartcard_number !== '' && textInput.product_id !== '' && textInput.service_id !== '') {
-            setLoading(true);
+            
             axios
                 .post(`api/smartcard-verification`, { smartcard_number: textInput.smartcard_number, service_id: textInput.service_id })
                 .then((res) => {
@@ -80,7 +80,7 @@ function Bill(props) {
                     } else {
                         swal('Unable to verify!', 'Please check your smartcard number and try again', 'error');
                     }
-                    setLoading(false);
+                    
                 });
         } else {
             swal('All fields are required!', 'Fill and select all fields', 'error');
@@ -121,7 +121,7 @@ function Bill(props) {
                     closeOnClickOutside: false
                 }).then((willDelete) => {
                     if (willDelete) {
-                        setLoading(true);
+                        
                         axios.post(`/api/bill-purchase/`, textInput).then((res) => {
                             if (res.data.status === 200) {
                                 swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
@@ -130,7 +130,7 @@ function Bill(props) {
                             }else {
                                 swal('Error!', res.data.errors, 'error');
                             }
-                            setLoading(false);
+                            
                         });
                     }
                 });
@@ -150,17 +150,17 @@ function Bill(props) {
             if (res.status === 200) {
                 setProductList(res.data.product);
             }
-            setLoading(false);
+            
         });
     }, [props.match.params.id, history]);
 
     return (
         <div className="container mt-5">
-            <div className="text-muted h5 mb-4 pb-4 border-bottom">
+            <div className="text-muted mb-4 pb-4 border-bottom">
                 <b>Bill</b> Payment |
             </div>
             <div className="bg-light card card-body col-md-6">
-                <Loader isActive={loading} />
+                
                 <form onSubmit={handlePurchaseBill} className="">
                     <div className="form-group mb-3">
                         {productList.map((item, index) => {
@@ -168,13 +168,13 @@ function Bill(props) {
                                 <button
                                     type="button"
                                     key={index}
-                                    className={`btn btn-outline-primary ${productActive === item.id && 'active'}`}
+                                    className={`btn btn-outline-primary btn-sm ${productActive === item.id && 'active'}`}
                                     onClick={() => {
                                         handleProductSelection(item.id, item.id);
                                     }}
                                     style={{ margin: 2 }}
                                 >
-                                    <img src={`http://localhost:8000/${item.image}`} width="50" height="50" alt={item.name} />
+                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} width="40" height="45" alt={item.name} />
                                 </button>
                             );
                         })}
