@@ -1,17 +1,17 @@
 import React from 'react';
 import './App.css';
-import { HashRouter, Switch } from 'react-router-dom';
+import { HashRouter, Switch, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import AdminPrivateRoute from './AdminPrivateRoute';
-import PublicRoute from './PublicRoute';
-import UserRoute from './UserRoute';
 import swal from 'sweetalert';
 import Toastify from 'toastify-js';
 import { Context, reducer } from './contexts/globalContext';
 import ReactjsOverlayLoader from "reactjs-overlay-loader";
+import AppRoutes from './routes';
 
 
 function App() {
+
+    const history=useHistory();
 
     // axios.defaults.baseURL = process.env.REACT_APP_URL;
     axios.defaults.baseURL = 'http://localhost:8000';
@@ -45,15 +45,15 @@ function App() {
         function (error) {
             if (error.response.status === 403) {
                 swal('Forbidden', error.response.data.message, 'warning').then(() => {
-                    window.location.href = "#403";
+                    window.history.back();
                 });
             } else if (error.response.status === 419) {
                 swal('Timeout', "Your session is timed out, login again", 'warning').then(() => {
-                    window.location.href = "#login";
+                    window.location.replace("/login");
                 });
             }else if (error.response.status === 401) {
                 swal('Unauthenticated', "Please login your account", 'warning').then(() => {
-                    window.location.href = "#login";
+                    window.location.replace("/login");
                 });
             } else {
                 Toastify({
@@ -80,13 +80,7 @@ function App() {
             <Context.Provider value={{ globalValues: values, setGlobalValues: dispatch }}>
                 <HashRouter>
                     <Switch>
-                        <PublicRoute path="/" name="Index" />
-                    </Switch>
-                    <Switch>
-                        <UserRoute path="/user" name="User" />
-                    </Switch>
-                    <Switch>
-                        <AdminPrivateRoute path="/admin" name="Admin" />
+                        <AppRoutes name="Index" />
                     </Switch>
                 </HashRouter>
                 <ReactjsOverlayLoader isActive={stateLoading} 

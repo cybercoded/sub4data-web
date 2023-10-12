@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\API\PurchaseController;
+use Illuminate\Support\Facades\Http;
 use Mail;
 
 class UserController extends Controller
@@ -116,6 +117,58 @@ class UserController extends Controller
                 ]);
             }
         }
+    }
+
+    public function createAutomatedBanks(Request $request)
+    {
+        $user_id = auth('sanctum')->user()->id;
+        $user = User::find($user_id);
+        $api = Api::where('api_name', 'monnify')->first();
+        $authorization = base64_encode($api['api_key'] . ':' . $api['api_secret']);
+
+            $response = Http::withHeaders([
+                'Authorization' => "Basic ".$authorization,
+                'Content-Type' => 'application/json'
+            ])->post('https://api.monnify.com/api/v1/auth/login/');
+
+            $jsonData = $response->json();
+            $accessToken = $jsonData['responseBody']['accessToken'];
+
+            $apiPostArray = [
+                'accountReference' => strtoupper(substr($user->name, 0, 5)).time(),
+                'accountName' => $user->name,
+                'currencyCode' => 'NGN',
+                'contractCode' => $api['api_contract_code'],
+                'customerEmail' => $user->email,
+                'customerName' => $user->name,
+                'bvn' => '22161748511',
+                'getAllAvailableBanks' => true,
+                'preferredBanks' => ['50515','035', '058', '232']
+            ];
+
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer ".$accessToken,
+                'Content-Type' => 'application/json'
+            ])->post($api['api_url']."/bank-transfer/reserved-accounts", $apiPostArray);
+
+            $jsonData = $response->json();
+            $result = $jsonData['responseBody'];
+
+            if($jsonData['responseMessage'] == 'success'){
+
+                Banks::create([
+                    'user_id' => $user_id,
+                    'bank_name'=>$result['bankName'],
+                    'account_name'=>$result['accountName'],
+                    'account_number'=>$result['accountNumber'],
+                    'reference'=>$result['accountReference'],
+                ]);
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Automated banks created successfully",
+                ]);
+            }
     }
 
     public function userUpgrade(Request $request)

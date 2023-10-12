@@ -47,11 +47,11 @@ class AuthController extends Controller
                 'accountReference' => strtoupper(substr($request->name, 0, 5)).time(),
                 'accountName' => $request->name,
                 'currencyCode' => 'NGN',
-                'contractCode' => '0426346591',
-                'customerEmail' => 'adexgyh@gmail.com',
+                'contractCode' => $api['api_contract_code'],
+                'customerEmail' => $request->email,
                 'customerName' => $request->name,
                 'bvn' => '22161748511',
-                'getAllAvailableBanks' => false,
+                'getAllAvailableBanks' => true,
                 'preferredBanks' => ['50515','035', '058', '232']
             ];
             /* "232": "Sterling bank",

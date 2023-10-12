@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\ActivityController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
@@ -11,10 +11,11 @@ use App\Http\Controllers\API\ServicesController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VerificationController;
-use App\Http\Controllers\ApisController;
-use App\Http\Controllers\BackupController;
-use App\Http\Controllers\LevelController;
-use App\Http\Controllers\MonnifyController;
+use App\Http\Controllers\API\ApisController;
+use App\Http\Controllers\API\BackupController;
+use App\Http\Controllers\API\BeneficiariesController;
+use App\Http\Controllers\API\LevelController;
+use App\Http\Controllers\API\MonnifyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +64,8 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
 
     Route::put('transfer-fund', [UserController::class, 'adminCreditUser']);
 
+    Route::post('create-automated-banks', [UserController::class, 'createAutomatedBanks']);
+
 
     //Products
 
@@ -100,6 +103,20 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
     Route::get('view-levels', [LevelController::class, 'index']);
 
     Route::post('upgrade-user', [UserController::class, 'userUpgrade']);
+
+    //Purchases
+    Route::post('airtime-purchase', [PurchaseController::class, 'airtime']);
+
+    Route::post('data-purchase', [PurchaseController::class, 'data']);
+
+    Route::post('bill-purchase', [PurchaseController::class, 'bill']);
+
+    Route::post('electricity-purchase', [PurchaseController::class, 'electricity']);
+
+    //Beneficiaries
+    Route::get('get-beneficiaries/{slug}', [BeneficiariesController::class, 'get']);
+
+    Route::delete('delete-beneficiary/{id}/{slug}', [BeneficiariesController::class, 'delete']);
 
 });
 
@@ -236,6 +253,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user-discount', [UserController::class, 'getDiscount']);
 
     Route::get('get-monnify-charges', [UserController::class, 'getMonnifyCharges']);
+
+    Route::post('create-automated-banks', [UserController::class, 'createAutomatedBanks']);
 
     //Purchases
     Route::post('airtime-purchase', [PurchaseController::class, 'airtime']);
