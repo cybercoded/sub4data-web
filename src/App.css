@@ -1,0 +1,126 @@
+nav:hover a ~ #my-sidebar {
+    display: none;
+}
+#screen-page-text {
+    color: white;
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    /*     font-size: 23px; */
+    font-weight: bold;
+    transform: translateY(-50%);
+}
+body, .my-bg-light {
+    background: #f9fffe !important;
+}
+
+#our-services .circle-point {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 20px;
+    border: 7px solid #E1C5FF;
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 20%) !important;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+#how-it-works .circle-point {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 7px solid #6F459D;
+    padding: 20px;
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 20%) !important;
+    font-size: 30px;
+    line-height: 25px;
+    font-weight: bold;
+    background-color: #F3E8FF;
+}
+
+.network-img-div {
+    max-width: 170px;
+}
+
+#page-header a {
+    color: #707070;
+    text-decoration: none;
+}
+
+#page-header .nav-item a:hover,
+#page-header .nav-item a:focus {
+    color: #2D0856;
+    text-decoration: underline;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.abs-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.tile {
+    padding: 12px;
+    background: white;
+    border-radius: 5px;
+    /*     box-shadow: 0 .1rem .2rem rgba(0,0,0,.05); */
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 20%) !important;
+}
+
+.shadow {
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 20%) !important;
+}
+
+.slab .feather {
+    stroke-width: 3;
+    height: 30px;
+    width: 30px;
+}
+
+
+.text-primary, .my-text-primary {
+    color: #2d0856 !important;
+}
+
+.bg-primary, .my-bg-primary {
+    background-color: #2d0856 !important;
+}
+
+.text-secondary {
+    color: #f3e8ff !important;
+}
+
+.bg-secondary {
+    background-color: #f3e8ff !important;
+}
+
+.btn-outline-primary, .border-primary {
+    border-color: #2d0856 !important;
+    color: #2d0856 !important;
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    color: white !important;
+    background-color: #2d0856 !important;
+}
+
+.btn-primary {
+    background-color: #2d0856 !important;
+    border-color: #2d0856 !important;
+}
+
+.dashboard .breadcrumb {
+    background: transparent;
+    padding: 0px;
+}
