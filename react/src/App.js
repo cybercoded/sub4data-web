@@ -84,7 +84,7 @@ function App() {
                     </Switch>
                 </HashRouter>
                 <ReactjsOverlayLoader isActive={stateLoading} 
-                    icon={<img alt='loader' width={50} src={`${process.env.REACT_APP_URL}img/loading.gif`}/>} 
+                    icon={<img alt='loader' width={50} src={`img/loading.gif`}/>} 
                 />
             </Context.Provider>
         </div>

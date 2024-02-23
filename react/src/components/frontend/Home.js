@@ -6,7 +6,7 @@ function Home() {
     const scrolledRef = React.useRef(false);
     const { hash } = useLocation();
     const hashRef = React.useRef(hash);
-    const imgRoot = process.env.REACT_APP_URL+'img/';
+    const imgRoot = 'img/';
 
     React.useEffect(() => {
         if (hash) {

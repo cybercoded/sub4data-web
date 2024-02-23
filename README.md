@@ -12,8 +12,6 @@
     > cd /laravel
 
 1.  install or update composer to the environment
-    > comoser install
-    
     > composer update
 
 1.  Rename or copy .env.example file to .env
