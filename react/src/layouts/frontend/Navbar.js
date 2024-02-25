@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 function Navbar() {
     const history = useHistory();
 
-    const [notification, setNotification] = React.useState(
+    const [notification] = React.useState(
         JSON.parse(localStorage.getItem('notification')) || ''
     );
 

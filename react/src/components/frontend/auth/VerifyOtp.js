@@ -3,10 +3,8 @@ import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Toastify from 'toastify-js';
-import { Context } from '../../../contexts/globalContext';
 
 function VerifyOtp(props) {
-    const { globalValues, setGlobalValues } = React.useContext(Context);
     const email = props.match.params.email;
     const history=useHistory();
     const [textInput, setTextInput] = useState({

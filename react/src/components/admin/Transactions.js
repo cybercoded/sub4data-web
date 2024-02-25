@@ -9,7 +9,7 @@ function Transactions(props){
     const user_id = props.match.params.id;
 
     const [transactionData, setTransactionData] = useState([]);
-    const [productList, setProductList] = useState([]);
+    const [productList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
 
     

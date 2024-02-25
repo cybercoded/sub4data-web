@@ -40,8 +40,7 @@ function EditLevel(props) {
         });
     };
 
-    useEffect(() => {
-        
+    useEffect(() => {       
 
         axios.get(`/api/get-level/${level_id}`).then((res) => {
             if (res.data.status === 200) {
@@ -52,7 +51,7 @@ function EditLevel(props) {
             }
             
         });
-    }, [level_id]);
+    }, [level_id, textInput]);
 
     return (
         <div className="container-fluid px-4">

@@ -10,7 +10,7 @@ function Data(props) {
     const [productActive, setProductActive] = useState('');
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
-    const [errorList, setErrorList] = useState([]);
+    const [errorList] = useState([]);
 
     const [textInput, setTextInput] = useState({
         product_id: '',
@@ -22,7 +22,6 @@ function Data(props) {
     const handleInput = (e) => {
         e.persist();
         setTextInput({ ...textInput, [e.target.name]: e.target.value });
-
     };
 
     const handleProductSelection = (product_id) => {
