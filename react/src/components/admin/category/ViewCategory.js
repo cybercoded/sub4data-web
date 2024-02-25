@@ -1,14 +1,14 @@
 import axios from "axios";
 import React,{useEffect, useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import swal from "sweetalert";
 import $ from "jquery";
 
 
 function ViewCategory(){
-
     
     const [categoryList, setCategoryList] = useState([]);
+    const history=useHistory();
 
     useEffect(()=>{
         axios.get(`api/view-category`).then(res=>{
@@ -18,10 +18,13 @@ function ViewCategory(){
                 $(document).ready(function () {
                     $('table').DataTable();
                 });
+            }else {
+                swal('Warning', res.data.message, 'warning').then(() => {
+                    history.push(`/admin/dashboard`);
+                });
             }
-            
         })
-    },[]);
+    },[history]);
 
     return(
         <div className="container px-4">
@@ -41,6 +44,7 @@ function ViewCategory(){
                                 <th>Image</th>
                                 <th>Status</th>
                                 <th>Edit</th>
+                                <th>View</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,6 +57,9 @@ function ViewCategory(){
                                         <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
                                         <td>
                                             <Link to={`edit-category/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
+                                        </td>
+                                        <td>
+                                            <Link to={`/admin/view-product/${item.id}`} className="btn btn-primary btn-sm">View</Link>
                                         </td>
                                     </tr>
                                 ))

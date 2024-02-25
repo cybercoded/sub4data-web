@@ -37,10 +37,12 @@ const AdminRouteList =[
 
     { path: '/admin/add-product', exact: true, name: 'AddProduct', component: AddProduct },
     { path: '/admin/view-product', exact: true, name: 'ViewProduct', component: ViewProduct },
+    { path: '/admin/view-product/:id', exact: true, name: 'ViewProduct', component: ViewProduct },
     { path: '/admin/edit-product/:id', exact: true, name: 'EditProduct', component: EditProduct },
 
     { path: '/admin/add-services', exact: true, name: 'AddServices', component: AddServices },
     { path: '/admin/view-services', exact: true, name: 'ViewServices', component: ViewServices },
+    { path: '/admin/view-services/:id', exact: true, name: 'ViewServices', component: ViewServices },
     { path: '/admin/edit-services/:id', exact: true, name: 'EditServices', component: EditServices },
     
     { path: '/admin/edit-user/:id', exact: true, name: 'EditUser', component: EditUser },

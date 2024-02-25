@@ -144,6 +144,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     Route::get('view-product', [ProductController::class, 'index']);
 
+    Route::get('view-product/{id}', [ProductController::class, 'view']);
+
     Route::get('edit-product/{id}', [ProductController::class, 'edit']);
 
     Route::post('update-product/{id}', [ProductController::class, 'update']);
@@ -152,6 +154,8 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     //Services
     Route::get('view-services', [ServicesController::class, 'index']);
+
+    Route::get('view-services/{id}', [ServicesController::class, 'view']);
 
     Route::post('store-services', [ServicesController::class, 'store']);
 

@@ -1,35 +1,31 @@
 import axios from "axios";
 import React, {useEffect,useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import swal from "sweetalert";
 
 import $ from "jquery";
 
-function ViewServices(){
+function ViewServices(props){
 
-    const [serviceList, setservice] = useState([]);
+    const [serviceList, setService] = useState([]);
+    const product_id = props.match.params.id;
+    const history=useHistory();
 
-    
     useEffect(() => {
-        let isMounted= true;
         document.title="View service";
-        axios.get(`api/view-services`).then(res=>{
-            if(isMounted)
-            {
-                if(res.data.status===200)
-                {
-                    setservice(res.data.service);
-                    $(document).ready(function () {
-                        $('table').DataTable();
-                    });
-                }
-            }
-            
+        axios.get(`api/view-services${product_id ? '/' + product_id : ''}`).then(res=>{
+            if(res.data.status===200) {
+                setService(res.data.services);
+                $(document).ready(function () {
+                    $('table').DataTable();
+                });
+            } else {
+                swal('Warning', res.data.message, 'warning').then(() => {
+                    history.push(`/admin/dashboard`);
+                });
+            } 
         });
-        return ()=>{
-            isMounted = false;
-        }
-    }, []);
+    }, [product_id, history]);
 
     const deleteService = (e,id)=>{
         e.preventDefault();
@@ -72,10 +68,10 @@ function ViewServices(){
                             </tr>
                         </thead>
                         <tbody>
-                            {serviceList.map((item)=> (
+                            {serviceList?.map((item)=> (
                                     <tr key={item.id}>
                                         <td>{item.id}</td>
-                                        <td>{item.product.name}</td>
+                                        <td>{item.product?.name}</td>
                                         <td>{item.name}</td>                    
                                         <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
                                         <td>

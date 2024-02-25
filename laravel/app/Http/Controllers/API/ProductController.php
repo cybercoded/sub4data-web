@@ -18,6 +18,16 @@ class ProductController extends Controller
             'product'=>$product
         ]);
     }
+
+    public function view_sub_catagory(){
+        $product=Product::all();
+        return response()->json([
+            'status'=>200,
+            'product'=>$product
+        ]);
+    }
+
+
     public function store(Request $request){
 
         $validator=Validator::make($request->all(),[
