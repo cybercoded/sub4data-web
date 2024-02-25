@@ -65,7 +65,7 @@ function ViewUsers(props){
                 
             }
         });
-    }, [textInput]);
+    }, []);
 
 
     return(

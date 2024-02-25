@@ -299,7 +299,7 @@ function Transactions(props){
                                 {transactionData.map((item, index)=> (
                                         <tr key={index}>
                                             <td>{index+1}</td>
-                                            <td><Link to={`/admin/edit-user/${item.user.id}`}>{item.user.name}</Link></td>
+                                            <td><Link to={`/admin/edit-user/${item.user?.id}`}>{item.user?.name}</Link></td>
                                             <td>{item.reference}</td>
                                             <td>{item.amount}</td>
                                             <td>{item.description}</td>                                            
@@ -312,7 +312,7 @@ function Transactions(props){
                                                     data-reference={item.reference}
                                                     data-api_reference={item.api_reference}
                                                     data-amount={item.amount}
-                                                    data-name={item.user.name}
+                                                    data-name={item.user?.name}
                                                     data-product={item.product?.name}
                                                     data-service={item.service?.name}
                                                     data-status={item.status}

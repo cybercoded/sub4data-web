@@ -41,7 +41,7 @@ function EditApi(props) {
             }
             
         });
-    }, [api_id, textInput]);
+    }, [api_id]);
 
     return (
         <div className="container-fluid px-4">

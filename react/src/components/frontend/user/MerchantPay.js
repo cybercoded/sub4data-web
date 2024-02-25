@@ -54,7 +54,7 @@ function MerchantPay() {
             }
             
         });
-    }, [textInput.charges, textInput]);
+    }, [textInput.charges]);
 
     return (
         <div className="container mt-5">
