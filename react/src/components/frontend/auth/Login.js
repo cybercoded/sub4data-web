@@ -5,6 +5,9 @@ import axios from 'axios';
 
 function Login() {
 
+    axios.defaults.withCredentials = true;
+    fetch(`http://localhost:8000/api/login`)
+
     const history=useHistory();
     const [loginInput, setLogin] = useState({
         email:'',
