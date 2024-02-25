@@ -45,7 +45,7 @@ function Dashboard(){
                             <div className="mb-3">
                                 <i className="fas fa-users fa-4x text-primary"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData.users_count}</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData?.users_count}</div>
                             <small className="text-muted font-weight-bold">
                                 Registered Users
                             </small>
@@ -60,7 +60,7 @@ function Dashboard(){
                                 <i className="fas fa-list-alt fa-4x text-success"></i>
                             </div>
                             <div className="h3 text-secondary font-weight-bold mb-0">
-                                ₦{ new Intl.NumberFormat().format(panelData.users_balance)}
+                                ₦{ new Intl.NumberFormat().format(panelData?.users_balance)}
                             </div>
                             <small className="text-muted font-weight-bold">
                                 Users Balance
@@ -89,7 +89,7 @@ function Dashboard(){
                             <div className="mb-3">
                                 <i className="fa fa-triangle-exclamation text-danger fa-4x"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData.unsuccessful_transactions}</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData?.unsuccessful_transactions}</div>
                             <small className="text-muted font-weight-bold">
                                 Unsuccessful Transactions
                             </small>
@@ -108,7 +108,7 @@ function Dashboard(){
                             </div>
                             <table className="table">
                                 <tbody>
-                                    { userData.map((item, index)=> (
+                                    { userData?.map((item, index)=> (
                                             <tr key={index}>                                               
                                                 <td><span className="badge bg-info">{item.status ===1 ? 'Active' : 'Inactive'}</span></td>
                                                 <td>{item.name}</td>
@@ -132,10 +132,10 @@ function Dashboard(){
                             </div>
                             <table className="table">
                                 <tbody>
-                                    { transactionData.map((item, index)=> (
+                                    { transactionData?.map((item, index)=> (
                                             <tr key={index}>
                                                 <td><span className="badge bg-info">{item.status}</span></td>                                            
-                                                <td>{item.user.name}</td>
+                                                <td>{item.user?.name}</td>
                                                 <td>{item.description}</td>                                                
                                             </tr>
                                         ))

@@ -10,14 +10,17 @@ function EditCategory(props){
     
     const [categoryInput, setCategory] = useState([]);
     const [error, setError] = useState([]);
+    const [checkbox, setCheckbox] = useState(false)
 
-    
     useEffect(() => {
         const category_id=props.match.params.id;
         axios.get(`/api/edit-category/${category_id}`).then(res=>{
             if(res.data.status===200)
             {
                 setCategory(res.data.category);
+                let status = res.data.category.status === 1;
+                setCheckbox(status)
+                console.log(status)
             }
             else if(res.data.status===404)
             {
@@ -36,6 +39,11 @@ function EditCategory(props){
         e.persist();
         setCategory({...categoryInput,[e.target.name]:e.target.value});
     }
+
+    const handleCheckBox = (e) => {
+        e.persist();
+        setCheckbox(e.target.checked)
+    };
 
     const [picture, setPicture] = useState([]);
     const handleImage =(e)=>{
@@ -110,7 +118,7 @@ function EditCategory(props){
                             </div>
                             <div className="form-group mb-3">
                                 <label>Status</label>
-                                <input type="checkbox" name="status" onChange={handleInput} defaultChecked={categoryInput.status == '1' } /> Status 0=shown/ 1=hidden
+                                <input type="checkbox" name="status" onChange={handleCheckBox} checked={checkbox} />
                             </div>
                         </div>
                         <div className="tab-pane card-body border fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">
@@ -132,7 +140,7 @@ function EditCategory(props){
                             <div className="form-group mb-3">
                                 <label>Image</label>
                                 <input type="file" onChange={handleImage}  name="image" className="form-control" />
-                                <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} width="50" height="50" />
+                                <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} alt={categoryInput.image} width="50" height="50" />
                                 <small className="text-danger">{error?.image}</small>
                             </div>                            
                         </div>  

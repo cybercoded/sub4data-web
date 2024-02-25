@@ -234,7 +234,6 @@ function EditProduct(props) {
                                         type="checkbox"
                                         name="status"
                                         onChange={handleCheckBox}
-                                        onClick={handleCheckBox}
                                         defaultChecked={checkbox}
                                     />
                                 </div>

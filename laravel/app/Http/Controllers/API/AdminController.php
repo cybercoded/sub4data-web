@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Mail\BulkMail;
 use App\Models\Activities;
@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Mail;
 use Validator;
+use App\Http\Controllers\Controller;
 
 class AdminController extends Controller
 {
