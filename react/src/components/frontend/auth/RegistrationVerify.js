@@ -2,18 +2,20 @@ import React, {useState} from 'react';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-
 import Toastify from 'toastify-js';
 import { Context } from '../../../contexts/globalContext';
+import CryptoJS from 'crypto-js';
 
 function RegistrationVerify(props) {
     const { globalValues, setGlobalValues } = React.useContext(Context);
     const email = props.match.params.email;
+    var encryptedPassword = localStorage.getItem("registration_password");
+    var decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, 'secret_key').toString(CryptoJS.enc.Utf8);
     const history=useHistory();
     const [textInput, setTextInput] = useState({
         email: localStorage.getItem('registration_email'),
         name: localStorage.getItem('registration_name'),
-        password: localStorage.getItem('registration_password'),
+        password: decryptedPassword,
         otp:'',
     });
 
@@ -25,7 +27,7 @@ function RegistrationVerify(props) {
    const handleResend = (e)=>{                   
         
         axios.put(`/api/send-otp/`, textInput).then((res) => {
-            if (res.data.status === 200) {
+            if (res.data.status === 200 || res.data.status === 201) {
                 Toastify({
                     text: "OTP was resent to you",
                     duration: 3000,
@@ -38,9 +40,15 @@ function RegistrationVerify(props) {
                         y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                     },
                 }).showToast();                    
-            }else {
+            } else {
                 swal('Error!', res.data.errors, 'error');
             }
+
+            if(res.data.status === 201) {
+                swal('Warning!', `Verification code was not sent, because you are in development mode use ${res.data.otp} as your otp`,'warning').then(() => {
+                    history.push(`/verify-registration`);
+                });
+            } 
             
         });
     }
@@ -68,7 +76,19 @@ function RegistrationVerify(props) {
                             history.push("/user/dashboard");
                         })
                     }else{
-                        swal('Error!', res.data.validation_errors, 'error');
+
+                        const validation_errors = res.data.validation_errors;
+                        let errorMessage = '';
+
+                        // Construct error message for each field
+                        for (const field in validation_errors) {
+                          if (validation_errors.hasOwnProperty(field)) {
+                            errorMessage += `${field}:\n`;
+                            errorMessage += validation_errors[field].join('\n');
+                            errorMessage += '\n';
+                          }
+                        }
+                        swal('Error!', errorMessage, 'error');
                     }
                     
                 });

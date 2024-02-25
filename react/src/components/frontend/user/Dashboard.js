@@ -16,10 +16,6 @@ function Dashboard() {
     const [userDataList, setUserDataList] = useState(
         JSON.parse(localStorage.getItem('user')) || []
     );
-    
-    const [notification, setNotification] = useState(
-        JSON.parse(localStorage.getItem('notification')) || ''
-    );
 
     useEffect(() => {
         localStorage.setItem('isBackgroundLoader', true);
@@ -28,13 +24,6 @@ function Dashboard() {
                 setCategoryList(res.data.category);
                 localStorage.setItem('category', JSON.stringify(res.data.category));
             }            
-        });
-        
-        axios.get(`api/get-notification`).then((res) => {
-            if (res.data.status === 200) {
-                setNotification(res.data.notification);
-                localStorage.setItem('notification', JSON.stringify(res.data.notification));
-            }
         });
         
         axios.get(`api/user`).then((res) => {
@@ -132,9 +121,9 @@ function Dashboard() {
                         <div className='card text-white my-bg-primary'>
                             <div className="card-body">
                                 <div className='mb-2 d-flex justify-content-between  font-weight-bold'>
-                                    <div className='text-truncate me-3 fw-bold'>{userDataList.name}</div>
+                                    <div className='text-truncate me-3 fw-bold'>{userDataList?.name}</div>
                                     <div className="float-end">                                       
-                                        { userDataList.levels?.map((item, index) => (
+                                        { userDataList?.levels?.map((item, index) => (
                                             <span key={index} className='badge bg-secondary'>
                                                 <i className={`fa ${item.level === 1 ? 'fa-user' : 'fa-certificate'}`}></i><br />
                                                 {item.name}
@@ -142,7 +131,7 @@ function Dashboard() {
                                         ))}
                                     </div>
                                 </div>
-                                <div className='h1 font-weight-bold my-3'>₦{ new Intl.NumberFormat().format(userDataList.balance)}</div>
+                                <div className='h1 font-weight-bold my-3'>₦{ new Intl.NumberFormat().format(userDataList?.balance)}</div>
                                 <div className='mt-3'>
                                     <Link to="/user/fund-wallet" className='btn btn-sm btn-secondary' style={{marginRight: 5}}>
                                         Fund wallet
@@ -154,7 +143,7 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
-                        { userDataList.banks.map((item, index) => (
+                        { userDataList?.banks?.map((item, index) => (
                                 <div className='col-md-3 mb-2 d-none d-md-block'>
                                     <div key={index} className='card bg-light'>
                                         <div className="card-body py-4">
@@ -177,27 +166,14 @@ function Dashboard() {
                             ))
                         }
                 </div>
-            </div>
-            {/* 
-                <section>
-                    <div className="alert alert-primary d-flex alert-dismissible fade show" role="alert">
-                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        <div style={{height: 70, overflow: 'hidden', marginLeft: 10}}>
-                            <strong>{notification.title}</strong>  {notification.message} 
-                            <span className='btn btn-secondary btn-sm' onClick={() => swal(notification.message) } style={{position: 'absolute', bottom: 10, right: 10}}>Read more</span>
-                        </div>
-                        
-                    </div>
-                </section> 
-            */}
-            
+            </div>            
             
             <div>
                 <div className="text-muted mb-4 pb-4 border-bottom d-none d-md-block">
                     <b>Instant</b> | Services
                 </div>
                 <div className="row">
-                    {categoryList.map((item, index) => (
+                    {categoryList?.map((item, index) => (
                         <Link to={`services/${item.slug}/${item.id}`} key={index} className="col-md-3 col-6 text-muted text-decoration-none">
                             <div className="card bg-light rd-5 mb-4">
                                 <div className="card-body text-center">
@@ -226,7 +202,7 @@ function Dashboard() {
                 <div className="table-responsive">
                     <table className="table">
                         <tbody>
-                            {transactionList.map((item, index)=> {
+                            {transactionList?.map((item, index)=> {
                                 return (
                                     <tr key={index}>
                                         <td className='d-none d-md-block' >{item.reference}</td>

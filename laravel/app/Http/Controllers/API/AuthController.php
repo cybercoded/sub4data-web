@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Mail\VerificationMail;
 use App\Models\Api;
@@ -64,26 +65,26 @@ class AuthController extends Controller
                 'Content-Type' => 'application/json'
             ])->post($api['api_url']."/bank-transfer/reserved-accounts", $apiPostArray);
 
-            $jsonData = $response->json();
-            $result = $jsonData['responseBody'];
-
             // print_r($jsonData);
             $user=User::create([
                 'name'=>$request->name,
                 'email'=>$request->email,
                 'user_ip' => $request->ip(),
                 'password'=>Hash::make($request->password)
-            ]);
-
+            ]);           
+            
             if($jsonData['responseMessage'] == 'success' && $user){
-
-                Banks::create([
-                    'user_id' => $user->id,
-                    'bank_name'=>$result['bankName'],
-                    'account_name'=>$result['accountName'],
-                    'account_number'=>$result['accountNumber'],
-                    'reference'=>$result['accountReference'],
-                ]);
+                $jsonData = $response->json();
+                if(isset($jsonData['responseBody'])) {
+                    $result = $jsonData['responseBody'];
+                    Banks::create([
+                        'user_id' => $user->id,
+                        'bank_name'=>$result['bankName'],
+                        'account_name'=>$result['accountName'],
+                        'account_number'=>$result['accountNumber'],
+                        'reference'=>$result['accountReference'],
+                    ]);
+                }
             }
 
             $token=$user->createToken($user->email. '_Token')->plainTextToken;
@@ -122,7 +123,7 @@ class AuthController extends Controller
                 else //user
                 {
                     $role='user';
-                    $token=$user->createToken($user->email. '_Token', [''])->plainTextToken;
+                    $token=$user->createToken($user->email. '_Token', ['client:user'])->plainTextToken;
                 }
 
                 $user->access_token = $token;
@@ -174,13 +175,38 @@ class AuthController extends Controller
                 'otp' => $otp,
                 'title' => $email_title,
             ];
-            Mail::to($request->input('email'))
-            ->send(new VerificationMail($email_title, $email_message));
 
-            return response()->json([
-                'status' => 200,
-                'message' => "OTP sent successfully",
-            ]);
+            try {
+                // Send the email
+                Mail::to($request->input('email'))->send(new VerificationMail($email_title, $email_message));
+                
+                // Check if the email was sent successfully
+                if(count(Mail::failures()) > 0) {
+                    // Handle failure, log errors, or perform any necessary action
+                    Log::error('Failed to send email to: ' . $request->input('email'));
+                    return response()->json([
+                        'status' => 419,
+                        'errors' => "Mail could not be sent to ". $request->input('email'),
+                    ]);
+                } else {
+                    // Email sent successfully
+                    return response()->json([
+                        'status' => 200,
+                        'message' => "OTP sent successfully",
+                    ]);
+                }
+            } catch (\Exception $e) {
+                // Handle exceptions, which could include cases like no internet connection
+                Log::error('Error sending email: ' . $e->getMessage());
+                return response()->json([
+                    'status' => 201,
+                    'errors' => "Mail could not be sent",
+                    'log' => $e->getMessage(),
+                    'otp' => config('app.env') === 'local' ? $otp : '',
+                    'local' => config('app.env') === 'local' ? true : false,
+                ]);
+            }
+           
         } else {
             return response()->json([
                 'status' => 404,
@@ -217,13 +243,37 @@ class AuthController extends Controller
                 'otp' => $otp,
                 'title' => $email_title,
             ];
-            Mail::to($request->input('email'))
-            ->send(new VerificationMail($email_title, $email_message));
-
-            return response()->json([
-                'status' => 200,
-                'message' => "OTP sent successfully",
-            ]);
+            
+            try {
+                // Send the email
+                Mail::to($request->input('email'))->send(new VerificationMail($email_title, $email_message));
+                
+                // Check if the email was sent successfully
+                if(count(Mail::failures()) > 0) {
+                    // Handle failure, log errors, or perform any necessary action
+                    Log::error('Failed to send email to: ' . $request->input('email'));
+                    return response()->json([
+                        'status' => 419,
+                        'errors' => "Mail could not be sent to ". $request->input('email'),
+                    ]);
+                } else {
+                    // Email sent successfully
+                    return response()->json([
+                        'status' => 200,
+                        'message' => "OTP sent successfully",
+                    ]);
+                }
+            } catch (\Exception $e) {
+                // Handle exceptions, which could include cases like no internet connection
+                Log::error('Error sending email: ' . $e->getMessage());
+                return response()->json([
+                    'status' => 201,
+                    'errors' => "Mail could not be sent",
+                    'log' => $e->getMessage(),
+                    'otp' => config('app.env') === 'local' ? $otp : '',
+                    'local' => config('app.env') === 'local' ? true : false,
+                ]);
+            }
         } else {
             return response()->json([
                 'status' => 404,

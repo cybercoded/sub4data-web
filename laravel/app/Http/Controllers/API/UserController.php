@@ -44,13 +44,16 @@ class UserController extends Controller
     public function getNotification()
     {
         $notification = Activities::where('type', 'bulk_email')->first();
-        return response()->json([
-            'status' => 200,
-            'notification' => [
-                'title' => $notification['title'],
-                'message' => unserialize($notification['log'])['message']
-            ]
-        ]);
+
+        if($notification) {
+            return response()->json([
+                'status' => 200,
+                'notification' => [
+                    'title' => $notification['title'],
+                    'message' => unserialize($notification['log'])['message']
+                ]
+            ]);
+        }
     }
 
     public function getMonnifyCharges()

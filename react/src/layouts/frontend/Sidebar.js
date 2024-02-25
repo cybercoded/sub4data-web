@@ -29,7 +29,7 @@ const SideBar = () => {
                     <div className="sb-sidenav-menu-heading">
                         Our Services
                     </div>
-                    {   categoryList.map((item, index) => (
+                    {   categoryList?.map((item, index) => (
                         <div className="nav-item" key={index}>
                             <Link className={`nav-link ${ item.slug === window.location.href.split('/')[5] && 'active' }`}to={`/user/services/${item.slug}/${item.id}`} >
                                 <div className="sb-nav-link-icon">

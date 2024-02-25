@@ -11,8 +11,12 @@ function AppRoutes(rest) {
             <Route {...rest} render={(props) => <PublicLayout {...props} /> } />
             { localStorage.getItem('auth_token') && (
                 <>
-                    <Route {...rest} render={(props) => <UserLayout {...props} /> } />
-                    <Route {...rest} render={(props) => <MasterLayout {...props} /> } />
+                    { localStorage.getItem('auth_role') === "user" && (
+                        <Route {...rest} render={(props) => <UserLayout {...props} /> } />
+                    )}
+                    { localStorage.getItem('auth_role') === "admin" && (
+                        <Route {...rest} render={(props) => <MasterLayout {...props} /> } />
+                    )}
                 </>
             )}          
         </>

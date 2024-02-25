@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import { Link, useHistory } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 
 function Register() {
-
 
     const history=useHistory();
     const [textInput, setTextInput] = useState({
@@ -69,13 +69,18 @@ function Register() {
         
         axios.get('/sanctum/csrf-cookie').then(() => {
             axios.put(`/api/send-otp/`, textInput).then((res) => {
-                if (res.data.status === 200) {
-                    
-                    localStorage.setItem("registration_name",textInput.name);
-                    localStorage.setItem("registration_email",textInput.email);
-                    localStorage.setItem("registration_password",textInput.password);
+                let  encryptedPassword = CryptoJS.AES.encrypt(textInput.password, 'secret_key').toString();
 
+                localStorage.setItem("registration_name",textInput.name);
+                localStorage.setItem("registration_email",textInput.email);
+                localStorage.setItem("registration_password", encryptedPassword);
+                    
+                if (res.data.status === 200) {                    
                     swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                        history.push(`/verify-registration`);
+                    });
+                }else if(res.data.status === 201) {
+                    swal('Warning!', `Verification code was not sent, because you are in development mode use ${res.data.otp} as your otp`,'warning').then(() => {
                         history.push(`/verify-registration`);
                     });
                 }else {
@@ -89,7 +94,7 @@ function Register() {
     return(
         <div className='my-bg-primary'>
             <div className="d-flex align-items-center justify-content-center vh-100">
-                <div className='col-md-4 col-lg-3 col-10'>
+                <div className='col-md-6 col-sm-8 col-lg-5 col-xl-4'>
                     <div className='card'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
