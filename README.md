@@ -12,7 +12,7 @@
     > cd /laravel
 
 1.  install or update composer to the environment
-    > composer update
+    > composer install && composer update
 
 1.  Rename or copy .env.example file to .env
     > cp .env.example .env
@@ -23,6 +23,12 @@
 1.  Set your database credentials and order relevant information as you require in your .env file
     > https://github.com/kunley247/sub4data-web/blob/master/laravel/.env
 
+1.  Populate the database from 
+    > https://github.com/kunley247/sub4data-web/blob/master/laravel/database/database.sql
+    to your mysql admin
+
+1.  Start the server side server
+    > php artisan serve
 
 ### Start the client side
 
@@ -30,8 +36,9 @@
     > cd /react
 
 1.  Install node_modules to the environment
-   `to make node available globally`
-    > npm install -g react-scripts 
-    > nmp install
-    > php artisan serve
+    > nmp install --force
+1.  Fix any issues that may occur with dependencies
+    > npm audit fix --force
+1   Start the client side server
+    > npm start
 
