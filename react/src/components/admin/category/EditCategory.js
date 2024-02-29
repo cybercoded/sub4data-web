@@ -143,10 +143,12 @@ function EditCategory(props){
                                 <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} alt={categoryInput.image} width="50" height="50" />
                                 <small className="text-danger">{error?.image}</small>
                             </div>                            
-                        </div>  
+                        </div>
+                        
+                        <button type="submit" className="btn btn-primary px-4 float-end">Update</button>
                     </div>
 
-                    <button type="submit" className="btn btn-primary px-4 float-end">Update</button>
+                    
                 </form>
                 </div>
                 

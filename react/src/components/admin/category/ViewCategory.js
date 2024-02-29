@@ -51,15 +51,15 @@ function ViewCategory(){
                             { categoryList.map((item)=> (
                                     <tr key={item.id}>
                                         <td>{item.id}</td>
-                                        <td>{item.name}</td>
+                                        <td><Link to={`edit-category/${item.id}`}>{item.name}</Link></td>
                                         <td>{item.slug}</td>
-                                        <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" height="50" alt={item.name}/></td>
-                                        <td>{item.status ===1 ? 'Shown' : 'Hidden'}</td>
+                                        <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" className="img-thumbnail" height="50" alt={item.name}/></td>
+                                        <td>{item.status === 1 ? 'Shown' : 'Hidden'}</td>
                                         <td>
                                             <Link to={`edit-category/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
                                         </td>
                                         <td>
-                                            <Link to={`/admin/view-product/${item.id}`} className="btn btn-primary btn-sm">View</Link>
+                                            <Link to={`/admin/view-product/${item.id}`} className="btn btn-primary btn-sm">View products</Link>
                                         </td>
                                     </tr>
                                 ))

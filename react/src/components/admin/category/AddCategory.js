@@ -193,11 +193,8 @@ function AddCategory() {
                                     <small className="text-danger">{categoryInput?.error_list.image}</small>
                                 </div>
                             </div>
-                        </div>
-
-                        <button type="submit" className="btn btn-primary px-4 float-end">
-                            Submit
-                        </button>
+                            <button type="submit" className="btn btn-primary px-4 float-end">Submit</button>
+                        </div>                        
                     </form>
                 </div>
             </div>

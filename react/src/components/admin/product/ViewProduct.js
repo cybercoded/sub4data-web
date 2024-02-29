@@ -54,15 +54,15 @@ function ViewProduct(props){
                             {productList?.map((item, index)=> (
                                 <tr key={index}>
                                     <td>{item.id}</td>
-                                    <td>{item.category.name}</td>
+                                    <td><Link to={`/admin/edit-product/${item.id}`}>{item.category?.name}</Link></td>
                                     <td>{item.name}</td>
                                     <td>{item.status === 1 ? 'Shown' : 'Hidden'}</td>
-                                    <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" height="50" alt={item.name}/></td>
+                                    <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" className="img-thumbnail" height="50" alt={item.name}/></td>
                                     <td>
                                         <Link to={`/admin/edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
                                     </td>
                                     <td>
-                                        <Link to={`/admin/view-services/${item.id}`} className="btn btn-primary btn-sm">View</Link>
+                                        <Link to={`/admin/view-services/${item.id}`} className="btn btn-primary btn-sm">View services</Link>
                                     </td>
                                 </tr>
                                 ))
