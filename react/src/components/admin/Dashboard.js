@@ -13,7 +13,18 @@ function Dashboard(){
 
     useEffect(()=>{
 
-        
+        axios.get(`api/view-permissions`).then(res=>{
+            if(res.status===200){
+                let permissions = res.data.permissions;
+                let list_of_permissions = [];
+                permissions.forEach(permission => {
+                    list_of_permissions.push(permission.roles[0]?.slug);
+                });
+
+                localStorage.setItem('userPermissionsList', JSON.stringify(list_of_permissions));
+            }
+        });
+
         axios.get(`api/view-users`).then(res=>{
             if(res.status===200){
                 setUserData(res.data.users);
@@ -75,7 +86,7 @@ function Dashboard(){
                             <div className="mb-3">
                                 <i className="fas fa-wallet fa-4x text-info"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">Click here to check</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">Click to check</div>
                             <small className="text-muted font-weight-bold">
                                 API Balance
                             </small>

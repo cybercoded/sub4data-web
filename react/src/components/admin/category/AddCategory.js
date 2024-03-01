@@ -16,9 +16,16 @@ function AddCategory() {
         error_list: []
     });
 
+    const [checkbox, setCheckbox] = useState(true)
+
     const handleInput = (e) => {
         e.persist();
         setCategory({ ...categoryInput, [e.target.name]: e.target.value });
+    };
+
+    const handleCheckbox = (e) => {
+        e.persist();
+        setCheckbox(e.target.checked)
     };
 
     const [picture, setPicture] = useState([]);
@@ -148,9 +155,9 @@ function AddCategory() {
                                     />
                                 </div>
                                 <div className="form-group mb-3">
-                                    <label>Status (Optional)</label>
-                                    <input type="checkbox" name="status" onChange={handleInput} defaultChecked={true} value={categoryInput.status} /> Status
-                                    0=shown/ 1=hidden
+                                    <input type="checkbox" id="checkbox-add-category" name="status" onChange={handleCheckbox} defaultChecked={checkbox} />
+                                    <label htmlFor="checkbox-add-category"></label>
+                                    <span>Status (Optional)</span>
                                 </div>
                             </div>
                             <div className="tab-pane card-body border fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">

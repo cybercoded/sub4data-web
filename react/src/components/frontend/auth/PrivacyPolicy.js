@@ -28,12 +28,12 @@ const PrivacyPolicy = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link mx-md-3 active" to="#our-services">
+                                <Link className="nav-link mx-md-3 active" to="/#our-services">
                                     Our Services
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link mx-md-3" to="#how-it-works">
+                                <Link className="nav-link mx-md-3" to="/#how-it-works">
                                     How it Works
                                 </Link>
                             </li>

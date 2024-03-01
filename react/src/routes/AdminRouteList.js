@@ -4,6 +4,10 @@ import AddCategory from '../components/admin/category/AddCategory';
 import ViewCategory from '../components/admin/category/ViewCategory';
 import EditCategory from '../components/admin/category/EditCategory';
 
+import EditACL from '../components/admin/acl/EditACL';
+import ViewAdmins from '../components/admin/acl/ViewAdmins';
+
+
 import AddProduct from '../components/admin/product/AddProduct';
 import ViewProduct from '../components/admin/product/ViewProduct';
 import EditProduct from '../components/admin/product/EditProduct';
@@ -26,11 +30,15 @@ import ViewLevels from '../components/admin/level/ViewLevels';
 import AddApi from '../components/admin/api/AddApi';
 import ViewApis from '../components/admin/api/ViewApis';
 import EditApi from '../components/admin/api/EditApi';
+import Index from '../components/admin';
 
 const AdminRouteList =[
-    { path: '/admin', exact: true, name: 'Admin' },
+    { path: '/admin', exact: true, name: 'Admin', component: Index },
     { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },    
 
+    { path: '/admin/view-admins', exact: true, name: 'ViewAdmins', component: ViewAdmins },
+    { path: '/admin/edit-acls/:id', exact: true, name: 'EditACL', component: EditACL },
+    
     { path: '/admin/add-category', exact: true, name: 'AddCategory', component: AddCategory },
     { path: '/admin/edit-category/:id', exact: true, name: 'EditCategory', component: EditCategory },
     { path: '/admin/view-category', exact: true, name: 'ViewCategory', component: ViewCategory },

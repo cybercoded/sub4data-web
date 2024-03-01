@@ -68,7 +68,7 @@ function RegistrationVerify(props) {
         
         axios.put(`/api/verify-registration-otp`, textInput).then((res) => {
             if (res.data.status === 200) {
-                axios.post(`/api/register`, textInput).then(res=>{
+                axios.post(`/api/public/register`, textInput).then(res=>{
                     if(res.data.status===200){
                         localStorage.setItem("auth_token",res.data.token);
                         localStorage.setItem("auth_name",res.data.username);

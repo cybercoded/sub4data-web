@@ -118,7 +118,8 @@ function EditCategory(props){
                             </div>
                             <div className="form-group mb-3">
                                 <label>Status</label>
-                                <input type="checkbox" name="status" onChange={handleCheckBox} checked={checkbox} />
+                                <input type="checkbox" id="checkbox" name="status" onChange={handleCheckBox} checked={checkbox} />
+                                <label for="checkbox"></label>
                             </div>
                         </div>
                         <div className="tab-pane card-body border fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">

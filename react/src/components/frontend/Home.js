@@ -125,15 +125,15 @@ function Home() {
                         <img src={`${imgRoot}/banner.jpg`} alt="GigNg banner" className="img-responsive img-fluid" style={{ minHeight: 250 }} />
                         <div className="fs-4 ps-2" id="screen-page-text">
                             <div className="text-center">
-                                <div>Browse the internet seamlessly with</div>
+                                <div style={{maxWidth: 250}}>Browse the internet seamlessly with</div>
                                 <div style={{ color: '#6BD2FF' }}>{process.env.REACT_APP_NAME}</div>
-                                <Link to="register" role='button' className='btn btn-primary btn-lg mt-4 rounded'>Get Started Now</Link>
+                                <Link to="register" role='button' className='btn btn-primary btn-lg mt-4 rounded'>Get Started</Link>
                             </div>
                         </div>
                     </div>
                     <div className="px-3 px-md-5 py-4">
                         <div className="container py-3">
-                            <div className="my-text-primary text-center mb-4" style={{ fontSize: 26 }}>
+                            <div className="my-text-primary text-center mb-4" style={{ fontSize: 30, lineHeight: 2 }}>
                                 <strong>
                                     Buy Data and Airtime of every Nigerian Network (MTN, Glo, Airtel and 9mobile) at cheap rates.
                                 </strong>

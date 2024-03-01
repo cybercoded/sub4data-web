@@ -23,9 +23,9 @@ function Reset() {
         e.preventDefault();
         
         
-        axios.get(`/api/verify-user-email/${textInput.email}`).then((res) => {
+        axios.get(`/api/public/verify-user-email/${textInput.email}`).then((res) => {
             if (res.data.status === 200) {
-                axios.put(`/api/password-reset/`, textInput).then((res) => {
+                axios.put(`/api/public/password-reset/`, textInput).then((res) => {
                     if (res.data.status === 200) {
                         swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
                             history.push(`/verify-otp/${textInput.email}`);

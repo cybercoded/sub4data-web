@@ -53,7 +53,7 @@ function VerifyOtp(props) {
         }
         
         
-        axios.put(`/api/verify-otp-and-reset/`, textInput).then((res) => {
+        axios.put(`/api/public/verify-otp-and-reset/`, textInput).then((res) => {
             if (res.data.status === 200) {
                 swal.stopLoading();
                 swal('Success!', "OTP verified",'success').then(() => {

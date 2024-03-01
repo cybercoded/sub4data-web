@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { HashRouter, Switch, useHistory } from 'react-router-dom';
+import { HashRouter, Switch } from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert';
 import Toastify from 'toastify-js';
@@ -11,10 +11,7 @@ import AppRoutes from './routes';
 
 function App() {
 
-    const history=useHistory();
-
-    // axios.defaults.baseURL = process.env.REACT_APP_URL;
-    axios.defaults.baseURL = 'http://127.0.0.1:8000';
+    axios.defaults.baseURL = process.env.LARAVEL_APP_URL;
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     axios.defaults.headers.post['Accept'] = 'application/json';
     axios.defaults.withCredentials = true;
@@ -43,21 +40,21 @@ function App() {
             return response;
         },
         function (error) {
-            if (error.response.status === 403) {
+            if (error.response?.status === 403) {
                 swal('Forbidden', error.response.data.message, 'warning').then(() => {
                     window.history.back();
                 });
-            } else if (error.response.status === 419) {
+            } else if (error.response?.status === 419) {
                 swal('Timeout', "Your session is timed out, login again", 'warning').then(() => {
                     window.location.replace("/login");
                 });
-            }else if (error.response.status === 401) {
+            }else if (error.response?.status === 401) {
                 swal('Unauthenticated', "Please login your account", 'warning').then(() => {
                     window.location.replace("/login");
                 });
             } else {
                 Toastify({
-                    text: error.message,
+                    text: error?.message,
                     duration: 4000,
                     className: "warning",
                     close: true,

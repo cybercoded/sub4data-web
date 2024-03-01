@@ -30,6 +30,9 @@ const SideBar = () => {
             
             <div className="sb-sidenav-menu">
                 <div className="nav">
+                    <div className='bg-secondary p-2'>
+                        <div className="fw-bold">{localStorage.getItem('auth_name')}</div>
+                    </div>
                     <div className="sb-sidenav-menu-heading">Menu</div>
                     <Link className="nav-link" to="/admin/dashboard">
                         <div className="sb-nav-link-icon">
@@ -44,7 +47,32 @@ const SideBar = () => {
                         Transactions
                     </Link>
 
-                    <div className="sb-sidenav-menu-heading">User Settings</div>
+                    <div className="sb-sidenav-menu-heading">Administrative settings</div>
+
+                    <Link
+                        className="nav-link collapsed"
+                        to="#"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseACLs"
+                        aria-expanded="false"
+                        aria-controls="collapseACLs"
+                    >
+                        <div className="sb-nav-link-icon">
+                            <i className="fa fa-list"></i>
+                        </div>
+                            Access Controls
+                        <div className="sb-sidenav-collapse-arrow">
+                            <i className="fas fa-angle-down"></i>
+                        </div>
+                    </Link>
+                    <div className="collapse" id="collapseACLs" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/view-admins">
+                                View ACLs
+                            </Link>
+                        </nav>
+                    </div>
+
                     <Link
                         className="nav-link collapsed"
                         to="#"

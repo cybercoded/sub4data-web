@@ -12,7 +12,7 @@ function Register() {
         name:'',
         email:'',
         password: '',
-        checkbox: ''
+        checkbox: false
     });
 
     const handleInput = (e)=>{
@@ -22,7 +22,7 @@ function Register() {
     
     const handleCheckBox = (e)=>{
         e.persist();
-        setTextInput({...textInput,[e.target.name]: e.target.chcked})
+        setTextInput({...textInput,[e.target.name]: e.target.checked})
     }
 
     const passwordValidator = (passwordInputValue) => {
@@ -57,18 +57,18 @@ function Register() {
 
     const registerSubmit= (e)=>{
         e.preventDefault();
+        if(!textInput.checkbox) {
+            swal('Error!', 'Agree with our Terms and Condition before continuing', 'error');
+            return;
+        }
 
         if( passwordValidator(textInput.password) !== "" ) {
             swal('Error!', passwordValidator(textInput.password), 'error');
             return;
-        }
-        if( textInput.checkbox ) {
-            swal('Error!', 'Agree with our Terms and Condition before continuing', 'error');
-            return;
-        }
+        }        
         
         axios.get('/sanctum/csrf-cookie').then(() => {
-            axios.put(`/api/send-otp/`, textInput).then((res) => {
+            axios.put(`/api/public/send-otp/`, textInput).then((res) => {
                 let  encryptedPassword = CryptoJS.AES.encrypt(textInput.password, 'secret_key').toString();
 
                 localStorage.setItem("registration_name",textInput.name);
@@ -120,10 +120,9 @@ function Register() {
                                 </div>
                                 
                                 <div className="mb-4">
-                                    <input type="checkbox" onChange={handleCheckBox} className='me-4' name="checkbox" id="checkbox" required />
-                                    <label for="checkbox">
-                                        <span>I Agree with the <Link to="terms-and-condition"> terms and conditions.</Link></span>
-                                    </label>
+                                    <input type="checkbox" onChange={handleCheckBox} className='me-4' name="checkbox" id="checkbox" />
+                                    <label htmlFor="checkbox"></label>
+                                    <span>I Agree with the <Link to="terms-and-condition"> terms and conditions.</Link></span>
                                 </div>
 
                                 <div className='form-group mb-3'>

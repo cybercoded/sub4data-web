@@ -66,7 +66,7 @@ function NewPassword(props) {
         }
         
         
-        axios.put(`/api/verify-otp-and-reset/`, textInput).then((res) => {
+        axios.put(`/api/public/verify-otp-and-reset/`, textInput).then((res) => {
             if (res.data.status === 200) {
                 swal('Success!', `You can proceed to login`,'success').then(() => {
                     history.push('/login');
@@ -84,7 +84,7 @@ function NewPassword(props) {
 
         
         
-        axios.put(`/api/password-reset/`, {email: email}).then((res) => {
+        axios.put(`/api/public/password-reset/`, {email: email}).then((res) => {
             if (res.data.status === 200) {
                 swal('Success!', `OTP was successfully sent to ${email}`,'success').then(() => {
                     history.push('/admin/dashboard');
