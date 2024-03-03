@@ -47,7 +47,7 @@ function EditCategory(props){
     const handleCheckBox = (e) => {
         e.persist();
         setCheckbox(e.target.checked)
-    };
+    }
 
     const [picture, setPicture] = useState([]);
     const handleImage =(e)=>{
