@@ -23,13 +23,11 @@ class ACLsController extends Controller
             ]);
         }
     }
-    
-    public function view($user_id)
+
+    public function populateACLs($user_id)
     {
-        // Get the roles with permissions
         $permissions = Permissions::where('user_id', $user_id)->get();
 
-        // If no per$permissions found
         if (count($permissions) < count(Roles::all()) ) {
             $roles = Roles::all();
 
@@ -38,18 +36,29 @@ class ACLsController extends Controller
                 if(!$new_permission_check){
                     Permissions::create([
                         'user_id' => $user_id,
-                        'roles_id' => $role->id
+                        'roles_id' => $role->id,
+                        'status' => $role->default_permission
                     ]);
                 }
             }
 
             $permissions = Permissions::where('user_id', $user_id)->get();
-            return response()->json([
+            return [
                 'status' => 200,
                 'permissions' => $permissions
-            ]);
+            ];
         }
+    }
+    
+    public function view($user_id)
+    {
+        $permissions = Permissions::where('user_id', $user_id)->get();        
 
+        if(!$permissions) {
+            $new_acls = new ACLsController;
+            return $new_acls->populateACLs($user_id);
+        }
+        
         return response()->json([
             'status' => 200,
             'permissions' => $permissions
@@ -57,31 +66,22 @@ class ACLsController extends Controller
     }
 
 
+
+
     public function update(Request $request, $user_id) 
     {
-        // Get the roles from the request payload
         $rolesPayload = $request->all();
 
-        // Update permissions
-        foreach ($rolesPayload as $role_slug => $assigned) {
-            $role = Roles::where('slug', $role_slug)->first();
+        $counts = 0;
+        foreach ($rolesPayload as $payload => $role_slug) {
+            $role = Roles::where('slug', $payload)->first();
             $role_id = $role->id;
-
             // Query permission for the given user and role
             $permission = Permissions::where('user_id', $user_id)->where('roles_id', $role_id)->first();
 
-            // If permission does not exist, create it
-            if (!$permission) {
-                Permissions::create([
-                    'user_id' => $user_id,
-                    'roles_id' => $role_id,
-                    'status' => $assigned
-                ]);
-            } else {
-                $permission->update([
-                    'status' => $assigned
-                ]);
-            }
+            $permission->update([
+                'status' => $role_slug == true ? 1 : 0
+            ]);
         }
 
         return response()->json([

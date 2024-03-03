@@ -120,11 +120,12 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('view-acls/{id}', [ACLsController::class, 'view'])->middleware('VerifyPermission:read_acls');
     Route::put('update-acls/{id}', [ACLsController::class, 'update'])->middleware('VerifyPermission:update_acls');
     Route::get('view-permissions', [ACLsController::class, 'index'])->middleware('VerifyPermission:read_acls');
+    Route::get('get-permissions', [ACLsController::class, 'index']);
 
     //Categories
     Route::post('store-category', [CategoryController::class, 'store'])->middleware('VerifyPermission:create_categories');
     Route::get('view-category', [CategoryController::class, 'index'])->middleware('VerifyPermission:read_categories');
-    Route::get('edit-category/{id}', [CategoryController::class, 'edit'])->middleware('VerifyPermission:update_categories');
+    Route::get('view-category/{id}', [CategoryController::class, 'edit'])->middleware('VerifyPermission:read_categories');
     Route::post('update-category/{id}', [CategoryController::class, 'update'])->middleware('VerifyPermission:update_categories');
     Route::delete('delete-category/{id}', [CategoryController::class, 'destory'])->middleware('VerifyPermission:delete_categories');
     Route::get('all-category', [CategoryController::class, 'allCategory'])->middleware('VerifyPermission:read_categories');
@@ -133,7 +134,6 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::post('store-product', [ProductController::class, 'store'])->middleware('VerifyPermission:create_products');
     Route::get('view-product', [ProductController::class, 'index'])->middleware('VerifyPermission:read_products');
     Route::get('view-product/{id}', [ProductController::class, 'view'])->middleware('VerifyPermission:read_products');
-    Route::get('edit-product/{id}', [ProductController::class, 'edit'])->middleware('VerifyPermission:update_products');
     Route::post('update-product/{id}', [ProductController::class, 'update'])->middleware('VerifyPermission:update_products');
     Route::delete('delete-product/{id}', [ProductController::class, 'destory'])->middleware('VerifyPermission:delete_products');
 
@@ -141,7 +141,6 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('view-services', [ServicesController::class, 'index'])->middleware('VerifyPermission:read_services');
     Route::get('view-services/{id}', [ServicesController::class, 'view'])->middleware('VerifyPermission:read_services');
     Route::post('store-services', [ServicesController::class, 'store'])->middleware('VerifyPermission:create_services');
-    Route::get('edit-services/{id}', [ServicesController::class, 'edit'])->middleware('VerifyPermission:update_services');
     Route::put('update-services/{id}', [ServicesController::class, 'update'])->middleware('VerifyPermission:update_services');
     Route::delete('delete-services/{id}', [ServicesController::class, 'destory'])->middleware('VerifyPermission:delete_services');
 

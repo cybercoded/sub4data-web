@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\API\PurchaseController;
+use App\Http\Controllers\API\ACLsController;
 use Illuminate\Support\Facades\Http;
 use Mail;
 
@@ -25,7 +26,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::orderBy('id', 'desc')->get();
         return response()->json([
             'status' => 200,
             'users' => $users
@@ -410,6 +411,11 @@ class UserController extends Controller
 
             if($request->input('password')) {
                 $user->password = Hash::make('password');
+            }
+
+            if($request->input('role_as') == true) {
+                $new_acls = new ACLsController;
+                $new_acls->populateACLs($id);
             }
 
             if ($user->save()) {

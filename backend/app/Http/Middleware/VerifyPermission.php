@@ -25,8 +25,8 @@ class VerifyPermission
             // If not, return an error response
             return response()->json([
                 'status' => 403,
-                'message' => 'Unauthorized.']
-            , 403);
+                'errors' => 'Unauthorized.'
+            ]);
         }
 
         // If the user has the permission, proceed with the request

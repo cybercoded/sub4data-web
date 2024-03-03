@@ -12,7 +12,7 @@ class TransactionController extends Controller
     public function index()
     {
         $transactions = Transactions::orderByDesc('id')->take(10)->get();
-
+        
         return response()->json([
             'status' => 200,
             'data' => $transactions
