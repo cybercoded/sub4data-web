@@ -2,7 +2,7 @@
   "name": "Sub4Data",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://127.21.128.1/sub4data-web-2",
+  "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
