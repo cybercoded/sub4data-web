@@ -1,4 +1,4 @@
-![Sub4Data Website]([https://sub4data.com.ng/laravel/img/logo.png](https://github.com/kunley247/sub4data-web/blob/master/frontend/public/logo.png))
+![Sub4Data Website](https://github.com/kunley247/sub4data-web/blob/master/frontend/public/logo.png)
 # A web application for vending and recharging phone bills, electricity bill, water bill, TV subscriptions in Nigeria. 
 
 
