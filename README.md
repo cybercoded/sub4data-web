@@ -1,4 +1,4 @@
-![Sub4Data Website](https://sub4data.com.ng/laravel/img/logo.png)
+![Sub4Data Website]([https://sub4data.com.ng/laravel/img/logo.png](https://github.com/kunley247/sub4data-web/blob/master/frontend/public/logo.png))
 # A web application for vending and recharging phone bills, electricity bill, water bill, TV subscriptions in Nigeria. 
 
 
@@ -8,7 +8,7 @@
 1.  Clone the repo and cd into it
     > git clone https://github.com/kunley247/sub4data-web
     
-1.  navigate into server side folder
+1.  navigate into server-side folder
     > cd /laravel
 
 1.  install or update composer to the environment
@@ -29,7 +29,7 @@
     > https://github.com/kunley247/sub4data-web/blob/master/laravel/database/database.sql
     to your mysql admin
 
-1.  Start the server side server
+1.  Start the server-side server
     > php artisan serve
 
 ### Start the client side
@@ -43,6 +43,6 @@
     Fix any issues that may occur with dependencies
     > npm audit fix --force
 
-1.   Start the client side server
+1.   Start the client-side server
     > npm start
 
