@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 function EditUser(props){
     const user_id = props.match.params.id;
@@ -18,14 +18,14 @@ function EditUser(props){
         e.preventDefault();
 
         axios.post(`api/update-user/${textInput.id}`, textInput).then((res) => {
-            if (res.data.status === 200) {
+            if (res?.data.status === 200) {
 
-                swal('Success!', 'Profile data successfully updated', 'success').then(() => {
+                Swal.fire('Success!', 'Profile data successfully updated', 'success').then(() => {
                     window.location.reload();
                 });
 
             }else {
-                swal('Unable to update!', 'Something went wrong, try again', 'error');
+                Swal.fire('Unable to update!', 'Something went wrong, try again', 'error');
             }
             
         });
@@ -34,8 +34,8 @@ function EditUser(props){
     useEffect(() => {
 
         axios.get(`api/get-user/${user_id}`).then((res) => {
-            if (res.data.status === 200) {
-                setTextInput(res.data.data);
+            if (res?.data.status === 200) {
+                setTextInput(res?.data.data);
             }
             
         });
@@ -142,7 +142,8 @@ function EditUser(props){
                                                 className="custom-control-input" 
                                                 onChange={(e) => {
                                                     e.preventDefault();
-                                                    swal({
+                                                    Swal.fire({
+
                                                         title: 'Are you sure?',
                                                         text: "Are you sure you want to reset this user's password?",
                                                         icon: 'warning',

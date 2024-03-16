@@ -1,37 +1,40 @@
 import axios from "axios";
 import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import $ from "jquery";
+import { Context } from "../../../contexts/globalContext";
+import { getPermission } from "../../../util";
 
 function ViewApis(){
     
     const [apisList, setApisList] = useState([]);
+    const { globalValues } = React.useContext(Context);
 
     const handleDelete = (e)=>{
         e.preventDefault();
-        swal({
+        Swal.fire({
             title: "Are you sure?",
             text: "You will not be able to recover this imaginary api!",
             icon: "warning",
             buttons: true,
-            dangerMode: true,
+            dangerMode: true
         })
         .then((willDelete) => {
             if (willDelete) {
                 
                 axios.delete(`api/delete-api/${e.target.dataset.id}`).then(res=>{
-                    if(res.data.status===200){
-                        swal("Deleted!", "Your imaginary api has been deleted.", "success");
+                    if(res?.data.status===200){
+                        Swal.fire("Deleted!", "Your imaginary api has been deleted.", "success");
                         setApisList(apisList.filter(item=>item.id!==parseInt(e.target.dataset.id)));
                     } else {
-                        swal("Cancelled", "Your imaginary api is safe :)", "error");
+                        Swal.fire("Cancelled", "Your imaginary api is safe :)", "error");
 
                     }
                 });
                 
             } else {
-                swal("Your imaginary api is safe :)", "Your imaginary api is safe :)", "error");
+                Swal.fire("Your imaginary api is safe :)", "Your imaginary api is safe :)", "error");
                 
             }
         });
@@ -39,8 +42,8 @@ function ViewApis(){
 
     useEffect(()=>{
         axios.get(`api/view-apis`).then(res=>{
-            if(res.data.status===200){
-                setApisList(res.data.apis);
+            if(res?.data.status===200){
+                setApisList(res?.data.apis);
 
                 $(document).ready(function () {
                     $('table').DataTable();
@@ -65,7 +68,9 @@ function ViewApis(){
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>URL</th>
-                                <th>Delete</th>
+                                {getPermission(globalValues.permissions, 'delete_apis') && (
+                                    <th>Delete</th>
+                                )}
                                 <th>Edit</th>
                             </tr>
                         </thead>
@@ -75,9 +80,11 @@ function ViewApis(){
                                         <td>{item.id}</td>
                                         <td>{item.api_name}</td>
                                         <td>{item.api_url}</td>
-                                        <td>
-                                            <button onClick={handleDelete} data-id={item.id} className="btn btn-danger btn-sm">Delete</button>
-                                        </td>
+                                        {getPermission(globalValues.permissions, 'delete_apis') && (
+                                            <td>
+                                                <button onClick={handleDelete} disabled={!getPermission(globalValues.permissions, 'delete_apis')}  data-id={item.id} className="btn btn-danger btn-sm">Delete</button>
+                                            </td>
+                                        )}
                                         <td>
                                             <Link to={`/admin/edit-api/${item.id}`} className="btn btn-primary btn-sm">Edit</Link>
                                         </td>

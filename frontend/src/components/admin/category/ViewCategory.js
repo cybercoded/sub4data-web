@@ -1,7 +1,7 @@
 import axios from "axios";
 import React,{useEffect, useState} from "react";
 import { Link, useHistory } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import $ from "jquery";
 
 
@@ -12,14 +12,14 @@ function ViewCategory(){
 
     useEffect(()=>{
         axios.get(`api/view-category`).then(res=>{
-            if(res.status===200){
-                setCategoryList(res.data.category);
+            if(res?.status===200){
+                setCategoryList(res?.data.category);
 
                 $(document).ready(function () {
                     $('table').DataTable();
                 });
             }else {
-                swal('Warning', res.data.message, 'warning').then(() => {
+                Swal.fire('Warning', res?.data.message, 'warning').then(() => {
                     history.push(`/admin/dashboard`);
                 });
             }
@@ -43,7 +43,6 @@ function ViewCategory(){
                                 <th>Slug</th>                                
                                 <th>Image</th>
                                 <th>Status</th>
-                                <th>Edit</th>
                                 <th>View</th>
                             </tr>
                         </thead>
@@ -55,9 +54,6 @@ function ViewCategory(){
                                         <td>{item.slug}</td>
                                         <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" className="img-thumbnail" height="50" alt={item.name}/></td>
                                         <td>{item.status === 1 ? 'Shown' : 'Hidden'}</td>
-                                        <td>
-                                            <Link to={`edit-category/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
-                                        </td>
                                         <td>
                                             <Link to={`/admin/view-product/${item.id}`} className="btn btn-primary btn-sm">View products</Link>
                                         </td>

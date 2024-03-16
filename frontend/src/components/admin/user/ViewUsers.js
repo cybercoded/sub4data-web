@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import $ from "jquery";
 
 
@@ -23,10 +23,10 @@ function ViewUsers(props){
 
         
         axios.post(`/api/filter-users`, textInput).then((res) => {
-            if(res.data.status === 200) {
-                setUsersData(res.data.users);
+            if(res?.data.status === 200) {
+                setUsersData(res?.data.users);
             } else {
-                swal("Error", res.data.errors, "error");
+                Swal.fire("Error", res?.data.errors, "error");
             }
             
         });
@@ -38,9 +38,9 @@ function ViewUsers(props){
        
         
         axios.post(`api/view-users`).then(res=>{
-            if(res.data.status===200)
+            if(res?.data.status===200)
             {
-                setUsersData(res.data.users);
+                setUsersData(res?.data.users);
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
@@ -55,9 +55,9 @@ function ViewUsers(props){
 
         
         axios.post(`api/view-users`).then(res=>{
-            if(res.data.status===200)
+            if(res?.data.status===200)
             {
-                setUsersData(res.data.users);
+                setUsersData(res?.data.users);
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });

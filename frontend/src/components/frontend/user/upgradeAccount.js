@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React from 'react'
 import { useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 
 
 function UpgradeAccount() {
@@ -12,23 +13,24 @@ function UpgradeAccount() {
     
     React.useEffect(() => {
         axios.get(`/api/view-levels`).then((res) => {
-            if (res.data.status === 200) {
-                setLevelLists(res.data.levels);
+            if (res?.data.status === 200) {
+                setLevelLists(res?.data.levels);
             } else {
-                swal('Error', res.data.errors, 'error');
+                Swal.fire('Error', res?.data.errors, 'error');
             }            
         });
 
         axios.get(`api/user`).then((res) => {
-            if (res.status === 200) {
-                setCurrentLevel(res.data.data.level);
+            if (res?.status === 200) {
+                setCurrentLevel(res?.data.data.level);
             }
         });
     }, []);
 
     const handleUpgrade = (e) => {
         e.persist();
-        swal({
+        Swal.fire({
+
             title: 'Are you sure?',
             text: 'Are you sure to proceed with your account upgrade?',
             icon: 'warning',
@@ -37,12 +39,12 @@ function UpgradeAccount() {
         }).then((willDelete) => {
             if (willDelete) {
                 axios.post(`/api/upgrade-user`, {level: selectedLevel}).then((res) => {
-                    if ( res.data.status === 200 ) {
-                        swal('Success', res.data.message, 'success').then(() => {
+                    if ( res?.data.status === 200 ) {
+                        Swal.fire('Success', res?.data.message, 'success').then(() => {
                             history.push(`/user/dashboard`);
                         })
                     } else {
-                        swal('Error', res.data.errors, 'error');
+                        Swal.fire('Error', res?.data.errors, 'error');
                     }
                 });
             }

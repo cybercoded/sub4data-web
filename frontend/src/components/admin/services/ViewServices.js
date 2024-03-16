@@ -1,8 +1,7 @@
 import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link, useHistory } from "react-router-dom";
-import swal from "sweetalert";
-
+import Swal from "sweetalert2";
 import $ from "jquery";
 
 function ViewServices(props){
@@ -14,13 +13,13 @@ function ViewServices(props){
     useEffect(() => {
         document.title="View service";
         axios.get(`api/view-services${product_id ? '/' + product_id : ''}`).then(res=>{
-            if(res.data.status===200) {
-                setService(res.data.services);
+            if(res?.data.status===200) {
+                setService(res?.data.services);
                 $(document).ready(function () {
                     $('table').DataTable();
                 });
             } else {
-                swal('Warning', res.data.message, 'warning').then(() => {
+                Swal.fire('Warning', res?.data.message, 'warning').then(() => {
                     history.push(`/admin/dashboard`);
                 });
             } 
@@ -34,13 +33,13 @@ function ViewServices(props){
         thisClicked.innerText="Deleting";
         
         axios.delete(`api/delete-services/${id}`).then(res=>{
-            if(res.data.status===200)
+            if(res?.data.status===200)
             {
-                swal("Success",res.data.message,"success");
+                Swal.fire("Success",res?.data.message,"success");
                 thisClicked.closest("tr").remove();
             }
-            else if(res.data.status=== 404){
-                swal("Warning",res.data.message,"warning");
+            else if(res?.data.status=== 404){
+                Swal.fire("Warning",res?.data.message,"warning");
                 thisClicked.innerText="Delete";
             }
         })

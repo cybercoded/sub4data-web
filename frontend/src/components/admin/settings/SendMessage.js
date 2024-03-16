@@ -1,10 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 import { useHistory } from "react-router-dom";
+import { getPermission } from "../../../util";
+import { Context } from "../../../contexts/globalContext";
 
 function SendMessage(){
+    const { globalValues } = React.useContext(Context);
     const history = useHistory();
     const [textInput, setTextInput] = useState({
         title: '',
@@ -22,12 +25,12 @@ function SendMessage(){
 
         
         axios.post('/api/send-bulk-email', textInput).then((res) => {
-            if(res.data.status === 200){
-                swal('Success!', 'Message sent successfully', 'success').then(() => {
+            if(res?.data.status === 200){
+                Swal.fire('Success!', 'Message sent successfully', 'success').then(() => {
                     history.push('/admin/dashboard');
                 });
             } else {
-                swal('Error!', res.data.errors, 'error');
+                Swal.fire('Error!', res?.data.errors, 'error');
             }
             
         });
@@ -49,16 +52,16 @@ function SendMessage(){
                     
                     <div className='form-group mb-3'>
                         <label>Title</label>
-                        <input type='text' name="title" onChange={handleInput} value={textInput.title} className='form-control' required ></input>
+                        <input type='text' disabled={!getPermission(globalValues.permissions, 'create_messages')} name="title" onChange={handleInput} value={textInput.title} className='form-control' required ></input>
                     </div>
                     
                     <div className='form-group mb-3'>
                         <label>Message body</label>
-                        <textarea type='float' name="message" style={{height: 300}} onChange={handleInput} required value={textInput.amount} className='form-control' ></textarea>
+                        <textarea type='float' disabled={!getPermission(globalValues.permissions, 'create_messages')} name="message" style={{height: 300}} onChange={handleInput} required value={textInput.amount} className='form-control' ></textarea>
                     </div>
 
                     <div className='form-group mb-3'>
-                        <button type='submit' className='btn btn-primary w-100'>Send Message</button>
+                        <button type='submit' disabled={!getPermission(globalValues.permissions, 'create_messages')} className='btn btn-primary w-100'>Send Message</button>
                     </div>
                 </form>
             </div>

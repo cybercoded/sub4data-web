@@ -1,11 +1,25 @@
-import axios from 'axios';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
+import { Context } from '../../contexts/globalContext';
+import { logOutFunction } from '../../util';
 function Navbar() {
+
+    const { setGlobalValues } = React.useContext(Context);
+
     const [notification] = React.useState(
         JSON.parse(localStorage.getItem('notification')) || ''
     );
+
+    const logOut = () => {
+        const parsedUrl = new URL(window.location.href);
+        const path = parsedUrl.pathname + parsedUrl.search;
+    
+        setGlobalValues({lastPageBeforeLogout: path})
+
+        logOutFunction()
+    }
 
     const handleSideBar = (e) => {
         e.persist();
@@ -34,9 +48,15 @@ function Navbar() {
                             <i className="fas fa-bell fa-lg"></i>
                         </span>
                         <ul className="dropdown-menu dropdown-menu-end" data-bs-target="#navbarNotification" aria-labelledby="navbarNotification">
-                            <li role='button' onClick={() => swal(notification.message) } className="dropdown-item">
-                                {notification.title}
-                            </li>
+                            {notification.message ?
+                                <li role='button' onClick={() => Swal.fire(notification.message) } className="dropdown-item">
+                                    {notification.title}
+                                </li>
+                                :
+                                <li role='button' className="dropdown-item">
+                                    0 notification
+                                </li>
+                            }
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
@@ -59,7 +79,7 @@ function Navbar() {
                                 <hr className="dropdown-divider" />
                             </li>
                             <li>
-                                <Link className="dropdown-item" to="/logout">
+                                <Link className="dropdown-item" onClick={logOut} to="/login">
                                     Logout
                                 </Link>
                             </li>

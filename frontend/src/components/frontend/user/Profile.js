@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 
 function Profile(){
@@ -21,14 +21,14 @@ function Profile(){
 
         
         axios.post(`api/update-user`, {name: textInput.name}).then((res) => {
-            if (res.data.status === 200) {
+            if (res?.data.status === 200) {
 
-                swal('Success!', 'Profile data successfully updated', 'success').then(() => {
+                Swal.fire('Success!', 'Profile data successfully updated', 'success').then(() => {
                     window.location.reload();
                 });
 
             }else {
-                swal('Unable to update!', 'Something went wrong, try again', 'error');
+                Swal.fire('Unable to update!', 'Something went wrong, try again', 'error');
             }
             
         });
@@ -36,8 +36,8 @@ function Profile(){
 
     useEffect(() => {
         axios.get(`api/user/`).then((res) => {
-            if (res.status === 200) {
-                setTextInput(res.data);
+            if (res?.status === 200) {
+                setTextInput(res?.data);
             }
             
         });

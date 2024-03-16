@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 
 
 function AddLevel() {
@@ -22,12 +23,12 @@ function AddLevel() {
 
         
         axios.post(`/api/store-level`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() => {
                     window.location.reload();
                 });
             } else {
-                swal('Error', JSON.stringify(res.data.errors), 'error');
+                Swal.fire('Error', JSON.stringify(res?.data.errors), 'error');
             }
             
         });
@@ -85,7 +86,7 @@ function AddLevel() {
                                     />
                                 </div>
 
-                                <button type="submit" className="btn btn-primary px-4 float-end">
+                                <button type="submit" className="btn btn-primary px-4">
                                     Submit
                                 </button>
                             </form>

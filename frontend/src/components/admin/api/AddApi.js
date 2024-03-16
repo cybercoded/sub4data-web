@@ -1,11 +1,15 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+import { getPermission } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
+
 
 
 function AddApi() {
     const [textInput, setTextInput] = useState([]);
+    const { globalValues } = React.useContext(Context);
 
     const handleInput = (e) => {
         e.persist();
@@ -18,12 +22,12 @@ function AddApi() {
 
         
         axios.post(`/api/store-api`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() => {
                     window.location.reload();
                 });
             } else {
-                swal('Error', JSON.stringify(res.data.errors), 'error');
+                Swal.fire('Error', JSON.stringify(res?.data.errors), 'error');
             }
             
         });
@@ -48,6 +52,7 @@ function AddApi() {
                                 <div className="form-group mb-3">
                                     <label>Api Name</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
                                         type="text"
                                         name="api_name"
                                         onChange={handleInput}
@@ -60,6 +65,7 @@ function AddApi() {
                                 <div className="form-group mb-3">
                                     <label>Api Key</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
                                         type="text"
                                         name="api_key"
                                         onChange={handleInput}
@@ -71,6 +77,7 @@ function AddApi() {
                                 <div className="form-group mb-3">
                                     <label>Api Secrete</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
                                         type="text"
                                         name="api_secret"
                                         onChange={handleInput}
@@ -83,6 +90,7 @@ function AddApi() {
                                 <div className="form-group mb-3">
                                     <label>Api URL</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
                                         type="url"
                                         name="api_url"
                                         onChange={handleInput}
@@ -95,6 +103,7 @@ function AddApi() {
                                 <div className="form-group mb-3">
                                     <label>Api Contract Code</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
                                         type="text"
                                         name="api_contract_code"
                                         onChange={handleInput}
@@ -107,6 +116,7 @@ function AddApi() {
                                 <div className="form-group mb-3">
                                     <label>API Charges</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
                                         type="number"
                                         name="api_payment_charges"
                                         onChange={handleInput}
@@ -116,7 +126,7 @@ function AddApi() {
                                     />
                                 </div>
 
-                                <button type="submit" className="btn btn-primary px-4 float-end">
+                                <button type="submit" disabled={!getPermission(globalValues.permissions, 'create_apis')} className="btn btn-primary px-4">
                                     Submit
                                 </button>
                             </form>

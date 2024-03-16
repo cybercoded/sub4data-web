@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 function UpdatePassword(){
 
@@ -18,15 +18,16 @@ function UpdatePassword(){
         e.preventDefault();
 
         if (textInput.oldPassword === '' || textInput.newPassword === '') {
-            swal('Error!', 'Please fill all fields', 'error');
+            Swal.fire('Error!', 'Please fill all fields', 'error');
             return;
         }
            
         
         axios.get(`/api/verify-password/${textInput.oldPassword}`).then((res) => {
-            if (res.data.status === 200) {
+            if (res?.data.status === 200) {
                 
-                swal({
+                Swal.fire({
+
                     title: "Are you sure?",
                     text: "Are you sure you want to change your Transaction Password!",
                     icon: "warning",
@@ -36,8 +37,8 @@ function UpdatePassword(){
                     if (willDelete) {
                         
                         axios.put(`/api/update-password/`, {password: textInput.newPassword}).then((res) => {
-                            if (res.data.status === 200) {
-                                swal('Success!', 'Password successfully updated','success').then((result) => {
+                            if (res?.data.status === 200) {
+                                Swal.fire('Success!', 'Password successfully updated','success').then((result) => {
                                     window.location.reload();
                                 });
                             }
@@ -46,7 +47,7 @@ function UpdatePassword(){
                     }
                 });
             }else {
-                swal('Error!', 'Incorrect Old Password, try again', 'error');
+                Swal.fire('Error!', 'Incorrect Old Password, try again', 'error');
             }
             
         });

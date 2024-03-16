@@ -1,7 +1,7 @@
 import axios from "axios";
 import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import $ from "jquery";
 
 
@@ -12,7 +12,8 @@ function ViewLevels(){
 
     const handleDelete = (e)=>{
         e.preventDefault();
-        swal({
+        Swal.fire({
+
             title: "Are you sure?",
             text: "You will not be able to recover this imaginary level!",
             icon: "warning",
@@ -23,17 +24,17 @@ function ViewLevels(){
             if (willDelete) {
                 
                 axios.delete(`api/delete-level/${e.target.dataset.id}`).then(res=>{
-                    if(res.data.status===200){
-                        swal("Deleted!", "Your imaginary level has been deleted.", "success");
+                    if(res?.data.status===200){
+                        Swal.fire("Deleted!", "Your imaginary level has been deleted.", "success");
                         setLevelsList(levelsList.filter(item=>item.id!==parseInt(e.target.dataset.id)));
                     } else {
-                        swal("Cancelled", "Your imaginary level is safe :)", "error");
+                        Swal.fire("Cancelled", "Your imaginary level is safe :)", "error");
 
                     }
                 });
                 
             } else {
-                swal("Your imaginary level is safe :)", "Your imaginary level is safe :)", "error");
+                Swal.fire("Your imaginary level is safe :)", "Your imaginary level is safe :)", "error");
                 
             }
         });
@@ -41,8 +42,8 @@ function ViewLevels(){
 
     useEffect(()=>{
         axios.get(`api/view-levels`).then(res=>{
-            if(res.status===200){
-                setLevelsList(res.data.levels);
+            if(res?.status===200){
+                setLevelsList(res?.data.levels);
 
                 $(document).ready(function () {
                     $('table').DataTable();

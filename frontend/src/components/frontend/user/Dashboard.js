@@ -1,44 +1,32 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Toastify from 'toastify-js';
-import swal from 'sweetalert';
-import { get_local_storage_item, store_local_storage_item } from '../../../util';
+import Swal from 'sweetalert2';
+import { toastifyFunction } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
 
 
 function Dashboard() {
     
-    const [categoryList, setCategoryList] = useState(
-        get_local_storage_item('category') || []
-    );
-    const [transactionList, setTransactionList] = useState(
-        get_local_storage_item('transactions') || []
-    );
-    const [userDataList, setUserDataList] = useState(
-        get_local_storage_item('user') || []
-    );
+    const {globalValues, setGlobalValues} = React.useContext(Context);
 
     useEffect(() => {
-        store_local_storage_item('isBackgroundLoader', true);
+        
         axios.get(`api/view-category`).then((res) => {
-            if (res.data.status === 200) {
-                setCategoryList(res.data.category);
-                store_local_storage_item('category', res.data.category);
+            if (res?.data.status === 200) {
+                setGlobalValues({category: res.data.category});
             }            
         });
         
         axios.get(`api/user`).then((res) => {
-            if (res.status === 200) {
-                setUserDataList(res.data.data);
-                store_local_storage_item('user', JSON.stringify(res.data.data));
+            if (res?.status === 200) {
+                setGlobalValues({user: res.data.data});
             }
         });
 
         axios.get(`api/view-transactions`).then((res) => {
-            if (res.data.status === 200) {
-                setTransactionList(res.data.data);
-                store_local_storage_item('transactions', JSON.stringify(res.data.data));
-                store_local_storage_item('isBackgroundLoader', false);
+            if (res?.data.status === 200) {
+                setGlobalValues({transactions: res.data.data});
             }
         });
 
@@ -46,19 +34,7 @@ function Dashboard() {
 
     const handleCopy = (value) => {
         navigator.clipboard.writeText(value)
-
-        Toastify({
-            text: "Copied to your clipboard",
-            duration: 3000,
-            className: "info",
-            close: true,
-            gravity: "top", // `top` or `bottom`
-            position: "center", // `left`, `center` or `right`
-            stopOnFocus: true, // Prevents dismissing of toast on hover
-            offset: {
-                y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-            },
-        }).showToast();
+        toastifyFunction("Copied to your clipboard");
 
     }
 
@@ -103,8 +79,9 @@ function Dashboard() {
                 </tr>
             </body>
         </table>`);
-        swal({
-            content: table,
+        Swal.fire({
+
+            html: table,
             buttons: {
                 confirm: true,
                 cancel: false,
@@ -122,9 +99,9 @@ function Dashboard() {
                         <div className='card text-white my-bg-primary'>
                             <div className="card-body">
                                 <div className='mb-2 d-flex justify-content-between  font-weight-bold'>
-                                    <div className='text-truncate me-3 fw-bold'>{userDataList?.name}</div>
+                                    <div className='text-truncate me-3 fw-bold'>{globalValues.user?.name}</div>
                                     <div className="float-end">                                       
-                                        { userDataList?.levels?.map((item, index) => (
+                                        { globalValues.user?.levels?.map((item, index) => (
                                             <span key={index} className='badge bg-secondary'>
                                                 <i className={`fa ${item.level === 1 ? 'fa-user' : 'fa-certificate'}`}></i><br />
                                                 {item.name}
@@ -132,7 +109,7 @@ function Dashboard() {
                                         ))}
                                     </div>
                                 </div>
-                                <div className='h1 font-weight-bold my-3'>₦{ new Intl.NumberFormat().format(userDataList?.balance)}</div>
+                                <div className='h1 font-weight-bold my-3'>{ globalValues.user?.balance && '₦'+ new Intl.NumberFormat().format(globalValues.user.balance)}</div>
                                 <div className='mt-3'>
                                     <Link to="/user/fund-wallet" className='btn btn-sm btn-secondary' style={{marginRight: 5}}>
                                         Fund wallet
@@ -144,7 +121,7 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
-                        { userDataList?.banks?.map((item, index) => (
+                        { globalValues.user?.banks?.map((item, index) => (
                                 <div className='col-md-3 mb-2 d-none d-md-block'>
                                     <div key={index} className='card bg-light'>
                                         <div className="card-body py-4">
@@ -174,7 +151,7 @@ function Dashboard() {
                     <b>Instant</b> | Services
                 </div>
                 <div className="row">
-                    {categoryList?.map((item, index) => (
+                    {globalValues.category?.map((item, index) => (
                         <Link to={`services/${item.slug}/${item.id}`} key={index} className="col-md-3 col-6 text-muted text-decoration-none">
                             <div className="card bg-light rd-5 mb-4">
                                 <div className="card-body text-center">
@@ -203,7 +180,7 @@ function Dashboard() {
                 <div className="table-responsive">
                     <table className="table">
                         <tbody>
-                            {transactionList?.map((item, index)=> {
+                            {globalValues.transactions?.map((item, index)=> {
                                 return (
                                     <tr key={index}>
                                         <td className='d-none d-md-block' >{item.reference}</td>

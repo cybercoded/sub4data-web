@@ -1,7 +1,8 @@
 import React from "react";
 
-import {Route,Switch} from 'react-router-dom';
+import {Route,Switch,Redirect} from 'react-router-dom';
 import PublicRouteList from "../../routes/PublicRouteList";
+import { RouteNotFound } from "../../util";
 
 const PublicLayout= ()=>{
 
@@ -12,15 +13,19 @@ const PublicLayout= ()=>{
                     return (
                         routeData.component && (
                             <Route key={idx}  
-                            path={routeData.path}
-                            exact={routeData.exact}
-                            name={routeData.name}
-                            render={(props) =>(
-                                <routeData.component {...props}/>
-                            )}
-                            />))
-                        })}
-            </Switch>
+                                path={routeData.path}
+                                exact={routeData.exact}
+                                name={routeData.name}
+                                render={(props) =>(
+                                    <routeData.component {...props}/>
+                                )}
+                            />
+                        ))
+                    })}
+                    <Redirect from="/user" to="/login" />
+                    <Redirect from="/admin" to="/login" />
+                    <Route component={RouteNotFound} />
+        </Switch>
         </main>
     );
 

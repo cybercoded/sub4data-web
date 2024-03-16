@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
 
 
@@ -19,19 +19,19 @@ function CreatePin(){
         e.preventDefault();
 
         if (textInput.newPin === '') {
-            swal('Error!', 'Please fill all fields', 'error');
+            Swal.fire('Error!', 'Please fill all fields', 'error');
             return;
         }
         if (textInput.newPin.length !== 4) {
-            swal('Error!', 'PIN should be 4 Digits', 'error');
+            Swal.fire('Error!', 'PIN should be 4 Digits', 'error');
             return;
         }
            
         
         
         axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success!', 'Transaction PIN successfully created','success').then((result) => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success!', 'Transaction PIN successfully created','success').then((result) => {
                    history.push('/user/dashboard');
                 });
             }

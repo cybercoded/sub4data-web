@@ -1,4 +1,4 @@
-import Home from "../components/frontend/Home";
+import Home from "../components/frontend";
 import Login from "../components/frontend/auth/Login";
 import Register from "../components/frontend/auth/Register";
 import Reset from "../components/frontend/auth/Reset";
@@ -7,13 +7,11 @@ import VerifyOtp from "../components/frontend/auth/VerifyOtp";
 import RegistrationVerify from "../components/frontend/auth/RegistrationVerify";
 import TermsAndCondition from "../components/frontend/auth/TermsAndCondition";
 import PrivacyPolicy from "../components/frontend/auth/PrivacyPolicy";
-import Logout from "../components/frontend/auth/Logout";
 
 
 const PublicRouteList =[
     { path: '/', exact: true, name: 'Home', component: Home },
     { path: '/login', exact: true, name: 'Login', component: Login },
-    { path: '/logout', exact: true, name: 'Login', component: Logout },
     { path: '/register', exact: true, name: 'Register', component: Register },
     { path: '/reset', exact: true, name: 'Reset', component: Reset },
     { path: '/new-password/:email/:otp', exact: true, name: 'NewPassword', component: NewPassword },

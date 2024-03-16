@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
-import Toastify from 'toastify-js';
+import Swal from 'sweetalert2';
 import $ from 'jquery';
+import { purchaser, toastifyFunction } from '../../../util';
 
 
 function Electricity(props) {
@@ -34,8 +34,8 @@ function Electricity(props) {
 
         
         axios.get(`api/view-services/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setServiceList(res.data.services);
+            if (res?.status === 200) {
+                setServiceList(res?.data.services);
             }
             
         });
@@ -52,8 +52,8 @@ function Electricity(props) {
 
         
         axios.get(`api/view-services/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setServiceList(res.data.services);
+            if (res?.status === 200) {
+                setServiceList(res?.data.services);
                 
             }
             
@@ -68,30 +68,19 @@ function Electricity(props) {
 
             
             axios.post(`api/meternumber-verification`, {meter_number: textInput.meter_number, service_id: textInput.service_id}).then((res) => {
-                if (res.data.status === 200) {
-                    $('#beneficiary-name').val(res.data.name);
+                if (res?.data.status === 200) {
+                    $('#beneficiary-name').val(res?.data.name);
                     $('#validatation-container').removeAttr('hidden')
                     $('#proceed-btn').attr('hidden', 'hidden');
-                    Toastify({
-                        text: "Your card has been verified!",
-                        duration: 3000,
-                        className: "info",
-                        close: true,
-                        gravity: "top", // `top` or `bottom`
-                        position: "center", // `left`, `center` or `right`
-                        stopOnFocus: true, // Prevents dismissing of toast on hover
-                        offset: {
-                            y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-                        },
-                    }).showToast();
+                    toastifyFunction("Your card has been verified!");
 
                 }else {
-                    swal('Unable to verify!', 'Please check your smartcard number and try again', 'error');
+                    Swal.fire('Unable to verify!', 'Please check your smartcard number and try again', 'error');
                 }
                 
             });
         }else {
-            swal('All fields are required!', 'Fill and select all fields', 'error');
+            Swal.fire('All fields are required!', 'Fill and select all fields', 'error');
         }
     };
 
@@ -121,61 +110,16 @@ function Electricity(props) {
     const handlePurchaseElectricity = (e) => {
         e.persist();
 
-        swal({
-            text: 'Enter your transaction pin',
-            content: 'input',
-            closeOnClickOutside: false,
-            button: {
-                text: 'Verify!',
-                closeModal: false
-            }
-        })
-        .then((pin) => {
-            return axios.get(`/api/verify-pin/${pin}`);
-        })
-        .then((results) => {
-            let result = results.data;
-
-            if (result.status === 200) {
-                swal({
-                    title: 'Are you sure?',
-                    text: 'Are you sure to proceed with your transaction!',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                    closeOnClickOutside: false
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        
-                        axios.post(`/api/electricity-purchase/`, textInput).then((res) => {
-                            if (res.data.status === 200) {
-                                swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
-                                    history.push('/user/dashboard');
-                                });
-                            }else {
-                                swal('Error!', res.data.errors, 'error');
-                            }
-                            
-                        });
-                    }
-                });
-            } else {
-                swal('Oh noes!', result.message, 'error');
-            }
-        })
-        .catch(() => {
-            swal.stopLoading();
-            swal.close();
-        });
+        purchaser('/api/electricity-purchase/', textInput);
     };
 
     useEffect(() => {
         const product_id = props.match.params.id;
         axios.get(`api/view-product/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setProductList(res.data.product);
-                setCharges(res.data.product.charges);
-                setDiscount(res.data.product.discount);
+            if (res?.status === 200) {
+                setProductList(res?.data.product);
+                setCharges(res?.data.product.charges);
+                setDiscount(res?.data.product.discount);
             }
             
         });

@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-
-import Toastify from 'toastify-js';
+import { toastifyFunction } from '../../../util';
 
 function VerifyPinOtp(props) {
     const history=useHistory();
@@ -19,18 +18,7 @@ function VerifyPinOtp(props) {
    const handleResend = (e)=>{                   
         
         axios.get(`/api/reset-pin/`).then((res) => {
-            Toastify({
-                text: "OTP was resent to you",
-                duration: 3000,
-                className: "info",
-                close: true,
-                gravity: "top", // `top` or `bottom`
-                position: "center", // `left`, `center` or `right`
-                stopOnFocus: true, // Prevents dismissing of toast on hover
-                offset: {
-                    y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-                },
-            }).showToast();
+            toastifyFunction("OTP was resent to you");
             
         });
     }
@@ -39,23 +27,23 @@ function VerifyPinOtp(props) {
         e.preventDefault();        
        
         if(textInput.otp === ''){
-            swal('Error!', 'Please enter OTP', 'error');
+            Swal.fire('Error!', 'Please enter OTP', 'error');
             return;
         }
         if(textInput.otp.length > 5 || textInput.otp.length < 5){
-            swal('Error!', 'OTP must 5 digits', 'error');
+            Swal.fire('Error!', 'OTP must 5 digits', 'error');
             return;
         }
         
         
         axios.put(`/api/verify-otp-and-reset-pin/`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                swal.stopLoading();
-                swal('Success!', "OTP successfully verified",'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.stopLoading();
+                Swal.fire('Success!', "OTP successfully verified",'success').then(() => {
                     history.push(`/user/create-pin`);
                 });
             }else {
-                swal('Error!', res.data.errors, 'error');
+                Swal.fire('Error!', res?.data.errors, 'error');
             }
             
         });

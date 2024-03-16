@@ -18,7 +18,7 @@ class ServicesController extends Controller
         $service = Services::all();
         return response()->json([
             'status' => 200,
-            'service' => $service
+            'services' => $service
         ]);
     }
 
@@ -99,7 +99,7 @@ class ServicesController extends Controller
 
     }
 
-    public function edit($id)
+    public function get($id)
     {
         $service = Services::find($id);
 
@@ -152,7 +152,7 @@ class ServicesController extends Controller
         {
             return response()->json([
                 'status'=>404,
-                'message'=>'No product found'
+                'message'=>'No services found for this particular product'
             ]);
         }
     }

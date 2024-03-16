@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import swal from 'sweetalert';
-
+import Swal from 'sweetalert2';
+import { Context } from '../../../contexts/globalContext';
+import { getPermission } from '../../../util';
 
 function EditApi(props) {
     let api_id = props.match.params.id;
     const [textInput, setTextInput] = useState([]);
+    const { globalValues } = React.useContext(Context);
 
     const handleInput = (e) => {
         e.persist();
@@ -19,12 +21,12 @@ function EditApi(props) {
 
         
         axios.post(`/api/update-api/${api_id}`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() => {
                     window.location.reload();
                 });
             } else {
-                swal('Error', JSON.stringify(res.data.errors), 'error');
+                Swal.fire('Error', JSON.stringify(res?.data.errors), 'error');
             }
             
         });
@@ -34,10 +36,10 @@ function EditApi(props) {
         
 
         axios.get(`/api/get-api/${api_id}`).then((res) => {
-            if (res.data.status === 200) {
-                setTextInput({...textInput, ...res.data.api});
+            if (res?.data.status === 200) {
+                setTextInput({...textInput, ...res?.data.api});
             } else {
-                swal('Error', res.data.errors, 'error');
+                Swal.fire('Error', res?.data.errors, 'error');
             }
             
         });
@@ -62,6 +64,7 @@ function EditApi(props) {
                                 <div className="form-group mb-3">
                                     <label>Api Name</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_apis')}
                                         type="text"
                                         name="api_name"
                                         onChange={handleInput}
@@ -74,6 +77,7 @@ function EditApi(props) {
                                 <div className="form-group mb-3">
                                     <label>Api Key</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_apis')}
                                         type="text"
                                         name="api_key"
                                         onChange={handleInput}
@@ -85,6 +89,7 @@ function EditApi(props) {
                                 <div className="form-group mb-3">
                                     <label>Api Secrete</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_apis')}
                                         type="text"
                                         name="api_secret"
                                         onChange={handleInput}
@@ -97,6 +102,7 @@ function EditApi(props) {
                                 <div className="form-group mb-3">
                                     <label>Api URL</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_apis')}
                                         type="url"
                                         name="api_url"
                                         onChange={handleInput}
@@ -109,6 +115,7 @@ function EditApi(props) {
                                 <div className="form-group mb-3">
                                     <label>Api Contract Code</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_apis')}
                                         type="text"
                                         name="api_contract_code"
                                         onChange={handleInput}
@@ -121,6 +128,7 @@ function EditApi(props) {
                                 <div className="form-group mb-3">
                                     <label>API Charges</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_apis')}
                                         type="number"
                                         name="api_payment_charges"
                                         onChange={handleInput}
@@ -130,7 +138,7 @@ function EditApi(props) {
                                     />
                                 </div>
 
-                                <button type="submit" className="btn btn-primary px-4 float-end">
+                                <button type="submit" disabled={!getPermission(globalValues.permissions, 'update_apis')} className="btn btn-primary px-4">
                                     Submit
                                 </button>
                             </form>

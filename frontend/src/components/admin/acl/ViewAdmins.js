@@ -10,9 +10,9 @@ function ViewAdmins(){
     useEffect(() => {
 
         axios.post(`api/filter-users`, {'role_as': 1}).then(res=>{
-            if(res.data.status===200)
+            if(res?.data.status===200)
             {
-                setAdminLists(res.data.users);
+                setAdminLists(res?.data.users);
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });                

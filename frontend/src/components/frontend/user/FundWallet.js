@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Toastify from 'toastify-js';
+import { toastifyFunction } from '../../../util';
 
 function FundWallet() {
     
@@ -9,33 +9,16 @@ function FundWallet() {
 
     useEffect(() => {
         axios.get(`api/user/`).then((res) => {
-            if (res.status === 200) {
-                setUserDataList(res.data);
-            }
-            
+            if (res?.status === 200) {
+                setUserDataList(res?.data);
+            }            
         });
-
     }, []);
 
     const handleCopy = (value) => {
         navigator.clipboard.writeText(value)
-
-        Toastify({
-            text: "Copied to your clipboard",
-            duration: 3000,
-            className: "info",
-            close: true,
-            gravity: "top", // `top` or `bottom`
-            position: "center", // `left`, `center` or `right`
-            stopOnFocus: true, // Prevents dismissing of toast on hover
-            offset: {
-                y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-            },
-        }).showToast();
-
+        toastifyFunction("Copied to your clipboard");
     }
-
-
 
     return (
         <div className="container mt-5">

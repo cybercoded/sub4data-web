@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 import $ from 'jquery';
 
 
@@ -27,10 +28,10 @@ function Transactions(props) {
 
         
         axios.post(`/api/filter-transactions`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                setTransactionData(res.data.data);
+            if (res?.data.status === 200) {
+                setTransactionData(res?.data.data);
             } else {
-                swal('Error', res.data.errors, 'error');
+                Swal.fire('Error', res?.data.errors, 'error');
             }
             
         });
@@ -78,8 +79,8 @@ function Transactions(props) {
                 </tr>
             </body>
         </table>`;
-        swal({
-            content: table,
+        Swal.fire({
+            html: table,
             buttons: {
                 confirm: true,
                 cancel: false
@@ -94,8 +95,8 @@ function Transactions(props) {
 
         
         axios.get(`api/view-services/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setServiceList(res.data.services);
+            if (res?.status === 200) {
+                setServiceList(res?.data.services);
             }
             
         });
@@ -106,8 +107,8 @@ function Transactions(props) {
 
         
         axios.post(`/api/filter-transactions`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                setTransactionData(res.data.data);
+            if (res?.data.status === 200) {
+                setTransactionData(res?.data.data);
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
@@ -120,15 +121,15 @@ function Transactions(props) {
     useEffect(() => {
         
         axios.get(`/api/view-product`).then((res) => {
-            if (res.data.status === 200) {
-                setProductList(res.data.product);
+            if (res?.data.status === 200) {
+                setProductList(res?.data.product);
                 
             }
         });
 
         axios.post(`/api/filter-transactions`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                setTransactionData(res.data.data);
+            if (res?.data.status === 200) {
+                setTransactionData(res?.data.data);
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });

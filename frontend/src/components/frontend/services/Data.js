@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+import { purchaser } from '../../../util';
+
 
 
 function Data(props) {
@@ -30,8 +32,8 @@ function Data(props) {
 
         
         axios.get(`api/view-services/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setServiceList(res.data.services);
+            if (res?.status === 200) {
+                setServiceList(res?.data.services);
             }
             
         });
@@ -45,8 +47,8 @@ function Data(props) {
 
         
         axios.get(`api/view-services/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setServiceList(res.data.services);
+            if (res?.status === 200) {
+                setServiceList(res?.data.services);
             }
             
         });
@@ -64,59 +66,15 @@ function Data(props) {
     const handlePurchaseData = (e) => {
         e.preventDefault();
 
-        swal({
-            text: 'Enter your transaction pin',
-            content: 'input',
-            closeOnClickOutside: false,
-            button: {
-                text: 'Verify!',
-                closeModal: false
-            }
-        })
-        .then((pin) => {
-            return axios.get(`/api/verify-pin/${pin}`);
-        })
-        .then((results) => {
-            let result = results.data;
-
-            if (result.status === 200) {
-                swal({
-                    title: 'Are you sure?',
-                    text: 'Are you sure to proceed with your transaction!',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                    closeOnClickOutside: false
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        
-                        axios.post(`/api/data-purchase/`, textInput).then((res) => {
-                            if (res.data.status === 200) {
-                                swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
-                                    history.push('/user/dashboard');
-                                });
-                            }else {
-                                swal('Error!', res.data.errors, 'error');
-                            }
-                            
-                        });
-                    }
-                });
-            } else {
-                swal('Oh noes!', result.message, 'error');
-            }
-        })
-        .catch(() => {
-            swal.stopLoading();
-            swal.close();
-        });
+        purchaser('/api/data-purchase/', textInput);
+       
     };
 
     useEffect(() => {
         const product_id = props.match.params.id;
         axios.get(`api/view-product/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setProductList(res.data.product);
+            if (res?.status === 200) {
+                setProductList(res?.data.product);
             }
             
         });

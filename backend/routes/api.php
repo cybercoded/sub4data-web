@@ -45,26 +45,19 @@ Route::prefix('public')->group( function () {
 });
 
 Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
+
     //user
     Route::get('get-user', [UserController::class, 'view']);
-
     Route::post('update-user', [UserController::class, 'userUpdate']);
-
     Route::put('update-password', [UserController::class, 'updatePassword']);
-
     Route::get('verify-password/{password}', [UserController::class, 'verifyPassword']);
-
     Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail']);
-
     Route::put('transfer-fund', [UserController::class, 'adminCreditUser']);
-
     Route::post('create-automated-banks', [UserController::class, 'createAutomatedBanks']);
 
 
     //Products
-
     Route::get('view-product/{slug}', [ProductController::class, 'viewWithSlug']);
-
     Route::get('view-product', [ProductController::class, 'index']);
 
     //Services
@@ -73,21 +66,16 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
 
     //Verifications
     Route::post('meternumber-verification', [VerificationController::class, 'meternumber']);
-
     Route::post('smartcard-verification', [VerificationController::class, 'smartnumber']);
 
     //Pins
     Route::put('update-pin', [PinController::class, 'update']);
-
     Route::get('reset-pin', [PinController::class, 'resetPin']);
-
     Route::get('verify-pin/{pin}', [PinController::class, 'verify']);
-
     Route::get('verify-otp-for-pin/{pin}', [PinController::class, 'verifyOtpForPin']);
 
     //Transactions
     Route::post('filter-transactions', [TransactionController::class, 'filter']);
-
     Route::get('view-transactions/{limit}', [TransactionController::class, 'get']);
 
     //Payment
@@ -95,21 +83,16 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
 
     //Levels
     Route::get('view-levels', [LevelController::class, 'index']);
-
     Route::post('upgrade-user', [UserController::class, 'userUpgrade']);
 
     //Purchases
     Route::post('airtime-purchase', [PurchaseController::class, 'airtime']);
-
     Route::post('data-purchase', [PurchaseController::class, 'data']);
-
     Route::post('bill-purchase', [PurchaseController::class, 'bill']);
-
     Route::post('electricity-purchase', [PurchaseController::class, 'electricity']);
 
     //Beneficiaries
     Route::get('get-beneficiaries/{slug}', [BeneficiariesController::class, 'get']);
-
     Route::delete('delete-beneficiary/{id}/{slug}', [BeneficiariesController::class, 'delete']);
 
 });
@@ -140,6 +123,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     //Services
     Route::get('view-services', [ServicesController::class, 'index'])->middleware('VerifyPermission:read_services');
     Route::get('view-services/{id}', [ServicesController::class, 'view'])->middleware('VerifyPermission:read_services');
+    Route::get('get-services/{id}', [ServicesController::class, 'get'])->middleware('VerifyPermission:read_services');
     Route::post('store-services', [ServicesController::class, 'store'])->middleware('VerifyPermission:create_services');
     Route::put('update-services/{id}', [ServicesController::class, 'update'])->middleware('VerifyPermission:update_services');
     Route::delete('delete-services/{id}', [ServicesController::class, 'destory'])->middleware('VerifyPermission:delete_services');
@@ -147,7 +131,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     //Users
     Route::get('view-users', [UserController::class, 'index'])->middleware('VerifyPermission:read_users');
     Route::post('view-users', [UserController::class, 'index'])->middleware('VerifyPermission:read_users');
-    Route::get('get-user/{id}', [UserController::class, 'edit'])->middleware('VerifyPermission:update_users');
+    Route::get('get-user/{id}', [UserController::class, 'edit'])->middleware('VerifyPermission:read_users');
     Route::post('update-user/{id}', [UserController::class, 'adminUpdate'])->middleware('VerifyPermission:update_users');
     Route::get('verify-email/{email}', [UserController::class, 'adminVerifyEmail'])->middleware('VerifyPermission:read_users');
     Route::put('credit-user', [UserController::class, 'adminCreditUser'])->middleware('VerifyPermission:create_transactions');

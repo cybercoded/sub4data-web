@@ -1,12 +1,16 @@
 import React, {useState} from 'react';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { get_local_storage_item, store_local_storage_item } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
 
 function Login() {
 
     const history=useHistory();
+    const { globalValues } = React.useContext(Context);
+
     const [loginInput, setLogin] = useState({
         email:'',
         password:'',
@@ -32,28 +36,21 @@ function Login() {
 
         axios.get('/sanctum/csrf-cookie').then(() => {
             axios.post(`api/public/login`,data).then(res =>{
-                if(res.data.status === 200){
-                    store_local_storage_item("auth_token",res.data.token);
-                    store_local_storage_item("auth_name",res.data.username);
-                    store_local_storage_item("auth_role",res.data.role);
-                    if(res.data.role==='admin'){
-                        history.push("/admin/dashboard");
+                if(res?.data?.status === 200){
+                    store_local_storage_item("auth_token",res?.data.token);
+                    store_local_storage_item("auth_role",res?.data.role);
+                    if(res?.data.role==='admin'){
+                        history.push(globalValues.lastPageBeforeLogout || '/admin/dashboard');
                     }else{
-                        swal({
-                            icon: 'success',
-                            title: 'Success',
-                            text: res.data.message,
-                            timer: 2000
-                        }).then(() => {
-                            swal(notification.message)
+                        Swal.fire({icon: 'success',title: 'Success',text: res?.data?.message,timer: 2000}).then(() => {
+                            notification.message && Swal.fire(notification.message)
                         });
-                        
-                        history.push("/user/dashboard");
+                        history.push(`${globalValues.lastPageBeforeLogout || '/user/dashboard'}`); 
                     }
-                }else if(res.data.status === 401) {
-                    swal('Warning', res.data.errors,'warning');
+                }else if(res?.data?.status === 401) {
+                    Swal.fire('Warning', res?.data?.errors,'warning');
                 }else{
-                    setLogin({...loginInput,error_list: res.data.validation_erros});
+                    setLogin({...loginInput,error_list: res?.data.validation_erros});
                 }
             });
         });
@@ -66,19 +63,19 @@ function Login() {
                     <div className='col-md-6 col-sm-8 col-lg-5 col-xl-4'>
                         <div className='card'>
                             <Link to="/" className='card-header text-center text-decoration-none'>                            
-                                <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
+                                <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
                                 <h4>Login your account</h4>
                             </Link>                        
                             <div className='card-body'>
                                 <form onSubmit={loginSubmit}>
                                     <div className='form-group mb-3'>
                                         <label>Email ID</label>
-                                        <input type='email' name="email" onChange={handleInput} value={loginInput.email} className='form-control' ></input>
+                                        <input type='email' name="email" onChange={handleInput} value={loginInput.email} className='form-control' required ></input>
                                         <span>{loginInput.error_list?.email}</span>
                                     </div>
                                     <div className='form-group mb-3'>
                                         <label>Password</label>
-                                        <input type='password' name="password" onChange={handleInput} value={loginInput.password} className='form-control' ></input>
+                                        <input type='password' name="password" onChange={handleInput} value={loginInput.password} className='form-control' required ></input>
                                         <span>{loginInput.error_list?.password}</span>
                                     </div>
                                     

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
@@ -57,22 +58,22 @@ function NewPassword(props) {
         e.preventDefault();
 
         if( passwordValidator(textInput.password) !== "" ) {
-            swal('Error!', passwordValidator(textInput.password), 'error');
+            Swal.fire('Error!', passwordValidator(textInput.password), 'error');
             return;
         }
         if(textInput.password !== textInput.password2){
-            swal('Error!', "Passwords do not match", 'error');
+            Swal.fire('Error!', "Passwords do not match", 'error');
             return;
         }
         
         
         axios.put(`/api/public/verify-otp-and-reset/`, textInput).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success!', `You can proceed to login`,'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success!', `You can proceed to login`,'success').then(() => {
                     history.push('/login');
                 });
             }else {
-                swal('Error!', res.data.errors, 'error');
+                Swal.fire('Error!', res?.data.errors, 'error');
             }
             
         });
@@ -85,12 +86,12 @@ function NewPassword(props) {
         
         
         axios.put(`/api/public/password-reset/`, {email: email}).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success!', `OTP was successfully sent to ${email}`,'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success!', `OTP was successfully sent to ${email}`,'success').then(() => {
                     history.push('/admin/dashboard');
                 });
             }else {
-                swal('Error!', res.data.errors, 'error');
+                Swal.fire('Error!', res?.data.errors, 'error');
             }
             
         });
@@ -103,7 +104,7 @@ function NewPassword(props) {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
+                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Regain your account</h4>
                         </Link>                        
                         <div className='card-body'>

@@ -1,8 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory} from 'react-router-dom';
-import swal from 'sweetalert';
-
+import Swal from 'sweetalert2';
 
 function AddServices() {
     const history = useHistory();
@@ -25,8 +24,8 @@ function AddServices() {
     useEffect(() => {
         
         axios.get(`api/view-product`).then((res) => {
-            if (res.data.status === 200) {
-                setproductList(res.data.product);
+            if (res?.data.status === 200) {
+                setproductList(res?.data.product);
             }
             
         });
@@ -39,20 +38,20 @@ function AddServices() {
 
         
         axios.post(`api/store-services`, servicesInput).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() =>{
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() =>{
                     window.location.reload();
                 });
-            } else if (res.data.status === 422 ) {
-                swal('All fields are mandatory', '', 'error');
-                setError(res.data.errors);
+            } else if (res?.data.status === 422 ) {
+                Swal.fire('All fields are mandatory', '', 'error');
+                setError(res?.data.errors);
             }
-            else if (res.data.status === 409 ) {
-                swal('Error', res.data.message, 'warning');
-                setError(res.data.message);
+            else if (res?.data.status === 409 ) {
+                Swal.fire('Error', res?.data.message, 'warning');
+                setError(res?.data.message);
             }else {
                 setError([]);
-                swal('Error', res.data.message, 'error');
+                Swal.fire('Error', res?.data.message, 'error');
                 history.push('admin/view-services');
             }
             
@@ -71,8 +70,7 @@ function AddServices() {
                         </Link>
                     </h4>
                 </div>
-                <form encType="multipart/form-data" onSubmit={handleSubmit} id="add_services_form">
-                    <div className="card-body">
+                <form className="card-body" encType="multipart/form-data" onSubmit={handleSubmit} id="add-services-form">
                         <ul className="nav nav-tabs" id="myTab" role="tablist">
                             <li className="nav-item" role="presentation">
                                 <button
@@ -105,7 +103,7 @@ function AddServices() {
                         </ul>
                         <div className="tab-content" id="myTabContent">
                             <div
-                                className="tab-pane card-body border fade show active"
+                                className="tab-pane fade show active"
                                 id="home"
                                 role="tabpanel"
                                 aria-labelledby="home-tab"
@@ -152,7 +150,7 @@ function AddServices() {
                                 </div>
                             </div>
                             <div
-                                className="tab-pane card-body border fade"
+                                className="tab-pane fade"
                                 id="otherdetails"
                                 role="tabpanel"
                                 aria-labelledby="otherdetails-tab"
@@ -181,13 +179,10 @@ function AddServices() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="card-footer">
-                        <button className="btn btn-primary" type="submit">
-                            Submit
-                        </button>
-                    </div>
                 </form>
+                <div className="card-footer">
+                    <button form='add-services-form' className="btn btn-primary" type="submit">Add service</button>
+                </div>
             </div>
         </div>
     );

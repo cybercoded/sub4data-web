@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 
 import $ from 'jquery';
 
@@ -25,20 +26,20 @@ function MerchantPay() {
         e.preventDefault();
 
         if (textInput.amount < 100) {
-            swal('Error', 'Amount must be greater than 100', 'error');
+            Swal.fire('Error', 'Amount must be greater than 100', 'error');
             return;
         }
         if (textInput.amount > 5000) {
-            swal('Error', 'Amount must not be greater than 5,000', 'error');
+            Swal.fire('Error', 'Amount must not be greater than 5,000', 'error');
             return;
         }
 
         
         axios.post(`api/merchant-pay`, textInput).then((res) => {
-            if (res.data.status === 200 &&  res.data.url) {
-                window.location = res.data.url;
+            if (res?.data.status === 200 &&  res?.data.url) {
+                window.location = res?.data.url;
             } else {
-                swal('Error', res.data.errors, 'error');
+                Swal.fire('Error', res?.data.errors, 'error');
             }
             
         });
@@ -47,10 +48,10 @@ function MerchantPay() {
     useEffect(() => {
         
         axios.get(`/api/get-monnify-charges`).then((res) => {
-            if (res.data.status === 200) {
-                setTextInput({ ...textInput, charges: res.data.charge });
+            if (res?.data.status === 200) {
+                setTextInput({ ...textInput, charges: res?.data.charge });
             } else {
-                swal('Error', res.data.errors, 'error');
+                Swal.fire('Error', res?.data.errors, 'error');
             }
             
         });

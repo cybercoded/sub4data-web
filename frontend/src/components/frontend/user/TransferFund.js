@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 
 
@@ -21,19 +21,20 @@ function TransferFund(){
         e.preventDefault();
 
         if (textInput.amount === '' || textInput.email === '') {
-            swal('Error!', 'Please fill all fields', 'error');
+            Swal.fire('Error!', 'Please fill all fields', 'error');
             return;
         }
         if (textInput.amount > 5000) {
-            swal('Error!', 'Amount should not be greater than 5,000', 'error');
+            Swal.fire('Error!', 'Amount should not be greater than 5,000', 'error');
             return;
         }
            
         
         axios.get(`/api/verify-email/${textInput.email}`).then((res) => {
-            if (res.data.status === 200) {                
-                swal({
-                    title: res.data.data.name,
+            if (res?.data.status === 200) {                
+                Swal.fire({
+
+                    title: res?.data.data.name,
                     text: `Are you sure you want to credit this user with ${textInput.amount}`,
                     icon: "warning",
                     buttons: true,
@@ -41,20 +42,20 @@ function TransferFund(){
                 }).then((willDelete) => {
                     if (willDelete) {
                         
-                        axios.put(`/api/transfer-fund/`, {...textInput, user_id: res.data.data.user_id}).then((res2) => {
+                        axios.put(`/api/transfer-fund/`, {...textInput, user_id: res?.data.data.user_id}).then((res2) => {
                             if (res2.data.status === 200) {
-                                swal('Success!', `${res.data.data.name} was successfully credited`,'success').then((result) => {
+                                Swal.fire('Success!', `${res?.data.data.name} was successfully credited`,'success').then((result) => {
                                     history.push('/user/dashboard');
                                 });
                             } else {
-                                swal('Error!', res2.data.errors, 'error');
+                                Swal.fire('Error!', res2.data.errors, 'error');
                             }
                             
                         });
                     }
                 });
             } else {                
-                swal('Error!', res.data.errors, 'error');
+                Swal.fire('Error!', res?.data.errors, 'error');
             }
             
         });

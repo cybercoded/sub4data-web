@@ -1,6 +1,6 @@
 import axios from "axios";
 import React,{useEffect, useState} from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 
 function ViewActivities(){
@@ -36,14 +36,14 @@ function ViewActivities(){
             </table>
         `);
 
-        swal(divElement);
+        Swal.fire(divElement);
     }
 
     const handleLoadMoreLogs = ()=>{
         
         axios.get(`api/get-activities`, textInput).then(res=>{
-            if(res.status===200){
-                setActivityList([...activityList,...res.data.activities]);
+            if(res?.status===200){
+                setActivityList([...activityList,...res?.data.activities]);
                 setTextInput({...textInput, limit: textInput.limit + 10 });
             }
             
@@ -55,10 +55,10 @@ function ViewActivities(){
 
         
         axios.post(`/api/filter-activities`, textInput).then((res) => {
-            if(res.data.status === 200) {
-                setActivityList([...activityList,...res.data.activities]);
+            if(res?.data.status === 200) {
+                setActivityList([...activityList,...res?.data.activities]);
             } else {
-                swal("Error", res.data.errors, "error");
+                Swal.fire("Error", res?.data.errors, "error");
             }
             
         });
@@ -67,8 +67,8 @@ function ViewActivities(){
 
     useEffect(()=>{
         axios.get(`api/get-activities`).then(res=>{
-            if(res.status===200){
-                setActivityList(res.data.activities);
+            if(res?.status===200){
+                setActivityList(res?.data.activities);
             }
             
         })

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React,{useState,useEffect, useContext} from "react";
 import { Link, useHistory } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import { Context } from "../../../contexts/globalContext";
 
 
@@ -16,19 +16,16 @@ function EditCategory(props){
     useEffect(() => {
         const category_id=props.match.params.id;
         axios.get(`/api/view-category/${category_id}`).then(res=>{
-            if(res.data.status===200)
+            if(res?.data.status===200)
             {
-                setCategory(res.data.category);
-                let status = res.data.category.status === 1;
+                setCategory(res?.data.category);
+                let status = res?.data.category.status === 1;
                 setCheckbox(status)
             }
-            else if(res.data.status===404)
+            else if(res?.data.status===404)
             {
-                swal('Error',res.data.message,"error");
+                Swal.fire('Error',res?.data.message,"error");
                 history.pushState('/admin/view-category')
-            }
-            if (!getPermission('read_categories')) {
-                swal('warning', 'You have no permission to view this page!', 'warning')
             }
         });
 
@@ -69,17 +66,17 @@ function EditCategory(props){
 
         const category_id=props.match.params.id;
         axios.post(`api/update-category/${category_id}`, formData).then(res=>{
-            if(res.data.status===200){
-                swal("Success",res.data.message,"success").then(() =>{
+            if(res?.data.status===200){
+                Swal.fire("Success",res?.data.message,"success").then(() =>{
                     window.location.reload();
                 });
-            }else if(res.data.status===422){
-                setError(res.data.errors);
-                swal("Error",res.data.errors,'warning');
+            }else if(res?.data.status===422){
+                setError(res?.data.errors);
+                Swal.fire("Error",res?.data.errors,'warning');
             }
-            else if(res.data.status===404){
+            else if(res?.data.status===404){
                 setError([]);
-                swal("Error",res.data.message,'error');
+                Swal.fire("Error",res?.data.message,'error');
                 history.push('admin/view-category');
             }
         });
@@ -94,8 +91,7 @@ function EditCategory(props){
                         <Link to="/admin/view-category" className="btn btn-primary btn-sm float-end">Back</Link>
                     </h4>
                 </div>
-                <div className="card-body">
-                    <form onSubmit={updateCategory} id="EDIT_CATEGORY_FORM">
+                <form className="card-body" onSubmit={updateCategory}>
                     <ul className="nav nav-tabs" id="myTab" role="tablist">
                         <li className="nav-item" role="presentation">
                             <button className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
@@ -105,7 +101,7 @@ function EditCategory(props){
                         </li>
                     </ul>
                     <div className="tab-content" id="myTabContent">
-                        <div className="tab-pane card-body border fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div className="form-group mb-3">
                                 <label>Slug</label>
                                 <input type="text" name="slug" disabled={getPermission('update_categories')} onChange={handleInput} value={categoryInput.slug} className="form-control" />
@@ -115,7 +111,7 @@ function EditCategory(props){
                                 <label>Name</label>
                                 <input type="text" name="name" disabled={getPermission('update_categories')} onChange={handleInput} value={categoryInput.name} className="form-control" />
                                 <small className="text-danger">{error?.name}</small>
-                             </div>
+                            </div>
                             <div className="form-group mb-3">
                                 <label>Description</label>
                                 <input name="description" disabled={getPermission('update_categories')} onChange={handleInput} value={categoryInput.description} className="form-control" />
@@ -126,7 +122,7 @@ function EditCategory(props){
                                 <label for="checkbox"></label>
                             </div>
                         </div>
-                        <div className="tab-pane card-body border fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">
+                        <div className="tab-pane fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">
                             <div className="form-group mb-3">
                                 <label>Meta Title</label>
                                 <input type="text" name="meta_title" disabled={getPermission('update_categories')}  onChange={handleInput} value={categoryInput.meta_title} className="form-control" />
@@ -148,13 +144,11 @@ function EditCategory(props){
                                 <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} alt={categoryInput.image} width="50" height="50" />
                                 <small className="text-danger">{error?.image}</small>
                             </div>                            
-                        </div>
-                        
-                        <button type="submit" disabled={getPermission('update_categories')} className="btn btn-primary px-4 float-end">Update</button>
+                        </div>                        
                     </div>
-
-                    
                 </form>
+                <div className="card-footer">
+                    <button type="submit" disabled={getPermission('update_categories')} className="btn btn-primary px-4">Update</button>                    
                 </div>
                 
             </div>

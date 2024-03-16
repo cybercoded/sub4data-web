@@ -4,7 +4,7 @@
         "labelledby",
         "LARAVEL",
         "Reactjs",
-        "swal",
+        "Swal.fire",
         "sweetalert",
         "Toastify"
     ]

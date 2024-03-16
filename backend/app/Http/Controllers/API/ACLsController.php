@@ -13,8 +13,11 @@ class ACLsController extends Controller
     public function index(Request $request)
     {
         $user = auth('sanctum')->user();
-        $permissions = Permissions::where('user_id', $user->id)->where('status', 1)->get();
-
+        $permissions = Roles::orderBy('name')
+                        ->join('permissions', 'roles.id', '=', 'permissions.roles_id')
+                        ->where('permissions.user_id', $user->id)
+                        ->where('permissions.status', 1)
+                        ->get();
         // If no per$permissions found
         if ($permissions) {
             return response()->json([
@@ -52,7 +55,10 @@ class ACLsController extends Controller
     
     public function view($user_id)
     {
-        $permissions = Permissions::where('user_id', $user_id)->get();        
+        $permissions = Roles::orderBy('name')
+        ->join('permissions', 'roles.id', '=', 'permissions.roles_id')
+        ->where('permissions.user_id', $user_id)
+        ->get();        
 
         if(!$permissions) {
             $new_acls = new ACLsController;

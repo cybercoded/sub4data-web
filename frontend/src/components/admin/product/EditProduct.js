@@ -1,14 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+import { Context } from '../../../contexts/globalContext';
+import { getPermission } from '../../../util';
+
 
 
 function EditProduct(props) {
     const history = useHistory();
     const [categoryList, setCategoryList] = useState([]);
     const [errorList, setError] = useState([]);
-    
+    const { globalValues } = React.useContext(Context);
     const [checkbox, setCheckbox] = useState();
     const [productInput, setProduct] = useState({
         category_id: '',
@@ -36,19 +39,19 @@ function EditProduct(props) {
 
     useEffect(() => {
         axios.get(`api/all-category`).then((res) => {
-            if (res.data.status === 200) {
-                setCategoryList(res.data.category);
+            if (res?.data.status === 200) {
+                setCategoryList(res?.data.category);
             }
         });
 
         const product_id = props.match.params.id;
 
         axios.get(`api/view-product/${product_id}`).then((res) => {
-            if (res.data.status === 200) {
-                setProduct(res.data.product);
-                setCheckbox(res.data.product.status === 1 ? true : false);
-            } else if (res.data.status === 404) {
-                swal('Error', res.data.message, 'error');
+            if (res?.data.status === 200) {
+                setProduct(res?.data.product);
+                setCheckbox(res?.data.product.status === 1 ? true : false);
+            } else if (res?.data.status === 404) {
+                Swal.fire('Error', res?.data.message, 'error');
                 history.push('admin/view-product');
             }
             
@@ -72,15 +75,15 @@ function EditProduct(props) {
         const product_id = props.match.params.id;
 
         axios.post(`api/update-product/${product_id}`, formData).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() => {
                     window.location.reload();
                 });
-            } else if (res.data.status === 422) {
-                swal('All fields are mandatory', '', 'error');
-                setError(res.data.errors);
-            } else if (res.data.status === 404) {
-                swal('Erro', res.data.message, 'error');
+            } else if (res?.data.status === 422) {
+                Swal.fire('All fields are mandatory', '', 'error');
+                setError(res?.data.errors);
+            } else if (res?.data.status === 404) {
+                Swal.fire('Erro', res?.data.message, 'error');
                 history.push('admin/view-product');
             }
             
@@ -99,7 +102,7 @@ function EditProduct(props) {
                         </Link>
                     </h4>
                 </div>
-                <form encType="multipart/form-data" onSubmit={updateProduct} id="add_product_form">
+                <form encType="multipart/form-data" onSubmit={updateProduct} id="add-product-form">
                     <div className="card-body">
                         <ul className="nav nav-tabs" id="myTab" role="tablist">
                             <li className="nav-item" role="presentation">
@@ -134,7 +137,7 @@ function EditProduct(props) {
                         </ul>
                         <div className="tab-content" id="myTabContent">
                             <div
-                                className="tab-pane card-body border fade show active"
+                                className="tab-pane fade show active"
                                 id="home"
                                 role="tabpanel"
                                 aria-labelledby="home-tab"
@@ -142,13 +145,14 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Select Category</label>
                                     <select
+                                        disabled={!getPermission(globalValues.permissions, 'update_products')}
                                         name="category_id"
                                         onChange={handleInput}
                                         value={productInput.category_id}
                                         className="form-select"
                                     >
                                         <option>Select Category</option>
-                                        {categoryList.map((item) => {
+                                        {categoryList?.map((item) => {
                                             return (
                                                 <option value={item.id} key={item.id}>
                                                     {item.name}
@@ -161,6 +165,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>api_product_id</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_products')}
                                         type="text"
                                         name="api_product_id"
                                         onChange={handleInput}
@@ -172,6 +177,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Name</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_products')}
                                         type="text"
                                         name="name"
                                         onChange={handleInput}
@@ -183,6 +189,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Description</label>
                                     <textarea
+                                        disabled={!getPermission(globalValues.permissions, 'update_products')}
                                         name="description"
                                         onChange={handleInput}
                                         value={productInput.description}
@@ -192,7 +199,7 @@ function EditProduct(props) {
                             </div>
 
                             <div
-                                className="tab-pane card-body border fade"
+                                className="tab-pane fade"
                                 id="otherdetails"
                                 role="tabpanel"
                                 aria-labelledby="otherdetails-tab"
@@ -200,6 +207,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Discount</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_products')}
                                         type="number"
                                         step="any"
                                         name="discount"
@@ -213,6 +221,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Charges</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_products')}
                                         type="number"
                                         step="any"
                                         name="charges"
@@ -231,6 +240,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Status (Checked=available)</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_products')}
                                         type="checkbox"
                                         name="status"
                                         onChange={handleCheckBox}
@@ -239,9 +249,11 @@ function EditProduct(props) {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <button className="btn btn-primary px-4 mt-2 float-end" type="submit">Submit</button>
+                    </div>                    
                 </form>
+                <div className='card-footer'>
+                    <button form='add-product-form' disabled={!getPermission(globalValues.permissions, 'update_products')} className="btn btn-primary px-4 mt-2" type="submit">Submit</button>
+                </div>
             </div>
         </div>
     );

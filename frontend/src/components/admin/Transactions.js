@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import $ from "jquery";
+import { getPermission } from "../../util";
+import { Context } from "../../contexts/globalContext";
 
 
 function Transactions(props){
@@ -11,8 +13,7 @@ function Transactions(props){
     const [transactionData, setTransactionData] = useState([]);
     const [productList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
-
-    
+    const { globalValues } = React.useContext(Context);    
     const [textInput, setTextInput] = useState({
         limit: 10,
         user_id: user_id
@@ -28,10 +29,10 @@ function Transactions(props){
 
         
         axios.post(`/api/filter-transactions`, textInput).then((res) => {
-            if(res.data.status === 200) {
-                setTransactionData(res.data.data);
+            if(res?.data.status === 200) {
+                setTransactionData(res?.data.data);
             } else {
-                swal("Error", res.data.errors, "error");
+                Swal.fire("Error", res?.data.errors, "error");
             }
             
         });
@@ -84,8 +85,9 @@ function Transactions(props){
                 </tr>
             </body>
         </table>`);
-        swal({
-            content: table,
+        Swal.fire({
+
+            html: table,
             buttons: {
                 confirm: true,
                 cancel: false,
@@ -100,8 +102,8 @@ function Transactions(props){
 
         
         axios.get(`api/view-services/${product_id}`).then((res) => {
-            if (res.status === 200) {
-                setServiceList(res.data.services);
+            if (res?.status === 200) {
+                setServiceList(res?.data.services);
             }
             
         });
@@ -112,9 +114,9 @@ function Transactions(props){
        
         
         axios.post(`/api/filter-transactions${!user_id ? '-admin' : ''}`, textInput).then((res) => {
-            if(res.data.status===200)
+            if(res?.data.status===200)
             {
-                setTransactionData(res.data.data);
+                setTransactionData(res?.data.data);
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
@@ -129,9 +131,9 @@ function Transactions(props){
 
         
         axios.post(`/api/filter-transactions${!user_id ? '-admin' : ''}`, textInput).then((res) => {
-            if(res.data.status===200)
+            if(res?.data.status===200)
             {
-                setTransactionData(res.data.data);
+                setTransactionData(res?.data.data);
                 $(document).ready(function () {
                     $('#table').DataTable();
                 });
@@ -151,7 +153,7 @@ function Transactions(props){
                 </div>
                 <div className="card-body">
                 <div className="accordion mb-5" id="accordionExample">
-                        <div className="accordion-item">
+                        <div className="accordion-item" tabIndex={0}>
                             <h2 className="accordion-header" id="headingOne">
                                 <button
                                     className="accordion-button collapsed"
@@ -296,7 +298,7 @@ function Transactions(props){
                                 </tr>
                             </thead>
                             <tbody>
-                                {transactionData.map((item, index)=> (
+                                {getPermission(globalValues.permissions, 'read_transactions') && transactionData.map((item, index)=> (
                                         <tr key={index}>
                                             <td>{index+1}</td>
                                             <td><Link to={`/admin/edit-user/${item.user?.id}`}>{item.user?.name}</Link></td>

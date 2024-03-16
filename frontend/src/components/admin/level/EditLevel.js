@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import swal from 'sweetalert';
-
+import Swal from 'sweetalert2';
+import { getPermission } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
 
 function EditLevel(props) {
+    const { globalValues } = React.useContext(Context);
     let level_id = props.match.params.id;
     const [checkbox, setCheckbox] = useState();
     const [textInput, setTextInput] = useState({
@@ -29,12 +31,12 @@ function EditLevel(props) {
 
         
         axios.post(`/api/update-level/${level_id}`, {...textInput, status: checkbox}).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() => {
                     window.location.reload();
                 });
             } else {
-                swal('Error', JSON.stringify(res.data.errors), 'error');
+                Swal.fire('Error', JSON.stringify(res?.data.errors), 'error');
             }
             
         });
@@ -43,15 +45,15 @@ function EditLevel(props) {
     useEffect(() => {       
 
         axios.get(`/api/get-level/${level_id}`).then((res) => {
-            if (res.data.status === 200) {
-                setTextInput({...textInput, ...res.data.level});
-                setCheckbox(res.data.level.status === 1 ? true : false);
+            if (res?.data.status === 200) {
+                setTextInput({...textInput, ...res?.data.level});
+                setCheckbox(res?.data.level.status === 1 ? true : false);
             } else {
-                swal('Error', res.data.errors, 'error');
+                Swal.fire('Error', res?.data.errors, 'error');
             }
             
         });
-    }, [level_id, textInput]);
+    }, [level_id]);
 
     return (
         <div className="container-fluid px-4">
@@ -72,6 +74,7 @@ function EditLevel(props) {
                                 <div className="form-group mb-3">
                                     <label>Name</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_levels')}
                                         type="text"
                                         name="name"
                                         onChange={handleInput}
@@ -84,6 +87,7 @@ function EditLevel(props) {
                                 <div className="form-group mb-3">
                                     <label>Level</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_levels')}
                                         type="number"
                                         name="level"
                                         onChange={handleInput}
@@ -96,6 +100,7 @@ function EditLevel(props) {
                                 <div className="form-group mb-3">
                                     <label>Percentage</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_levels')}
                                         type="number"
                                         name="percentage"
                                         onChange={handleInput}
@@ -108,6 +113,7 @@ function EditLevel(props) {
                                 <div className="form-group mb-3">
                                     <label>Status</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_levels')}
                                         type="checkbox"
                                         name="status"
                                         onChange={handleCheckBox}
@@ -116,7 +122,7 @@ function EditLevel(props) {
                                     />
                                 </div>
 
-                                <button type="submit" className="btn btn-primary px-4 float-end">
+                                <button disabled={!getPermission(globalValues.permissions, 'update_levels')} type="submit" className="btn btn-primary px-4">
                                     Submit
                                 </button>
                             </form>

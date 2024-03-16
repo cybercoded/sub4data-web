@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+import { purchaser } from '../../../util';
 
 
 function Airtime(props) {
@@ -38,55 +39,14 @@ function Airtime(props) {
         setErrorList({ ...errorList, amount: response });
     };
 
-    const handlePurchaseAirtime = (e) => {
+    const handlePurchaseAirtime = async (e) => {
         e.preventDefault();
-
-        swal({
-            text: 'Enter your transaction pin',
-            content: 'input',
-            closeOnClickOutside: false,
-            button: {
-                text: 'Verify!',
-                closeModal: false
-            }
-        })
-        .then((pin) => {
-            return axios.get(`/api/verify-pin/${pin}`);
-        })
-        .then((results) => {
-            
-            let result = results.data;
-            if (result.status === 200) {
-                swal({
-                    title: 'Are you sure?',
-                    text: 'Are you sure to proceed with your transaction!',
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        
-                        axios.post(`/api/airtime-purchase/`, textInput).then((res) => {
-                            if (res.data.status === 200) {
-                                swal('Success!', 'Your transaction has been successfully processed!', 'success').then((res) => {                                        
-                                    history.push('/user/dashboard');
-                                });
-                            }else {
-                                swal('Error!', res.data.errors, 'error');
-                            }
-                            
-                        });
-                    }
-                });
-            } else {
-                swal('Oh noes!', result.message, 'error');
-            }                
-        })
-        .catch(() => {
-            swal.stopLoading();
-            swal.close();
-        });
+        
+        purchaser('/api/airtime-purchase/', textInput);
+        
     };
+    
+    
 
     useEffect(() => {
         const product_id = props.match.params.id;
@@ -102,7 +62,7 @@ function Airtime(props) {
         axios.get(`api/user/`).then((res) => {
             if (res.status === 200) {
                 if(res.data.pin === null) {
-                    swal('Error', 'You must create a Transaction PIN to Use this App', 'warning').then((res) => {
+                    Swal.fire('Error', 'You must create a Transaction PIN to Use this App', 'warning').then((res) => {
                         history.push('/user/create-pin')
                     })
                 }

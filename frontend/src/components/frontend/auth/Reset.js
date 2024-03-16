@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
@@ -24,19 +25,19 @@ function Reset() {
         
         
         axios.get(`/api/public/verify-user-email/${textInput.email}`).then((res) => {
-            if (res.data.status === 200) {
+            if (res?.data.status === 200) {
                 axios.put(`/api/public/password-reset/`, textInput).then((res) => {
-                    if (res.data.status === 200) {
-                        swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                    if (res?.data.status === 200) {
+                        Swal.fire('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
                             history.push(`/verify-otp/${textInput.email}`);
                         });
                     }else {
-                        swal('Error!', res.data.errors, 'error');
+                        Swal.fire('Error!', res?.data.errors, 'error');
                     }
                     
                 });
             } else {                
-                swal('Error!', res.data.errors, 'error');
+                Swal.fire('Error!', res?.data.errors, 'error');
                 
             }
             
@@ -50,7 +51,7 @@ function Reset() {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
+                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Regain your account</h4>
                         </Link>                        
                         <div className='card-body'>

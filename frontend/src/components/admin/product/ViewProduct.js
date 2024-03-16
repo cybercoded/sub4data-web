@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, {useEffect,useState} from "react";
 import { Link, useHistory } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import $ from "jquery";
 
 
@@ -14,14 +14,14 @@ function ViewProduct(props){
     useEffect(() => {
         document.title="View product";
         axios.get(`api/view-product${category_id ? '/' + category_id : ''}`).then(res=>{
-            if(res.data.status===200) {
-                setProduct(res.data.product);                    
+            if(res?.data.status===200) {
+                setProduct(res?.data.product);                    
 
                 $(document).ready(function () {
                     $('table').DataTable();
                 });
             }else {
-                swal('Warning', res.data.message, 'warning').then(() => {
+                Swal.fire('Warning', res?.data.message, 'warning').then(() => {
                     history.push(`/admin/dashboard`);
                 });
             }
@@ -44,10 +44,9 @@ function ViewProduct(props){
                                 <th>ID</th>
                                 <th>Category Name</th>
                                 <th>Product Name</th>
-                                <th>Image</th>
                                 <th>Status</th>
-                                <th>Edit</th>
-                                <th>View</th>
+                                <th>Image</th>
+                                <th>Actions&nbsp;&nbsp;&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,9 +57,6 @@ function ViewProduct(props){
                                     <td>{item.name}</td>
                                     <td>{item.status === 1 ? 'Shown' : 'Hidden'}</td>
                                     <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" className="img-thumbnail" height="50" alt={item.name}/></td>
-                                    <td>
-                                        <Link to={`/admin/edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
-                                    </td>
                                     <td>
                                         <Link to={`/admin/view-services/${item.id}`} className="btn btn-primary btn-sm">View services</Link>
                                     </td>

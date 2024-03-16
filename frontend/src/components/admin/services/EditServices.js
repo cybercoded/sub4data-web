@@ -1,12 +1,15 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+import { getPermission } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
+
 
 
 function EditServices(props) {
     const history = useHistory();
-    
+    const { globalValues } = React.useContext(Context);
     const [checkbox, setCheckbox] = useState();
     const [servicesInput, setServices] = useState([]);
     const [productData, setProductData] = useState([]);
@@ -15,20 +18,21 @@ function EditServices(props) {
     useEffect(() => {
         
         axios.get(`api/view-product`).then((res) => {
-            if (res.data.status === 200) {
-                setProductData(res.data.product);
+            if (res?.data.status === 200) {
+                setProductData(res?.data.product);
             }
             
         });
 
         const services_id = props.match.params.id;
-        axios.get(`/api/view-services/${services_id}`).then((res) => {
-            if (res.data.status === 200) {
+        axios.get(`/api/get-services/${services_id}`).then((res) => {
+            if (res?.data?.status === 200) {
                 setServices(res.data.service);
-                setCheckbox(res.data.service.status === 1? true : false);
-            } else if (res.data.status === 404) {
-                swal('Error', res.data.message, 'error');
-                history.pushState('/admin/view-services');
+                console.log(res.data.service.status === 1)
+                setCheckbox(res.data.service.status === 1 ? true : false);
+            } else if (res?.data?.status === 404) {
+                Swal.fire('Error', res.data.message, 'error');
+                history.goBack();
             }
             
         });
@@ -48,22 +52,21 @@ function EditServices(props) {
         e.preventDefault();
         const services_id = props.match.params.id;
 
-        
         axios.put(`api/update-services/${services_id}`, {...servicesInput, status: checkbox}).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() =>{
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() =>{
                     window.location.reload();
                 });
-            } else if (res.data.status === 422 ) {
-                swal('All fields are mandatory', '', 'error');
-                setError(res.data.errors);
+            } else if (res?.data.status === 422 ) {
+                Swal.fire('All fields are mandatory', '', 'error');
+                setError(res?.data.errors);
             }
-            else if (res.data.status === 409 ) {
-                swal('Error', res.data.errors, 'warning');
-                setError(res.data.errors);
-            } else if (res.data.status === 404) {
+            else if (res?.data.status === 409 ) {
+                Swal.fire('Error', res?.data.errors, 'warning');
+                setError(res?.data.errors);
+            } else if (res?.data.status === 404) {
                 setError([]);
-                swal('Error', res.data.message, 'error');
+                Swal.fire('Error', res?.data.message, 'error');
                 history.push('admin/view-services');
             }
             
@@ -83,7 +86,7 @@ function EditServices(props) {
                     </h4>
                 </div>
                 <div className="card-body">
-                    <form onSubmit={updateServices} id="EDIT_services_FORM">
+                    <form onSubmit={updateServices} id="edit-service-form">
                         <ul className="nav nav-tabs" id="myTab" role="tablist">
                             <li className="nav-item" role="presentation">
                                 <button
@@ -124,10 +127,11 @@ function EditServices(props) {
                                 <div className="form-group mb-3">
                                     <label>Select product</label>
                                     <select
+                                        disabled={!getPermission(globalValues.permissions, 'update_services')}
                                         name="product_id"
                                         onChange={handleInput}
                                         className="form-select"
-                                        value={servicesInput.product_id}
+                                        value={servicesInput?.product_id}
                                     >
                                         <option>Select product</option>
                                         {productData.map((item) => {
@@ -143,6 +147,7 @@ function EditServices(props) {
                                 <div className="form-group mb-3">
                                     <label>Name</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'update_services')}
                                         type="text"
                                         name="name"
                                         onChange={handleInput}
@@ -154,6 +159,7 @@ function EditServices(props) {
                                 <div className="form-group mb-3">
                                     <label>Description (Optional)</label>
                                     <textarea
+                                        disabled={!getPermission(globalValues.permissions, 'update_services')}
                                         name="description"
                                         onChange={handleInput}
                                         value={servicesInput?.description}
@@ -162,7 +168,7 @@ function EditServices(props) {
                                 </div>
                             </div>
                             <div
-                                className="tab-pane card-body border fade"
+                                className="tab-pane fade"
                                 id="otherdetails"
                                 role="tabpanel"
                                 aria-labelledby="otherdetails-tab"
@@ -171,6 +177,7 @@ function EditServices(props) {
                                     <div className="col-md-4 form-group mb-3">
                                         <label>API service id</label>
                                         <input
+                                            disabled={!getPermission(globalValues.permissions, 'update_services')}
                                             type="text"
                                             onChange={handleInput}
                                             value={servicesInput?.api_service_id}
@@ -184,6 +191,7 @@ function EditServices(props) {
                                     <div className="col-md-4 form-group mb-3">
                                         <label>Price</label>
                                         <input
+                                            disabled={!getPermission(globalValues.permissions, 'update_services')}
                                             type="number"
                                             step="any"
                                             onChange={handleInput}
@@ -194,23 +202,24 @@ function EditServices(props) {
                                         <small className="text-danger">{error?.price}</small>
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
-                                        <label>Status (Checked=available)</label>
+                                        <p>Status (Checked=available)</p>
                                         <input
+                                            disabled={!getPermission(globalValues.permissions, 'update_services')}
+                                            id='edit-service-checkbox'
                                             type="checkbox"
                                             name="status"
                                             onChange={handleCheckBox}
-                                            onClick={handleCheckBox}
                                             defaultChecked={checkbox}
                                         />
+                                        <label htmlFor='edit-service-checkbox'></label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <button type="submit" className="btn btn-primary px-4 float-end">
-                            Update
-                        </button>
                     </form>
+                </div>
+                <div className='card-footer'>
+                    <button disabled={!getPermission(globalValues.permissions, 'update_services')} form='edit-service-form' type="submit" className="btn btn-primary px-4">Update service</button>
                 </div>
             </div>
         </div>

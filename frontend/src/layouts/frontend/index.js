@@ -1,9 +1,10 @@
 import React from "react";
 
-import {Route,Switch} from 'react-router-dom';
+import {Route,Switch,Redirect} from 'react-router-dom';
 import Navbar from "./Navbar";
 import SideBar from "./Sidebar";
 import UserRouteList from "../../routes/UserRouteList";
+import { RouteNotFound } from "../../util";
 const UserLayout= ()=>{
 
     return(
@@ -24,10 +25,12 @@ const UserLayout= ()=>{
                                         exact={routeData.exact}
                                         name={routeData.name}
                                         render={(props) =>(
-                                            <routeData.component {...props}/>
-                                        )}
-                                        />))
-                                    })}
+                                                <routeData.component {...props}/>
+                                            )}
+                                        />
+                                    ))
+                                })}
+                                <Redirect from="/" to="/admin/dashboard" />
                         </Switch>
                     </main>
                 </div>  

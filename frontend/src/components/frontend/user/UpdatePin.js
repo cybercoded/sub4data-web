@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 
 function UpdatePin(){
@@ -19,12 +19,12 @@ function UpdatePin(){
     const handleReset = (e) => {
         
         axios.get(`/api/reset-pin/`).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
                     history.push(`/user/pin-verify-otp`);
                 });
             }else {
-                swal('Error!', res.data.errors, 'error');
+                Swal.fire('Error!', res?.data.errors, 'error');
             }
             
         });
@@ -35,19 +35,20 @@ function UpdatePin(){
         e.preventDefault();
 
         if (textInput.oldPin === '' || textInput.newPin === '') {
-            swal('Error!', 'Please fill all fields', 'error');
+            Swal.fire('Error!', 'Please fill all fields', 'error');
             return;
         }
         if (textInput.oldPin.length !== 4 || textInput.newPin.length !== 4) {
-            swal('Error!', 'PIN should be 4 Digits', 'error');
+            Swal.fire('Error!', 'PIN should be 4 Digits', 'error');
             return;
         }
            
         
         axios.get(`/api/verify-pin/${textInput.oldPin}`).then((res) => {
-            if (res.data.status === 200) {
+            if (res?.data.status === 200) {
                 
-                swal({
+                Swal.fire({
+
                     title: "Are you sure?",
                     text: "Are you sure you want to chnage your Transaction PIN!",
                     icon: "warning",
@@ -57,8 +58,8 @@ function UpdatePin(){
                     if (willDelete) {
                         
                         axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
-                            if (res.data.status === 200) {
-                                swal('Success!', 'Transaction PIN successfully updated','success').then((result) => {
+                            if (res?.data.status === 200) {
+                                Swal.fire('Success!', 'Transaction PIN successfully updated','success').then((result) => {
                                     window.location.reload();
                                 });
                             }
@@ -67,7 +68,7 @@ function UpdatePin(){
                     }
                 });
             }else {
-                swal('Error!', 'Incorrect Old PIN, try again', 'error');
+                Swal.fire('Error!', 'Incorrect Old PIN, try again', 'error');
             }
             
         });

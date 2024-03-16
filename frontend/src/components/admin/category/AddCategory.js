@@ -1,10 +1,14 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+import { getPermission, split_errors } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
 
 
 function AddCategory() {
+
+    const { globalValues } = React.useContext(Context);
     const [categoryInput, setCategory] = useState({
         slug: '',
         name: '',
@@ -48,32 +52,23 @@ function AddCategory() {
 
         
         axios.post(`/api/store-category`, formData).then((res) => {
-            if (res.data.status === 200) {
-                swal('Success', res.data.message, 'success').then(() => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success', res?.data.message, 'success').then(() => {
                     window.location.reload();
                 });
-            } else if (res.data.status === 400) {
-                setCategory({ ...categoryInput, error_list: res.data.errors });
+            } else if (res?.data.status === 400) {
+                Swal.fire({
+                    title: 'Warning!',
+                    html: split_errors(res?.data?.errors),
+                    icon: 'error'
+                });
             }
             
         });
     };
 
-    var display_errors = [];
-
-    if (categoryInput.error_list) {
-        display_errors = [categoryInput.error_list.slug, categoryInput.error_list.name, categoryInput.error_list.meta_title];
-    }
     return (
         <div className="container-fluid px-4">
-            {display_errors.map((item, index) => {
-                return (
-                    <p className="mb-1 text-danger" key={index}>
-                        {item}
-                    </p>
-                );
-            })}
-
             <div className="card mt-4">
                 
                 <div className="card-header">
@@ -118,7 +113,7 @@ function AddCategory() {
                         </ul>
                         <div className="tab-content" id="myTabContent">
                             <div
-                                className="tab-pane card-body border fade show active"
+                                className="tab-pane fade show active"
                                 id="home"
                                 role="tabpanel"
                                 aria-labelledby="home-tab"
@@ -126,6 +121,7 @@ function AddCategory() {
                                 <div className="form-group mb-3">
                                     <label>Slug</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_categories')}
                                         type="text"
                                         name="slug"
                                         onChange={handleInput}
@@ -137,6 +133,7 @@ function AddCategory() {
                                 <div className="form-group mb-3">
                                     <label>Name</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_categories')}
                                         type="text"
                                         name="name"
                                         onChange={handleInput}
@@ -148,6 +145,7 @@ function AddCategory() {
                                 <div className="form-group mb-3">
                                     <label>Description (Optional)</label>
                                     <textarea
+                                        disabled={!getPermission(globalValues.permissions, 'create_categories')}
                                         name="description"
                                         onChange={handleInput}
                                         value={categoryInput.description}
@@ -155,15 +153,16 @@ function AddCategory() {
                                     />
                                 </div>
                                 <div className="form-group mb-3">
-                                    <input type="checkbox" id="checkbox-add-category" name="status" onChange={handleCheckbox} defaultChecked={checkbox} />
+                                    <input disabled={!getPermission(globalValues.permissions, 'create_categories')} type="checkbox" id="checkbox-add-category" name="status" onChange={handleCheckbox} defaultChecked={checkbox} />
                                     <label htmlFor="checkbox-add-category"></label>
                                     <span>Status (Optional)</span>
                                 </div>
                             </div>
-                            <div className="tab-pane card-body border fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">
+                            <div className="tab-pane fade" id="seo-tags" role="tabpanel" aria-labelledby="seo-tags-tab">
                                 <div className="form-group mb-3">
                                     <label>Meta Title</label>
                                     <input
+                                        disabled={!getPermission(globalValues.permissions, 'create_categories')}
                                         type="text"
                                         name="meta_title"
                                         onChange={handleInput}
@@ -175,6 +174,7 @@ function AddCategory() {
                                 <div className="form-group mb-3">
                                     <label>Meta Keywords (Optional)</label>
                                     <textarea
+                                        disabled={!getPermission(globalValues.permissions, 'create_categories')}
                                         name="meta_keyword"
                                         onChange={handleInput}
                                         value={categoryInput.meta_keyword}
@@ -185,6 +185,7 @@ function AddCategory() {
                                 <div className="form-group mb-3">
                                     <label>Meta Description (Optional)</label>
                                     <textarea
+                                        disabled={!getPermission(globalValues.permissions, 'create_categories')}
                                         name="meta_description"
                                         onChange={handleInput}
                                         value={categoryInput.meta_description}
@@ -195,14 +196,16 @@ function AddCategory() {
 
                                 <div className="form-group mb-3">
                                     <label>Image</label>
-                                    <input type="file" onChange={handleImage} name="image" className="form-control" />
+                                    <input type="file" disabled={!getPermission(globalValues.permissions, 'create_categories')} onChange={handleImage} name="image" className="form-control" />
                                     <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} width="50" height="50" alt="Img" />
                                     <small className="text-danger">{categoryInput?.error_list.image}</small>
                                 </div>
                             </div>
-                            <button type="submit" className="btn btn-primary px-4 float-end">Submit</button>
                         </div>                        
                     </form>
+                </div>
+                <div className='card-footer'>
+                    <button type="submit" disabled={!getPermission(globalValues.permissions, 'create_categories')} className="btn btn-primary px-4">Add category</button>
                 </div>
             </div>
         </div>

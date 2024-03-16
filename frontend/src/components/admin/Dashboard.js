@@ -1,36 +1,31 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { store_local_storage_item } from "../../util";
 
-
-function Dashboard(){
-
-    
+function Dashboard(){    
     const [userData, setUserData] = useState([]);
     const [transactionData, setTransactionData] = useState([]);
-    const [panelData, setPanelData] = useState([]);
-    
+    const [panelData, setPanelData] = useState([]);    
 
     useEffect(()=>{
 
         axios.get(`api/view-users`).then(res=>{
-            if(res.status===200){
-                setUserData(res.data.users);
+            if(res?.status===200){
+                setUserData(res?.data.users);
             }
             
         });
 
         axios.get(`api/view-transactions-admin`).then(res=>{
-            if(res.status===200){
-                setTransactionData(res.data.data);
+            if(res?.status===200){
+                setTransactionData(res?.data.data);
             }
             
         });
         
         axios.get(`api/get-panel-value-admin`).then(res=>{
-            if(res.status===200){
-                setPanelData(res.data);
+            if(res?.status===200){
+                setPanelData(res?.data);
             }
             
         });
@@ -60,7 +55,7 @@ function Dashboard(){
                                 <i className="fas fa-list-alt fa-4x text-success"></i>
                             </div>
                             <div className="h3 text-secondary font-weight-bold mb-0">
-                                ₦{ new Intl.NumberFormat().format(panelData?.users_balance)}
+                                { panelData.users_balance && '₦' + new Intl.NumberFormat().format(panelData.users_balance)}
                             </div>
                             <small className="text-muted font-weight-bold">
                                 Users Balance

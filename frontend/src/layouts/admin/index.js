@@ -3,23 +3,23 @@ import Navbar from './Navbar.js';
 import SideBar from "./Sidebar.js";
 import {Route,Switch,Redirect} from 'react-router-dom';
 import AdminRouteList from "../../routes/AdminRouteList.js";
-import { store_local_storage_item } from "../../util.js";
+import { logOutFunction, store_local_storage_item } from "../../util.js";
 import axios from "axios";
 import { Context } from "../../contexts/globalContext.js";
+import Swal from "sweetalert2";
 
 const MasterLayout= ()=>{
     const { setGlobalValues } = useContext(Context);
 
     React.useEffect(() => {
         axios.get(`api/get-permissions`).then(res=>{
-            if(res.status===200){
-                let permissions = res.data.permissions;
+            if(res?.status===200){
+                let permissions = res?.data?.permissions;
                 let list_of_permissions = [];
-                permissions.forEach(permission => {
-                    list_of_permissions.push(permission.roles[0]?.slug);
+                permissions?.forEach(permission => {
+                    list_of_permissions.push(permission.slug);
                 });
     
-                store_local_storage_item('permissions', list_of_permissions);
                 setGlobalValues({permissions: list_of_permissions});
             }
         });
@@ -51,7 +51,6 @@ const MasterLayout= ()=>{
                                     )
                                 )
                             })}
-                            <Redirect from="/admin" to="/admin/dashboard" />
                             <Redirect from="/" to="/admin/dashboard" />
                         </Switch>
                     </main>

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+
 import { Link, useHistory } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { store_local_storage_item } from '../../../util';
@@ -59,12 +60,12 @@ function Register() {
     const registerSubmit= (e)=>{
         e.preventDefault();
         if(!textInput.checkbox) {
-            swal('Error!', 'Agree with our Terms and Condition before continuing', 'error');
+            Swal.fire('Error!', 'Agree with our Terms and Condition before continuing', 'error');
             return;
         }
 
         if( passwordValidator(textInput.password) !== "" ) {
-            swal('Error!', passwordValidator(textInput.password), 'error');
+            Swal.fire('Error!', passwordValidator(textInput.password), 'error');
             return;
         }        
         
@@ -76,16 +77,16 @@ function Register() {
                 store_local_storage_item("registration_email",textInput.email);
                 store_local_storage_item("registration_password", encryptedPassword);
                     
-                if (res.data.status === 200) {                    
-                    swal('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                if (res?.data.status === 200) {                    
+                    Swal.fire('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
                         history.push(`/verify-registration`);
                     });
-                }else if(res.data.status === 201) {
-                    swal('Warning!', `Verification code was not sent, because you are in development mode use ${res.data.otp} as your otp`,'warning').then(() => {
+                }else if(res?.data.status === 201) {
+                    Swal.fire('Warning!', `Verification code was not sent, because you are in development mode use ${res?.data.otp} as your otp`,'warning').then(() => {
                         history.push(`/verify-registration`);
                     });
                 }else {
-                    swal('Error!', res.data.errors, 'error');
+                    Swal.fire('Error!', res?.data.errors, 'error');
                 }
                 
             });    
@@ -99,7 +100,7 @@ function Register() {
                     <div className='card'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
+                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Register new account</h4>
                         </Link>
                         <div className='card-body'>
