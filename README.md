@@ -43,6 +43,6 @@
     Fix any issues that may occur with dependencies
     > npm audit fix --force
 
-1.   Start the client-side server
+1.  Start the client-side server
     > npm start
 
