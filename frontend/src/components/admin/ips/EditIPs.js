@@ -11,10 +11,6 @@ function EditIPs(props) {
     const [checkbox, setCheckbox] = useState();
     const { globalValues } = React.useContext(Context);
 
-    const handleInput = (e) => {
-        e.persist();
-        setTextInput({ ...textInput, [e.target.name]: e.target.value });
-    };
 
     const handleCheckBox = (e) => {
         e.persist();
@@ -42,14 +38,21 @@ function EditIPs(props) {
 
         axios.get(`/api/view-ip/${api_id}`).then((res) => {
             if (res?.data.status === 200) {
-                setTextInput({...textInput, ...res.data.whitelist});
+                setTextInput(prevTextInput => ({
+                    ...prevTextInput, 
+                    ...res.data.whitelist
+                }));
                 setCheckbox(res.data.whitelist.status === 1 ? true : false);
             } else {
                 Swal.fire('Error', res?.data.errors, 'error');
             }
-            
         });
     }, [api_id]);
+
+    const handleInput = (e) => {
+        e.persist();
+        setTextInput({ ...textInput, [e.target.name]: e.target.value });
+    };
 
     return (
         <div className="container-fluid px-4">
