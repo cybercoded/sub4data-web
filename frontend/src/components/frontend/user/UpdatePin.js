@@ -48,14 +48,13 @@ function UpdatePin(){
             if (res?.data.status === 200) {
                 
                 Swal.fire({
-
                     title: "Are you sure?",
-                    text: "Are you sure you want to chnage your Transaction PIN!",
+                    text: "Are you sure you want to change your Transaction PIN!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true
-                }).then((willDelete) => {
-                    if (willDelete) {
+                }).then((res) => {
+                    if (res.isConfirmed) {
                         
                         axios.put(`/api/update-pin/`, {pin: textInput.newPin}).then((res) => {
                             if (res?.data.status === 200) {

@@ -60,7 +60,7 @@ class ACLsController extends Controller
         ->where('permissions.user_id', $user_id)
         ->get();        
 
-        if(!$permissions) {
+        if(count($permissions) < count(Roles::all()) ) {
             $new_acls = new ACLsController;
             return $new_acls->populateACLs($user_id);
         }

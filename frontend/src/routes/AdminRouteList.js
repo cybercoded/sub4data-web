@@ -30,6 +30,9 @@ import ViewLevels from '../components/admin/level/ViewLevels';
 import AddApi from '../components/admin/api/AddApi';
 import ViewApis from '../components/admin/api/ViewApis';
 import EditApi from '../components/admin/api/EditApi';
+import AddIPs from '../components/admin/ips/AddIPs';
+import EditIPs from '../components/admin/ips/EditIPs';
+import ViewIPs from '../components/admin/ips/ViewIPs';
 
 const AdminRouteList =[
     { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },    
@@ -40,6 +43,10 @@ const AdminRouteList =[
     { path: '/admin/add-category', exact: true, name: 'AddCategory', component: AddCategory },
     { path: '/admin/edit-category/:id', exact: true, name: 'EditCategory', component: EditCategory },
     { path: '/admin/view-category', exact: true, name: 'ViewCategory', component: ViewCategory },
+
+    { path: '/admin/add-ips', exact: true, name: 'AddIPs', component: AddIPs },
+    { path: '/admin/edit-ips/:id', exact: true, name: 'EditIPs', component: EditIPs },
+    { path: '/admin/view-ips', exact: true, name: 'ViewIPs', component: ViewIPs },
 
     { path: '/admin/add-product', exact: true, name: 'AddProduct', component: AddProduct },
     { path: '/admin/view-product', exact: true, name: 'ViewProduct', component: ViewProduct },

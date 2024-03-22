@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePinResetsTable extends Migration
+class UpdateIpWhitelistsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreatePinResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pin_resets', function (Blueprint $table) {
-            $table->id();
-            $table->string('email')->unique();
-            $table->integer('token')->length(5);
-            $table->timestamps();
+        Schema::table('ip_whitelists', function (Blueprint $table) {
+            $table->integer('status')->default(1);
         });
     }
 
@@ -28,6 +25,8 @@ class CreatePinResetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pin_resets');
+        Schema::table('ip_whitelists', function (Blueprint $table) {
+            //
+        });
     }
 }

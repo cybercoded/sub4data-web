@@ -33,8 +33,8 @@ function UpdatePassword(){
                     icon: "warning",
                     buttons: true,
                     dangerMode: true
-                }).then((willDelete) => {
-                    if (willDelete) {
+                }).then((res) => {
+                    if (res.isConfirmed) {
                         
                         axios.put(`/api/update-password/`, {password: textInput.newPassword}).then((res) => {
                             if (res?.data.status === 200) {

@@ -39,8 +39,8 @@ function TransferFund(){
                     icon: "warning",
                     buttons: true,
                     dangerMode: true
-                }).then((willDelete) => {
-                    if (willDelete) {
+                }).then((res) => {
+                    if (res.isConfirmed) {
                         
                         axios.put(`/api/transfer-fund/`, {...textInput, user_id: res?.data.data.user_id}).then((res2) => {
                             if (res2.data.status === 200) {

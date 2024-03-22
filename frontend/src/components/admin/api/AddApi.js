@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { getPermission } from '../../../util';
+import { getPermission, split_errors } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 
@@ -27,7 +27,7 @@ function AddApi() {
                     window.location.reload();
                 });
             } else {
-                Swal.fire('Error', JSON.stringify(res?.data.errors), 'error');
+                Swal.fire('Error', split_errors(res?.data.errors), 'error');
             }
             
         });

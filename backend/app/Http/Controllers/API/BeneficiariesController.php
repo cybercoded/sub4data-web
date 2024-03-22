@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Models\Beneficiaries;
 use App\Models\Category;
+use App\Http\Controllers\Controller;
+
 
 class BeneficiariesController extends Controller
 {

@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\ActivityController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\IPWhitelistsController;
 use App\Http\Controllers\API\PinController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\PurchaseController;
@@ -98,12 +99,19 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
+    
 
     //Access Control Lists
     Route::get('view-acls/{id}', [ACLsController::class, 'view'])->middleware('VerifyPermission:read_acls');
     Route::put('update-acls/{id}', [ACLsController::class, 'update'])->middleware('VerifyPermission:update_acls');
     Route::get('view-permissions', [ACLsController::class, 'index'])->middleware('VerifyPermission:read_acls');
     Route::get('get-permissions', [ACLsController::class, 'index']);
+
+    //Access Control Lists
+    Route::get('get-ips', [IPWhitelistsController::class, 'index'])->middleware('VerifyPermission:read_ips');
+    Route::get('view-ip/{id}', [IPWhitelistsController::class, 'get'])->middleware('VerifyPermission:read_ips');
+    Route::put('update-ip/{id}', [IPWhitelistsController::class, 'update'])->middleware('VerifyPermission:update_ips');
+    Route::post('store-ips', [IPWhitelistsController::class, 'store'])->middleware('VerifyPermission:create_ips');
 
     //Categories
     Route::post('store-category', [CategoryController::class, 'store'])->middleware('VerifyPermission:create_categories');

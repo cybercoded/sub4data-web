@@ -32,6 +32,7 @@ function App() {
     
     axios.interceptors.request.use(
         function (request) {
+            setStateLoading(true);
             return request;
         },
         
@@ -75,9 +76,7 @@ function App() {
                         <AppRoutes name="Index" />
                     </Switch>
                 </BrowserRouter>
-                <ReactjsOverlayLoader isActive={stateLoading} 
-                    icon={<img alt='loader' width={50} src={`${process.env.REACT_APP_URL}img/loading.gif`}/>} 
-                />
+                <ReactjsOverlayLoader isActive={stateLoading} icon={<img alt='loader' width={50} src={`${process.env.REACT_APP_URL}img/loading.gif`}/>} />
             </Context.Provider>
         </div>
     );

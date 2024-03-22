@@ -15,6 +15,7 @@ class ApisController extends Controller
      */
     public function index()
     {
+        
         $apis = Api::all();
         return response()->json([
             'status' => 200,

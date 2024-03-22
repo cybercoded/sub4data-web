@@ -7,7 +7,7 @@ const TermsAndCondition = () => {
             <nav className="navbar navbar-expand-lg navbar-light text-white py-0 px-2" id="header">
                     <div className="container-fluid">
                         <Link className="navbar-brand fw-bold my-text-primary" to="#">
-                            <img src={process.env.REACT_APP_LOGO} alt="" style={{ width: 60 }} />
+                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="Logo" style={{ width: 60 }} />
                         </Link>
                         <button
                             className="navbar-toggler"

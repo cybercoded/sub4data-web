@@ -19,9 +19,8 @@ function ViewApis(){
             icon: "warning",
             buttons: true,
             dangerMode: true
-        })
-        .then((willDelete) => {
-            if (willDelete) {
+        }).then((res) => {
+            if (res.isConfirmed) {
                 
                 axios.delete(`api/delete-api/${e.target.dataset.id}`).then(res=>{
                     if(res?.data.status===200){

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Context } from '../../../contexts/globalContext';
-import { getPermission } from '../../../util';
+import { getPermission, split_errors } from '../../../util';
 
 function EditApi(props) {
     let api_id = props.match.params.id;
@@ -26,7 +26,7 @@ function EditApi(props) {
                     window.location.reload();
                 });
             } else {
-                Swal.fire('Error', JSON.stringify(res?.data.errors), 'error');
+                Swal.fire('Error',split_errors(res?.data.errors), 'error');
             }
             
         });

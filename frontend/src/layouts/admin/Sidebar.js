@@ -210,6 +210,37 @@ const SideBar = () => {
                         </div>
                     )}
 
+{getPermission(globalValues.permissions, 'read_ips') && (
+                        <div>
+                            <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseips" aria-expanded="false" aria-controls="collapseips">
+                                <div className="sb-nav-link-icon">
+                                    <i className="fa fa-arrow-up-right-from-square"></i>
+                                </div>
+                                    IPs
+                                <div className="sb-sidenav-collapse-arrow">
+                                    <i className="fas fa-angle-down"></i>
+                                </div>
+                            </Link>
+                            <div className="collapse" id="collapseips" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav className="sb-sidenav-menu-nested nav">
+                                    <Link className="nav-link custom-toggler" to="/admin/view-ips">
+                                        View IPs
+                                    </Link>
+                                    {getPermission(globalValues.permissions, 'update_ips') && (
+                                        <Link className="nav-link custom-toggler" to="/admin/edit-ips">
+                                            Edit IP
+                                        </Link>
+                                    )}
+                                    {getPermission(globalValues.permissions, 'create_ips') && (
+                                        <Link className="nav-link custom-toggler" to="/admin/add-ip">
+                                            Add IP
+                                        </Link>
+                                    )}
+                                </nav>
+                            </div>
+                        </div>
+                    )}
+
                     {getPermission(globalValues.permissions, 'read_levels') && (
                         <div>
                             <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseLevels" aria-expanded="false" aria-controls="collapseLevels">

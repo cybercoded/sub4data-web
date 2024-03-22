@@ -19,9 +19,8 @@ function ViewLevels(){
             icon: "warning",
             buttons: true,
             dangerMode: true,
-        })
-        .then((willDelete) => {
-            if (willDelete) {
+        }).then((res) => {
+            if (res.isConfirmed) {
                 
                 axios.delete(`api/delete-level/${e.target.dataset.id}`).then(res=>{
                     if(res?.data.status===200){

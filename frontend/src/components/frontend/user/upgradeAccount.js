@@ -30,14 +30,13 @@ function UpgradeAccount() {
     const handleUpgrade = (e) => {
         e.persist();
         Swal.fire({
-
             title: 'Are you sure?',
             text: 'Are you sure to proceed with your account upgrade?',
             icon: 'warning',
             buttons: true,
             dangerMode: true
-        }).then((willDelete) => {
-            if (willDelete) {
+        }).then((res) => {
+            if (res.isConfirmed) {
                 axios.post(`/api/upgrade-user`, {level: selectedLevel}).then((res) => {
                     if ( res?.data.status === 200 ) {
                         Swal.fire('Success', res?.data.message, 'success').then(() => {

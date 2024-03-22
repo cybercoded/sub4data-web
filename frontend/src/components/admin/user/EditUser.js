@@ -149,8 +149,8 @@ function EditUser(props){
                                                         icon: 'warning',
                                                         buttons: true,
                                                         dangerMode: true
-                                                    }).then((willDelete) => {
-                                                        if (willDelete) {
+                                                    }).then((res) => {
+                                                        if (res.isConfirmed) {
                                                             setTextInput({...textInput, password: true});
                                                         } else {
                                                             setTextInput({...textInput, password: false});
