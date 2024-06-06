@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Context, reducer } from './contexts/globalContext';
 import ReactjsOverlayLoader from "reactjs-overlay-loader";
 import AppRoutes from './routes';
-import { get_local_storage_item, store_local_storage_item, toastifyFunction } from './util';
+import { CustomCookieConsent, get_local_storage_item, store_local_storage_item, toastifyFunction } from './util';
 
 
 function App() {
@@ -27,6 +27,7 @@ function App() {
     React.useEffect(() => {
         if(!get_local_storage_item('auth_role')) {
             store_local_storage_item('auth_role', 'public');
+            window.location.reload()
         }
     }, [])
     
@@ -53,10 +54,14 @@ function App() {
                     window.history.back();
                 });
             } else if (error.response?.status === 419) {
+                store_local_storage_item('auth_role', 'public');
+                localStorage.removeItem("auth_token")
                 Swal.fire('Timeout', "Your session is timed out, login again", 'warning').then(() => {
                     window.location.replace("/login");
                 });
             }else if (error.response?.status === 401) {
+                store_local_storage_item('auth_role', 'public');
+                localStorage.removeItem("auth_token");
                 Swal.fire('Unauthenticated', "Please login your account", 'warning').then(() => {
                     window.location.replace("/login");
                 });
@@ -76,7 +81,8 @@ function App() {
                         <AppRoutes name="Index" />
                     </Switch>
                 </BrowserRouter>
-                <ReactjsOverlayLoader isActive={stateLoading} icon={<img alt='loader' width={50} src={`${process.env.REACT_APP_URL}img/loading.gif`}/>} />
+                <ReactjsOverlayLoader isActive={stateLoading} style={{zIndex: 1}} icon={<img alt='loader' width={50} src={`${process.env.REACT_APP_URL}img/loading.gif`}/>} />
+                <CustomCookieConsent />
             </Context.Provider>
         </div>
     );

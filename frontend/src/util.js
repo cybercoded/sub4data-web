@@ -2,6 +2,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import React from 'react';
 import Toastify from 'toastify-js';
+import CookieConsent, { Cookies } from "react-cookie-consent";
 
 const get_local_storage_item = (item) => {
 
@@ -18,6 +19,12 @@ const store_local_storage_item = (key, value) => {
     }
 
     return true;
+}
+
+const handleCopy = (value) => {
+    navigator.clipboard.writeText(value)
+    toastifyFunction("Copied to your clipboard");
+
 }
 
 const toastifyFunction = (msg) => {
@@ -144,4 +151,23 @@ const split_errors = (errors) => {
     return errorMessage;
 }
 
-export {get_local_storage_item, toastifyFunction, RouteNotFound, purchaser, logOutFunction, getPermission, store_local_storage_item, split_errors}
+const CustomCookieConsent = () => {
+    return <CookieConsent
+        debug={true}
+        location="bottom"
+        buttonClasses="btn btn-primary text-white"
+        buttonText="OK, Continue!"
+        cookieName="myAwesomeCookieName2"
+        style={{ background: "#333" }}
+        expires={150}
+        contentStyle={{ fontSize: "18px" }}
+        enableDeclineButton
+        onDecline={() => {
+            //alert("nay!");
+        }}
+    >
+        This website uses cookies to enhance the user experience.{" "}
+    </CookieConsent>
+}
+
+export {get_local_storage_item, CustomCookieConsent, handleCopy, toastifyFunction, RouteNotFound, purchaser, logOutFunction, getPermission, store_local_storage_item, split_errors}

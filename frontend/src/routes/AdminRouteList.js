@@ -33,6 +33,7 @@ import EditApi from '../components/admin/api/EditApi';
 import AddIPs from '../components/admin/ips/AddIPs';
 import EditIPs from '../components/admin/ips/EditIPs';
 import ViewIPs from '../components/admin/ips/ViewIPs';
+import ViewMerchants from '../components/admin/merchants/ViewMerchants';
 
 const AdminRouteList =[
     { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },    
@@ -44,7 +45,7 @@ const AdminRouteList =[
     { path: '/admin/edit-category/:id', exact: true, name: 'EditCategory', component: EditCategory },
     { path: '/admin/view-category', exact: true, name: 'ViewCategory', component: ViewCategory },
 
-    { path: '/admin/add-ips', exact: true, name: 'AddIPs', component: AddIPs },
+    { path: '/admin/add-ip', exact: true, name: 'AddIPs', component: AddIPs },
     { path: '/admin/edit-ips/:id', exact: true, name: 'EditIPs', component: EditIPs },
     { path: '/admin/view-ips', exact: true, name: 'ViewIPs', component: ViewIPs },
 
@@ -53,6 +54,8 @@ const AdminRouteList =[
     { path: '/admin/view-product/:id', exact: true, name: 'ViewProduct', component: ViewProduct },
     { path: '/admin/edit-product/:id', exact: true, name: 'EditProduct', component: EditProduct },
 
+    { path: '/admin/view-merchants', exact: true, name: 'AddServices', component: ViewMerchants },
+    
     { path: '/admin/add-services', exact: true, name: 'AddServices', component: AddServices },
     { path: '/admin/view-services', exact: true, name: 'ViewServices', component: ViewServices },
     { path: '/admin/view-services/:id', exact: true, name: 'ViewServices', component: ViewServices },

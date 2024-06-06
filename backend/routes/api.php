@@ -5,6 +5,7 @@ use App\Http\Controllers\API\ActivityController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\IPWhitelistsController;
+use App\Http\Controllers\API\MerchantAPIController;
 use App\Http\Controllers\API\PinController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\PurchaseController;
@@ -56,7 +57,6 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
     Route::put('transfer-fund', [UserController::class, 'adminCreditUser']);
     Route::post('create-automated-banks', [UserController::class, 'createAutomatedBanks']);
 
-
     //Products
     Route::get('view-product/{slug}', [ProductController::class, 'viewWithSlug']);
     Route::get('view-product', [ProductController::class, 'index']);
@@ -99,6 +99,9 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
+
+    //Merchants / Developers
+    Route::get('view-merchant-keys', [MerchantAPIController::class, 'index']);
     
 
     //Access Control Lists
@@ -203,6 +206,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('update-user', [UserController::class, 'userUpdate']);
     Route::put('update-password', [UserController::class, 'updatePassword']);
     Route::get('verify-password/{password}', [UserController::class, 'verifyPassword']);
+    Route::put('generate-merchant-keys', [MerchantAPIController::class, 'store']);
+    Route::get('get-merchant-keys', [MerchantAPIController::class, 'view']);
+
 
     Route::get('user-banks', [UserController::class, 'viewBanks']);
     Route::get('user-discount', [UserController::class, 'getDiscount']);

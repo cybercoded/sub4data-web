@@ -7,7 +7,7 @@ import { Context } from '../../../contexts/globalContext';
 
 
 
-function AddApi() {
+function AddIP() {
     const [textInput, setTextInput] = useState([]);
     const { globalValues } = React.useContext(Context);
 
@@ -49,7 +49,7 @@ function AddApi() {
                         </div>
                         <div className="card-body">
                             <form onSubmit={submitApi}>                        
-                                <div className="form-group mb-3">
+                                <div className="form-group mb-6">
                                     <label>Api Name</label>
                                     <input
                                         disabled={!getPermission(globalValues.permissions, 'create_apis')}
@@ -57,70 +57,6 @@ function AddApi() {
                                         name="api_name"
                                         onChange={handleInput}
                                         value={textInput.api_name}
-                                        className="form-control"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group mb-3">
-                                    <label>Api Key</label>
-                                    <input
-                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
-                                        type="text"
-                                        name="api_key"
-                                        onChange={handleInput}
-                                        value={textInput.api_key}
-                                        className="form-control"
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Api Secrete</label>
-                                    <input
-                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
-                                        type="text"
-                                        name="api_secret"
-                                        onChange={handleInput}
-                                        value={textInput.api_secret}
-                                        className="form-control"
-                                        required
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label>Api URL</label>
-                                    <input
-                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
-                                        type="url"
-                                        name="api_url"
-                                        onChange={handleInput}
-                                        value={textInput.api_url}
-                                        className="form-control"
-                                        required
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label>Api Contract Code</label>
-                                    <input
-                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
-                                        type="text"
-                                        name="api_contract_code"
-                                        onChange={handleInput}
-                                        value={textInput.api_contract_code}
-                                        className="form-control"
-                                        required
-                                    />
-                                </div>
-                                
-                                <div className="form-group mb-3">
-                                    <label>API Charges</label>
-                                    <input
-                                        disabled={!getPermission(globalValues.permissions, 'create_apis')}
-                                        type="number"
-                                        name="api_payment_charges"
-                                        onChange={handleInput}
-                                        value={textInput.api_payment_charges}
                                         className="form-control"
                                         required
                                     />
@@ -138,4 +74,4 @@ function AddApi() {
     );
 }
 
-export default AddApi;
+export default AddIP;

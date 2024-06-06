@@ -210,7 +210,7 @@ const SideBar = () => {
                         </div>
                     )}
 
-{getPermission(globalValues.permissions, 'read_ips') && (
+                    {getPermission(globalValues.permissions, 'read_ips') && (
                         <div>
                             <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseips" aria-expanded="false" aria-controls="collapseips">
                                 <div className="sb-nav-link-icon">
@@ -262,6 +262,27 @@ const SideBar = () => {
                                             Add Level
                                         </Link>
                                     )}
+                                </nav>
+                            </div>
+                        </div>
+                    )}
+
+                    {getPermission(globalValues.permissions, 'read_merchants') && (
+                        <div>
+                            <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseLevels" aria-expanded="false" aria-controls="collapseLevels">
+                                <div className="sb-nav-link-icon">
+                                    <i className="fab fa-dev"></i>
+                                </div>
+                                    Merchants 
+                                <div className="sb-sidenav-collapse-arrow">
+                                    <i className="fas fa-angle-down"></i>
+                                </div>
+                            </Link>
+                            <div className="collapse" id="collapseLevels" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav className="sb-sidenav-menu-nested nav">
+                                    <Link className="nav-link custom-toggler" to="/admin/view-merchants">
+                                        View Merchants
+                                    </Link>
                                 </nav>
                             </div>
                         </div>

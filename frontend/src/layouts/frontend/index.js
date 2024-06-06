@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import SideBar from "./Sidebar";
 import UserRouteList from "../../routes/UserRouteList";
 import { RouteNotFound } from "../../util";
+
 const UserLayout= ()=>{
 
     return(
@@ -30,7 +31,7 @@ const UserLayout= ()=>{
                                         />
                                     ))
                                 })}
-                                <Redirect from="/" to="/admin/dashboard" />
+                                <Redirect from="/"  to="/user/dashboard" />
                         </Switch>
                     </main>
                 </div>  

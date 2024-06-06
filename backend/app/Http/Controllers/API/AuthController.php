@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\IPWhitelists;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Mail\VerificationMail;
@@ -35,15 +36,24 @@ class AuthController extends Controller
 
             $api = Api::where('api_name', 'monnify')->first();
             $authorization = base64_encode($api['api_key'] . ':' . $api['api_secret']);
+            
+            if (!config('app.env') === 'local') {
+                $response = Http::withHeaders([
+                    'Authorization' => "Basic ".$authorization,
+                    'Content-Type' => 'application/json'
+                ])->post('https://api.monnify.com/api/v1/auth/login/')->json();
 
-            $response = Http::withHeaders([
-                'Authorization' => "Basic ".$authorization,
-                'Content-Type' => 'application/json'
-            ])->post('https://api.monnify.com/api/v1/auth/login/');
+            } else {
+                $response = [
+                    'responseBody' => [
+                        'accessToken' => '12hdggyu23edff5t'
+                    ],
+                    'responseMessage' => 'success'
+                ];
+            }
 
-            $jsonData = $response->json();
-            $accessToken = $jsonData['responseBody']['accessToken'];
-
+            $accessToken = $response['responseBody']['accessToken'];
+            
             $apiPostArray = [
                 'accountReference' => strtoupper(substr($request->name, 0, 5)).time(),
                 'accountName' => $request->name,
@@ -55,17 +65,26 @@ class AuthController extends Controller
                 'getAllAvailableBanks' => true,
                 'preferredBanks' => ['50515','035', '058', '232']
             ];
-            /* "232": "Sterling bank",
-            "035": "Wema bank",
-            "50515": "Moniepoint Microfinance Bank",
-            "058": "GTBank", */
 
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer ".$accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($api['api_url']."/bank-transfer/reserved-accounts", $apiPostArray);
+            if (!config('app.env') === 'local') {
+                $response = Http::withHeaders([
+                    'Authorization' => "Bearer ".$accessToken,
+                    'Content-Type' => 'application/json'
+                ])->post($api['api_url']."/bank-transfer/reserved-accounts", $apiPostArray)->json();
+            } else {
+                $response = [
+                    'responseBody' => [
+                        'accessToken' => '12hdggyu23edff5t',
+                        'bankName' => 'Wema bank',
+                        'accountName' => 'Tomiwa',
+                        'accountNumber' => '5000358118',
+                        'accountReference' => 'ELECT1686463044'
 
-            // print_r($jsonData);
+                    ],
+                    'responseMessage' => 'success'
+                ];
+            }
+
             $user=User::create([
                 'name'=>$request->name,
                 'email'=>$request->email,
@@ -73,10 +92,9 @@ class AuthController extends Controller
                 'password'=>Hash::make($request->password)
             ]);           
             
-            if($jsonData['responseMessage'] == 'success' && $user){
-                $jsonData = $response->json();
-                if(isset($jsonData['responseBody'])) {
-                    $result = $jsonData['responseBody'];
+            if($response['responseMessage'] == 'success' && $user){
+                if(isset($response['responseBody'])) {
+                    $result = $response['responseBody'];
                     Banks::create([
                         'user_id' => $user->id,
                         'bank_name'=>$result['bankName'],
@@ -108,13 +126,19 @@ class AuthController extends Controller
             ]);
         }else{
             $user= User::where('email',$request->email)->where('status', 1)->first();
+            $ifIPisWhitelisted = IPWhitelists::where('ip', $request->ip())->get();
 
             if(! $user || ! Hash::check($request->password,$user->password)){
                 return response()->json([
                     'status'=>401,
                     'errors'=>'Invalid credentials'
                 ]);
-            }else{
+            }elseif(count($ifIPisWhitelisted) == 0){
+                return response()->json([
+                    'status'=>401,
+                    'errors'=> "(". $request->ip(). ") IP address was not found on our list"
+                ]);
+            }else {
                 if($user->role_as==1) //admin
                 {
                     $role='admin';

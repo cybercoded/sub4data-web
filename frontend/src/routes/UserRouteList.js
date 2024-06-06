@@ -14,6 +14,7 @@ import FundWallet from "../components/frontend/user/FundWallet";
 import VerifyPinOtp from "../components/frontend/user/VerifyPinOtp";
 import MerchantPay from "../components/frontend/user/MerchantPay";
 import UpgradeAccount from "../components/frontend/user/upgradeAccount";
+import MerchantAPI from "../components/frontend/user/MerchantAPI";
 
 const UserRouteList =[
     { path: '/user/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
@@ -25,6 +26,7 @@ const UserRouteList =[
     { path: '/user/services/electricity/:id', exact: true, name: 'Electricity', component: Electricity },
 
     { path: '/user/create-pin', exact: true, name: 'CreatePin', component: CreatePin },
+    { path: '/user/merchant-api', exact: true, name: 'MerchantAPI', component: MerchantAPI },
     { path: '/user/update-pin', exact: true, name: 'UpdatePin', component: UpdatePin },
     { path: '/user/update-password', exact: true, name: 'UpdatePassword', component: UpdatePassword },
     { path: '/user/transactions', exact: true, name: 'Transactions', component: Transactions },

@@ -57,7 +57,10 @@ function RegistrationVerify(props) {
             if (res?.data.status === 200) {
                 axios.post(`/api/public/register`, textInput).then(res=>{
                     if(res?.data.status===200){
+                        store_local_storage_item("auth_role","user");
                         store_local_storage_item("auth_token",res?.data.token);
+                        localStorage.removeItem("registration_password");
+                        localStorage.removeItem("registration_name");
                         Swal.fire("success",res?.data.message,"success").then(()=>{
                             history.push("/user/dashboard");
                         })

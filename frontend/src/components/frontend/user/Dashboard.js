@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { toastifyFunction } from '../../../util';
+import { handleCopy, toastifyFunction } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 
@@ -31,12 +31,6 @@ function Dashboard() {
         });
 
     }, []);
-
-    const handleCopy = (value) => {
-        navigator.clipboard.writeText(value)
-        toastifyFunction("Copied to your clipboard");
-
-    }
 
     const handleViewTransaction = (e) => {
         e.preventDefault();

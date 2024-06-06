@@ -77,6 +77,13 @@ const SideBar = () => {
                         Transactions
                     </Link>
 
+                    <Link className={`nav-link custom-toggler ${ 'merchant-api' === window.location.href.split('/')[4] && 'active' }`} to="/user/merchant-api">
+                        <div className="sb-nav-link-icon">
+                            <i className="fa fa-external-link"></i>
+                        </div>
+                        Merchant API
+                    </Link>
+
                     <div className="sb-sidenav-menu-heading">
                         Others
                     </div>

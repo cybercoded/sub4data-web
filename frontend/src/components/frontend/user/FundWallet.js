@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toastifyFunction } from '../../../util';
+import { handleCopy, toastifyFunction } from '../../../util';
 
 function FundWallet() {
     
@@ -14,11 +14,6 @@ function FundWallet() {
             }            
         });
     }, []);
-
-    const handleCopy = (value) => {
-        navigator.clipboard.writeText(value)
-        toastifyFunction("Copied to your clipboard");
-    }
 
     return (
         <div className="container mt-5">

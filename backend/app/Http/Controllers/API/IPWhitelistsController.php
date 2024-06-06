@@ -53,7 +53,7 @@ class IPWhitelistsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ip' => 'required|ip',
+            'ip' => 'required|ip|unique',
             'email'=>'required|email|max:191|exists:users,email'
         ]);
 

@@ -9,7 +9,7 @@ const PublicLayout= ()=>{
     return (        
         <main>
             <Switch>
-                {PublicRouteList.map((routeData,idx)=>{
+                { PublicRouteList.map((routeData,idx)=>{
                     return (
                         routeData.component && (
                             <Route key={idx}  
@@ -21,10 +21,11 @@ const PublicLayout= ()=>{
                                 )}
                             />
                         ))
-                    })}
-                    <Redirect from="/user" to="/login" />
-                    <Redirect from="/admin" to="/login" />
-                    <Route component={RouteNotFound} />
+                    })
+                }
+                <Redirect from="/user" to="/login" />
+                <Redirect from="/admin" to="/login" />
+                <Route component={RouteNotFound} />
         </Switch>
         </main>
     );

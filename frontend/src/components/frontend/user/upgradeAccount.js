@@ -72,7 +72,7 @@ function UpgradeAccount() {
                                     }
                                 }}
                             >
-                                <div className="ms-2 me-auto">
+                                <div role='button' className="ms-2 me-auto">
                                     <div className="fw-bold">{item.name}</div>
                                     Upgrade with ₦{item.upgrade_fee} and enjoy ₦{item.percentage}% on every transactions
                                 </div>
