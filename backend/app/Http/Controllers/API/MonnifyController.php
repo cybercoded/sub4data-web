@@ -120,12 +120,6 @@ class MonnifyController extends Controller
         Mail::to($customer_details['email'])
             ->send(new TransactionMail($title, $customer_details));
 
-        Activities::create([
-            'type' => 'monnify_credit',
-            'title' => 'Monnify Merchant Credit Payment',
-            'log' => serialize($customer_details)
-        ]);
-
         $transaction = new Transactions();
         $transaction->user_id = $user->id;
         $transaction->amount = $initial_reference->amount;

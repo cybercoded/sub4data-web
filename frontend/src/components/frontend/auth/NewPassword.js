@@ -3,12 +3,13 @@ import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { get_local_storage_item } from '../../../util';
 
 
 function NewPassword(props) {
 
-    const email = props.match.params.email;
-    const otp = props.match.params.otp;
+    const email = get_local_storage_item('reset_email') || props.match.params.email;
+    const otp = get_local_storage_item('otp') || props.match.params.otp;
 
     const history=useHistory();
     const [textInput, setTextInput] = useState({
@@ -81,9 +82,7 @@ function NewPassword(props) {
     
     
     const handleResend = (e)=>{
-        e.preventDefault();
-
-        
+        e.preventDefault();        
         
         axios.put(`/api/public/password-reset/`, {email: email}).then((res) => {
             if (res?.data.status === 200) {

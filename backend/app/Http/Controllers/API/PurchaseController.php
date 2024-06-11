@@ -286,13 +286,7 @@ class PurchaseController extends Controller
             'description' => $request['description'],
             'order_date' => date('Y-m-d H:i:s')
         ];
-
-        Activities::create([
-            'type' => 'debit',
-            'title' => $request['description'],
-            'log' => serialize($customer_details)
-        ]);
-
+        
         if ($request['saveBeneficiary'] == 'true') {
             $beneficiary = Beneficiaries::where('user_id', $request['user']['id'])->where('number', $request['number'])->first();
 

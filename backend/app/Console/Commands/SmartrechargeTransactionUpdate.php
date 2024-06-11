@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\API\PurchaseController;
 use App\Mail\TransactionMail;
 use App\Models\Activities;
 use App\Models\Api;
@@ -58,16 +59,16 @@ class SmartrechargeTransactionUpdate extends Command
             ]);
 
             $result = $response->json();
-
-            $status_update = Transactions::where('id', $transaction->id)->update([
+            $transaction = Transactions::where('id', $transaction->id);
+            $status_update = $transaction->update([
                 'status' => strtolower($result['text_status'] == 'COMPLETED' ? 'success' : $result['text_status']),
             ]);
 
             if($result['error_code'] != '1981' || $result['text_status'] != '1986') {
-
+                
                 $user = User::where('id', $transaction->user_id)->first();
                 $afterBalance = $user->balance + $transaction->amount;
-                $title = '[Debit Transaction] Thank you for your purchase';
+                $title = '[Debit Transaction] Thank you for your patience';
                 $customer_details = [
                     'name' => $user->name,
                     'email' => $user->email,
@@ -82,10 +83,21 @@ class SmartrechargeTransactionUpdate extends Command
                 Mail::to($customer_details['email'])
                 ->send(new TransactionMail($title, $customer_details));
 
-                Activities::create([
-                    'type' => 'credit',
-                    'title' => "Refunded ".$transaction->description,
-                    'log' => serialize($customer_details)
+                $my_purchaser = new PurchaseController;
+                $my_purchaser->purchaser([
+                    'user' => $user,
+                    'beneficiaryName' => $user->name,
+                    'saveBeneficiary' => 'false',
+                    'number' => 'null',
+                    'category_id' => $transaction->category_id,
+                    'product_id' => $transaction->product_id,
+                    'service_id' => $transaction->service_id,
+                    'amount' => $transaction->amount,
+                    'reference' => 'SUB' . rand(),
+                    'api_reference' => $transaction->api_reference,
+                    'description' => "₦" . number_format($transaction->amount) . " " . $user->name . " was refunded to your account for transaction ID (" . $transaction->reference.")",
+                    'after_balance' => $afterBalance,
+                    'status' => 'success'
                 ]);
 
                 User::where('id', $transaction->user_id)->update([

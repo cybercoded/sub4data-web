@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 
 function Profile(){
 
-    
+    const [checkboxes, setCheckboxes] = useState(false);
     const [textInput, setTextInput] = useState({
         name: '',
         email: ''
@@ -16,11 +16,16 @@ function Profile(){
         setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
+    const handleCheckBox = (e) => {
+        e.persist();
+        setCheckboxes(e.target.checked);
+    };
+
     const handleProfileUpdate = (e) => {        
         e.preventDefault();
 
         
-        axios.post(`api/update-user`, {name: textInput.name}).then((res) => {
+        axios.post(`api/update-user`, {name: textInput.name, mfa: checkboxes}).then((res) => {
             if (res?.data.status === 200) {
 
                 Swal.fire('Success!', 'Profile data successfully updated', 'success').then(() => {
@@ -37,11 +42,10 @@ function Profile(){
     useEffect(() => {
         axios.get(`api/user/`).then((res) => {
             if (res?.status === 200) {
-                setTextInput(res?.data);
-            }
-            
+                setTextInput(res?.data.data);
+            }            
         });
-    }, []);
+    }, [textInput.mfa]);
 
 
     return (
@@ -53,7 +57,10 @@ function Profile(){
                 
 
                 <form onSubmit={handleProfileUpdate}>
-
+                    <div>
+                        <input type='checkbox' id='mfa' title='Select this role' name='mfa' onChange={handleCheckBox} defaultChecked={textInput.mfa === 1} />
+                        <label htmlFor='mfa'></label>
+                    </div>
                     <div className='form-group mb-3'>
                         <label>Email ID</label>
                         <input type='text' name="email"  value={textInput.email} disabled className='form-control' ></input>

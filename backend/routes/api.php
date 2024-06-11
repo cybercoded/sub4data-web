@@ -37,8 +37,9 @@ Route::prefix('public')->group( function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::get('verify-user-email/{email}', [UserController::class, 'adminVerifyEmail']);
     Route::put('password-reset', [UserController::class, 'resetPassword']);
-    Route::put('send-otp', [AuthController::class, 'sendOTP']);
-    Route::put('resend-otp', [AuthController::class, 'resendOTP']);
+    Route::put('send-registration-otp', [AuthController::class, 'sendRegistrationOTP']);
+    Route::put('verify-otp', [UserController::class, 'verifyOTP']);
+    Route::put('resend-otp', [AuthController::class, 'resendRegistrationOTP']);
     Route::put('verify-otp-and-reset', [UserController::class, 'verifyOtpAndResetPassword']);
     Route::put('verify-registration-otp', [UserController::class, 'verifyRegistrationOtp']);
     Route::get('verify-monnify-merchant-payment', [MonnifyController::class, 'verifyPay']);

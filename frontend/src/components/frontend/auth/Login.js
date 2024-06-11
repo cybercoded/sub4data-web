@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
@@ -6,8 +6,8 @@ import axios from 'axios';
 import { get_local_storage_item, store_local_storage_item } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
-function Login() {
-
+function Login(props) {
+    const auto_login = props.match.params.auto_login;
     const history=useHistory();
     const { globalValues } = React.useContext(Context);
 
@@ -26,6 +26,24 @@ function Login() {
         setLogin({...loginInput,[e.target.name]: e.target.value});
     }
 
+    useEffect(() => {
+        if (auto_login) {
+            let email = get_local_storage_item('otp_email');
+            let password = get_local_storage_item('user_pass');
+            if (email && password) {
+                axios.get('/sanctum/csrf-cookie').then(() => {
+                    axios.post(`api/public/login`,{email: email, password: password, auto: 1}).then(res =>{
+                        localStorage.clear();
+                        store_local_storage_item("auth_token", res?.data.token);
+                        store_local_storage_item("auth_role", res?.data.role);
+
+                        history.push(globalValues.lastPageBeforeLogout || `/${res?.data.role}/dashboard`);
+                    })
+                });
+            }
+        }
+    }, [])
+
     const loginSubmit= (e)=>{
         e.preventDefault();
 
@@ -33,19 +51,27 @@ function Login() {
             email: loginInput.email,
             password: loginInput.password,
         }
-
+        
         axios.get('/sanctum/csrf-cookie').then(() => {
             axios.post(`api/public/login`,data).then(res =>{
                 if(res?.data?.status === 200){
-                    store_local_storage_item("auth_token",res?.data.token);
-                    store_local_storage_item("auth_role",res?.data.role);
-                    if(res?.data.role==='admin'){
-                        history.push(globalValues.lastPageBeforeLogout || '/admin/dashboard');
-                    }else{
-                        Swal.fire({icon: 'success',title: 'Success',text: res?.data?.message,timer: 2000}).then(() => {
-                            notification.message && Swal.fire(notification.message)
-                        });
-                        history.push(`${globalValues.lastPageBeforeLogout || '/user/dashboard'}`); 
+                    if(res.data.mfa === 1) {
+                        store_local_storage_item("otp_email",loginInput.email);
+                        store_local_storage_item("user_pass",loginInput.password);
+                        history.push(`/verify-otp/${encodeURIComponent('login/true')}`); 
+                    } 
+                    else {
+                        store_local_storage_item("auth_token",res?.data.token);
+                        store_local_storage_item("auth_role",res?.data.role);
+                        if(res?.data.role==='admin'){
+                            history.push(globalValues.lastPageBeforeLogout || '/admin/dashboard');
+                        }
+                        else{
+                            Swal.fire({icon: 'success',title: 'Success',text: res?.data?.message,timer: 2000}).then(() => {
+                                notification.message && Swal.fire(notification.message)
+                            });
+                            history.push(`${globalValues.lastPageBeforeLogout || '/user/dashboard'}`); 
+                        }
                     }
                 }else if(res?.data?.status === 401) {
                     Swal.fire('Warning', res?.data?.errors,'warning');

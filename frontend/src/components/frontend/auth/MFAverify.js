@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { toastifyFunction } from '../../../util';
 
-function VerifyOtp(props) {
+function MFAverify(props) {
     const email = props.match.params.email;
     const history=useHistory();
     const [textInput, setTextInput] = useState({
@@ -91,4 +91,4 @@ function VerifyOtp(props) {
 }
 
 
-export default VerifyOtp;
+export default MFAverify;

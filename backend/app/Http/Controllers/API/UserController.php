@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Mail\PasswordUpdateMail;
 use App\Mail\TransactionMail;
 use App\Mail\VerificationMail;
@@ -10,6 +11,7 @@ use App\Models\Activities;
 use App\Models\Api;
 use App\Models\Banks;
 use App\Models\Levels;
+use App\Models\OTPs;
 use App\Models\PasswordReset;
 use App\Models\TransactionPin;
 use App\Models\Transactions;
@@ -34,13 +36,15 @@ class UserController extends Controller
     }
 
     public function view(Request $request)
-    {
-        $user = User::find($request->user?->id ?: auth('sanctum')->user()->id);
-        return response()->json([
-            'status' => 200,
-            'data' => $user
-        ]);
-    }
+{
+    $userId = $request->user?->id ?: auth('sanctum')->user()->id;
+    $user = User::find($userId)->first(); 
+
+    return response()->json([
+        'status' => 200,
+        'data' => new UserResource($user)
+    ]);
+}
 
     public function getNotification()
     {
@@ -108,6 +112,7 @@ class UserController extends Controller
             $user_id = auth('sanctum')->user()->id;
             $user = User::find($user_id);
             $user->name = $request->input('name');
+            $user->mfa = $request->mfa ? 1 : 0;
 
             if ($user->save()) {
                 return response()->json([
@@ -226,31 +231,13 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $password_reset = new PasswordReset();
-            $otp = rand ( 10000 , 99999 );
-            $password_reset->token = $otp;
-            $password_reset->email = $request->input('email');
+        $password_reset = new AuthController;
+        $password_reset->sendOTP($request->email, 'VerificationMail');
 
-            if ($password_reset->save()) {
-
-                $user = User::where('email', $request->input('email'))->first();
-                $email_title = "[Verification] Password Reset";
-                $email_message = [
-                    'name' => $user->name,
-                    'otp' => $otp,
-                    'title' => $email_title,
-                ];
-                Mail::to($request->input('email'))
-                ->send(new VerificationMail($email_title, $email_message));
-
+            if ($password_reset) {
                 return response()->json([
                     'status' => 200,
-                    'message' => "OTP sent successfully",
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 404,
-                    'errors' => "Unable to update user",
+                    'errors' => "Email verification sent successfully",
                 ]);
             }
         }
@@ -269,7 +256,7 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $password_reset = PasswordReset::where('token', $request->input('otp'))->first();
+            $password_reset = OTPs::where('token', $request->input('otp'))->first();
 
             if($password_reset) {
                 $user= User::where('email',$request->email)->first();
@@ -293,12 +280,6 @@ class UserController extends Controller
                         ];
                         Mail::to($request->input('email'))
                         ->send(new PasswordUpdateMail($email_title, $email_message));
-
-                        Activities::create([
-                            'type' => 'password_reset',
-                            'title' => "Password reset",
-                            'log' => serialize($email_message)
-                        ]);
 
                         $user->password = Hash::make($request->input('password'));
                         $user->save();
@@ -324,7 +305,7 @@ class UserController extends Controller
         }
     }
 
-    public function verifyRegistrationOtp(Request $request)
+    public function verifyOTP(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
@@ -337,7 +318,7 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $password_reset = PasswordReset::where('token', $request->input('otp'))
+            $password_reset = OTPs::where('token', $request->input('otp'))
             ->where('email', $request->input('email'))->first();
 
             if($password_reset) {
@@ -504,13 +485,6 @@ class UserController extends Controller
                 Mail::to($customer_details['email'])
                 ->send(new TransactionMail($title, $customer_details));
 
-                //Recording receiver
-                Activities::create([
-                    'type' => 'credit_transfer',
-                    'title' => $transactionTo->description,
-                    'log' => serialize($customer_details)
-                ]);
-
                 //mailing sender
                 $title = '[Debit Transaction] Transfer';
                 $customer_details = [
@@ -527,14 +501,6 @@ class UserController extends Controller
                 Mail::to($customer_details['email'])
                 ->send(new TransactionMail($title, $customer_details));
 
-                //Recording sender
-                Activities::create([
-                    'type' => 'debit_transfer',
-                    'title' => $transactionFrom->description,
-                    'log' => serialize($customer_details)
-                ]);
-
-
                 if ($to->save() && $from->save() && $transactionTo->save() && $transactionFrom->save()) {
                     return response()->json([
                         'status' => 200,
@@ -543,7 +509,7 @@ class UserController extends Controller
                 } else {
                     return response()->json([
                         'status' => 404,
-                        'errors' => "Unable to transafer fund",
+                        'errors' => "Unable to transfer fund",
                     ]);
                 }
             }
@@ -605,13 +571,6 @@ class UserController extends Controller
             Mail::to($customer_details['email'])
             ->send(new TransactionMail($title, $customer_details));
 
-            //Recording receiver
-            Activities::create([
-                'type' => $request->type,
-                'title' => $request->title,
-                'log' => serialize($customer_details)
-            ]);
-
             //mailing sender
             $title = '[Debit Transaction] Transfer';
             $customer_details = [
@@ -628,14 +587,6 @@ class UserController extends Controller
             Mail::to($customer_details['email'])
             ->send(new TransactionMail($title, $customer_details));
 
-            //Recording sender
-            Activities::create([
-                'type' => $request->type,
-                'title' => $request->title,
-                'log' => serialize($customer_details)
-            ]);
-
-
             if ($to->save() && $from->save() && $transactionTo->save() && $transactionFrom->save()) {
                 return response()->json([
                     'status' => 200,
@@ -644,7 +595,7 @@ class UserController extends Controller
             } else {
                 return response()->json([
                     'status' => 404,
-                    'errors' => "Unable to transafer fund",
+                    'errors' => "Unable to transfer fund",
                 ]);
             }
         }

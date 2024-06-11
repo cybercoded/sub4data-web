@@ -1,19 +1,17 @@
 import React, {useState} from 'react';
 import Swal from 'sweetalert2';
-
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { get_local_storage_item, store_local_storage_item, toastifyFunction } from '../../../util';
 
-import Toastify from 'toastify-js';
-import $ from 'jquery';
-import { store_local_storage_item } from '../../../util';
-
-function Reset() {
-
+function VerifyOTPs(props) {
+    const email = get_local_storage_item('otp_email') || props.match.params.email;
+    const otp = get_local_storage_item('otp') || props.match.params.otp;
+    const redirect = props.match.params.redirect;
     const history=useHistory();
     const [textInput, setTextInput] = useState({
-        email:'',
-        otp:'',
+        email: email,
+        otp: otp,
     });
 
     const handleInput = (e)=>{
@@ -21,30 +19,43 @@ function Reset() {
         setTextInput({...textInput,[e.target.name]: e.target.value});
     }
 
-    const loginSubmit= (e)=>{
-        e.preventDefault();
+   const handleResend = (e)=>{                   
         
-        
-        axios.get(`/api/public/verify-user-email/${textInput.email}`).then((res) => {
+        axios.put(`/api/public/api/resend-otp/`, {email: textInput.email}).then((res) => {
             if (res?.data.status === 200) {
-                axios.put(`/api/public/password-reset/`, textInput).then((res) => {
-                    if (res?.data.status === 200) {
-                        Swal.fire('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
-                            store_local_storage_item('otp_email', textInput.email)
-                            history.push(`/verify-otp/new-password`);
-                        });
-                    }else {
-                        Swal.fire('Error!', res?.data.errors, 'error');
-                    }
-                    
-                });
-            } else {                
+                toastifyFunction("OTP was resent to you");
+            }else {
                 Swal.fire('Error!', res?.data.errors, 'error');
-                
+            }            
+        });
+    }
+    
+    const handleVerify = (e)=>{   
+        e.preventDefault();        
+       
+        if(textInput.otp === ''){
+            Swal.fire('Error!', 'Please enter OTP', 'error');
+            return;
+        }
+        if(textInput.otp.length > 5 || textInput.otp.length < 5){
+            Swal.fire('Error!', 'OTP must 5 digits', 'error');
+            return;
+        }
+        
+        
+        axios.put(`/api/public/verify-otp/`, textInput).then((res) => {
+            if (res?.data.status === 200) {
+                Swal.fire('Success!', "OTP verified",'success').then(() => {
+                    store_local_storage_item("otp",textInput.otp);
+                    history.push(`/${decodeURIComponent(redirect)}`);
+                });
+            }else {
+                Swal.fire('Error!', res?.data.errors, 'error');
             }
             
         });
     }
+
 
     return(
         <div>
@@ -54,13 +65,13 @@ function Reset() {
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
                             <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
-                            <h4>Regain your account</h4>
+                            <h4>Enter OTP Sent to <span className='text-info'> {email}</span></h4>
                         </Link>                        
                         <div className='card-body'>
-                            <form onSubmit={loginSubmit}>
+                            <form onSubmit={handleVerify}>
                                 <div className='form-group mb-3'>
-                                    <label>Email ID</label>
-                                    <input type='email' name="email" onChange={handleInput} value={textInput.email} className='form-control' ></input>
+                                    <label>Enter OTP</label>
+                                    <input type='number' name="otp" onChange={handleInput} value={textInput.otp} className='form-control' ></input>
                                 </div>
                                 
                                 <div className='form-group mb-3'>
@@ -69,7 +80,7 @@ function Reset() {
                                 
                                 <div className='form-group mb-3'>
                                     <div className="text-center mb-0">
-                                        <div>Remembered password? <Link to="/login">Login</Link> </div>
+                                        <Link to="#" onClick={handleResend}>Resend OTP</Link>
                                     </div>
                                 </div>
                             </form>
@@ -82,4 +93,4 @@ function Reset() {
 }
 
 
-export default Reset;
+export default VerifyOTPs;

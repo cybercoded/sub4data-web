@@ -11,22 +11,35 @@ class ActivityController extends Controller
     //
 
     public function index()
-    {
-        $activities = Activities::orderByDesc('id')->take(10)->get();
-        $activityArray = [];
-        foreach ($activities as $activity) {
-            $activityArray[] = array(
-                'id' => $activity['id'],
-                'type' => $activity['type'],
-                'title' => $activity['title'],
-                'log' => unserialize($activity['log']),
-            );
+{
+    $activities = Activities::orderByDesc('id')->take(10)->get();
+    $activityArray = [];
+
+    foreach ($activities as $activity) {
+        $log = '';
+        try {
+            $log = unserialize($activity['log']);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Unserialization error: ' . $e->getMessage());
+            // Optionally, you can add more information about the activity
+            \Log::error('Activity ID: ' . $activity['id']);
         }
-        return response()->json([
-            'status' => 200,
-            'activities' => $activityArray
-        ]);
+
+        $activityArray[] = array(
+            'id' => $activity['id'],
+            'type' => $activity['type'],
+            'title' => $activity['title'],
+            'log' => $log ?: '',  // Fallback to empty string if unserialization fails
+        );
     }
+
+    return response()->json([
+        'status' => 200,
+        'activities' => $activityArray
+    ]);
+}
+
 
     public function filter(Request $request)
     {

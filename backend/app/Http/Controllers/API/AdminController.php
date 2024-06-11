@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Mail\BulkMail;
 use App\Models\Activities;
+use App\Models\Messages;
 use App\Models\Transactions;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Mail;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -36,7 +38,6 @@ class AdminController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'type' => 'required',
             'title' =>'required|max:255',
             'message' =>'required|max:3000'
         ]);
@@ -50,8 +51,8 @@ class AdminController extends Controller
 
         $email_body = [
             'name' => 'Customer name',
-            'title' => $request->input('title'),
-            'message' =>$request->message
+            'title' => $request->title,
+            'message' => $request->message
         ];
 
         $users = User::all();
@@ -64,17 +65,18 @@ class AdminController extends Controller
             ->send(new BulkMail($request->input('title'), $email_body));
         }
 
-        $email_body['name'] = 'Customer name';
-        Activities::create([
-            'type' => $request->type,
+        $send_message = Messages::create([
+            'user_id' => Auth::user()->id,
             'title' => $request->title,
-            'log' => serialize($email_body)
+            'body' =>$request->message
         ]);
-
-        return response()->json([
-           'status' => 200,
-           'message' => 'Message successfully sent to all users',
-        ]);
+        
+        if ($send_message) {
+            return response()->json([
+            'status' => 200,
+            'message' => 'Message successfully sent to all users',
+            ]);
+        }
     }
 
     public function purchaser()
