@@ -16,8 +16,8 @@ function Airtime(props) {
         product_id: '',
         phone: '',
         percentage: 0,
-        coupon: '',
-        amount: 0,
+        coupon: 'SUB64937',
+        amount: 100,
         total: 0
     });
 
@@ -31,7 +31,7 @@ function Airtime(props) {
         setTextInput({ ...textInput, [e.target.name]: value });
 
         var response = '';
-        if (value < 50) {
+        if (value < 50 && textInput.percentage == 0) {
             response = 'Amount should not be lesser than 50';
         }
         if (value > 5000) {
@@ -88,9 +88,10 @@ function Airtime(props) {
 
         let originalAmount = textInput.amount;
         let originalDiscount = originalAmount - ( (discount * textInput.amount) / 100).toFixed(2);
-        let couponDiscount = originalDiscount * textInput.percentage / 100;
-        console.log(couponDiscount)
-        return  originalDiscount - couponDiscount;
+        let couponDiscount = originalDiscount * parseFloat(textInput.percentage) / 100;
+        let total = originalDiscount - couponDiscount;
+        console.log(total)
+        return  total;
     }
 
     return (
@@ -142,7 +143,7 @@ function Airtime(props) {
                                 <button type='button' onClick={handleCouponVerify} className='btn btn-primary w-100'>Apply</button>
                             </div>
                         </div>
-                        <small className="text-danger">{errorList?.coupon}</small>
+                        <small className="text-info fw-bold">{errorList?.coupon}</small>
                     </div>
 
 
@@ -170,4 +171,7 @@ function Airtime(props) {
                 </form>
             </div>
         </div>
-   
+    );
+}
+
+export default Airtime;

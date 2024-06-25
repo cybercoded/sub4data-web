@@ -24,7 +24,7 @@ class DiscountsController extends Controller
         ]);
     }
 
-    public function get(Request $request)
+    public function view(Request $request)
     {
         $discounts = Discounts::orderBy('id', 'desc')->get();
         if(!$request->all) {
