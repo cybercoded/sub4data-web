@@ -2,35 +2,13 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { handleCopy, toastifyFunction } from '../../../util';
+import { handleCopy, url } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 
 function Dashboard() {
     
-    const {globalValues, setGlobalValues} = React.useContext(Context);
-
-    useEffect(() => {
-        
-        axios.get(`api/view-category`).then((res) => {
-            if (res?.data.status === 200) {
-                setGlobalValues({category: res.data.category});
-            }            
-        });
-        
-        axios.get(`api/user`).then((res) => {
-            if (res?.status === 200) {
-                setGlobalValues({user: res.data.data});
-            }
-        });
-
-        axios.get(`api/view-transactions`).then((res) => {
-            if (res?.data.status === 200) {
-                setGlobalValues({transactions: res.data.data});
-            }
-        });
-
-    }, []);
+    const {globalValues} = React.useContext(Context);
 
     const handleViewTransaction = (e) => {
         e.preventDefault();
@@ -151,7 +129,7 @@ function Dashboard() {
                                 <div className="card-body text-center">
                                     <div>
                                         <img
-                                            src={`${process.env.REACT_APP_URL}${item.image}`}
+                                            src={`${url()}${item.image}`}
                                             className="mb-2"
                                             width="50"
                                             height="50"

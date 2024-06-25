@@ -2,11 +2,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import { logOutFunction, passwordValidator } from "../../../util";
 function UpdatePassword(){
 
     const [textInput, setTextInput] = useState({
         oldPassword: '',
-        newPassword: ''
+        newPassword: '',
+        newPassword2: ''
     });
 
     const handleInput = (e) => {
@@ -14,14 +16,23 @@ function UpdatePassword(){
         setTextInput({ ...textInput, [e.target.name]: e.target.value });
     };
 
-    const handleTransactionPassword = (e) => {        
+    const handlePasswordChange = (e) => {        
         e.preventDefault();
+
+        if( passwordValidator(textInput.newPassword) !== "" ) {
+            Swal.fire('Error!', passwordValidator(textInput.newPassword), 'error');
+            return;
+        }
 
         if (textInput.oldPassword === '' || textInput.newPassword === '') {
             Swal.fire('Error!', 'Please fill all fields', 'error');
             return;
         }
-           
+
+        if (textInput.newPassword !== textInput.newPassword2 ) {
+            Swal.fire('Error!', 'Passwords did not match, try again!', 'error');
+            return;
+        }
         
         axios.get(`/api/verify-password/${textInput.oldPassword}`).then((res) => {
             if (res?.data.status === 200) {
@@ -29,7 +40,7 @@ function UpdatePassword(){
                 Swal.fire({
 
                     title: "Are you sure?",
-                    text: "Are you sure you want to change your Transaction Password!",
+                    text: "Are you sure you want to change your Password!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true
@@ -60,23 +71,28 @@ function UpdatePassword(){
             </div>
             <div className="bg-light card card-body col-md-6">
 
-                <form onSubmit={handleTransactionPassword}>
+                <form onSubmit={handlePasswordChange}>
 
                     <div className='form-group mb-3'>
                         <label>Current Password</label>
-                        <input type='text' name="oldPassword" onChange={handleInput} value={textInput.oldPassword} className='form-control' ></input>
+                        <input type='password' name="oldPassword" onChange={handleInput} value={textInput.oldPassword} className='form-control' ></input>
                     </div>
 
                     <div className='form-group mb-3'>
                         <label>New Password</label>
-                        <input type='text' name="newPassword" onChange={handleInput} value={textInput.newPassword} className='form-control' ></input>
+                        <input type='password' name="newPassword" onChange={handleInput} value={textInput.newPassword} className='form-control' ></input>
+                    </div>
+
+                    <div className='form-group mb-3'>
+                        <label>New Password Again</label>
+                        <input type='password' name="newPassword2" onChange={handleInput} value={textInput.newPassword2} className='form-control' ></input>
                     </div>
 
                     <div className='form-group mb-3'>
                         <button type='submit' className='btn btn-primary w-100'>Update Password</button>
                     </div>
 
-                    <Link to='/reset'>Forgot my old password</Link>
+                    <Link type="button" onClick={() => logOutFunction('reset') } to=''>Forgot my old password</Link>
                 </form>
             </div>
         </div>

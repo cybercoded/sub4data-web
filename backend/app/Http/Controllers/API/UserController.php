@@ -31,20 +31,20 @@ class UserController extends Controller
         $users = User::orderBy('id', 'desc')->get();
         return response()->json([
             'status' => 200,
-            'users' => $users
+            'users' => new UserResource($users)
         ]);
     }
 
     public function view(Request $request)
-{
-    $userId = $request->user?->id ?: auth('sanctum')->user()->id;
-    $user = User::find($userId)->first(); 
+    {
+        $userId = $request->user?->id ?: auth('sanctum')->user()->id;
+        $user = User::find($userId)->first(); 
 
-    return response()->json([
-        'status' => 200,
-        'data' => new UserResource($user)
-    ]);
-}
+        return response()->json([
+            'status' => 200,
+            'data' => new UserResource($user)
+        ]);
+    }
 
     public function getNotification()
     {
@@ -231,23 +231,17 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-        $password_reset = new AuthController;
-        $password_reset->sendOTP($request->email, 'VerificationMail');
-
-            if ($password_reset) {
-                return response()->json([
-                    'status' => 200,
-                    'errors' => "Email verification sent successfully",
-                ]);
-            }
+            $password_reset = new AuthController;
+            return $password_reset->sendOTP($request->email, 'VerificationMail');
         }
     }
 
-    public function verifyOtpAndResetPassword(Request $request)
+    public function setNewPassword(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'otp' => 'required',
+            'email' => 'required|exists:otps,email',
+            'otp' => 'required|exists:otps,token',
         ]);
 
         if ($validator->fails()) {
@@ -255,53 +249,42 @@ class UserController extends Controller
                 'status' => 422,
                 'errors' => $validator->errors(),
             ]);
-        } else {
-            $password_reset = OTPs::where('token', $request->input('otp'))->first();
+        }
+        $password_reset = OTPs::where('token', $request->input('otp'))->first();
 
-            if($password_reset) {
-                $user= User::where('email',$request->email)->first();
-                $seconds = 1800; // 30 mins
-                $time1 = strtotime($password_reset->created_at) + $seconds;
-                if(time() >= $time1) {
-                    return response()->json([
-                        'status' => 422,
-                        'errors' => "OTP has expired after 30 Minutes",
-                    ]);
+        $user= User::where('email',$request->email)->first();
+        $seconds = 1800; // 30 mins
+        $time1 = strtotime($password_reset->created_at) + $seconds;
+        if(time() >= $time1) {
+            return response()->json([
+                'status' => 422,
+                'errors' => "OTP has expired after 30 Minutes",
+            ]);
+        }
+
+        if ($password_reset->email === $user->email) {
+
+            if($request->password) {
+                $email_title = "[Update] Password Update";
+                $email_message = [
+                    'name' => $user->name,
+                    'otp' => $request->input('otp'),
+                    'title' => $email_title
+                ];
+
+                $user->password = Hash::make($request->input('password'));
+                $user->save();
+
+                if( config('app.env') !== 'local' ) {
+                    Mail::to($request->input('email'))
+                    ->send(new PasswordUpdateMail($email_title, $email_message));
                 }
-
-                if ($password_reset->email === $user->email) {
-
-                    if($request->password) {
-                        $email_title = "[Update] Password Update";
-                        $email_message = [
-                            'name' => $user->name,
-                            'otp' => $request->input('otp'),
-                            'title' => $email_title
-                        ];
-                        Mail::to($request->input('email'))
-                        ->send(new PasswordUpdateMail($email_title, $email_message));
-
-                        $user->password = Hash::make($request->input('password'));
-                        $user->save();
-                    }
-
-                    return response()->json([
-                        'status' => 200,
-                        'message' => "Password reset successfully",
-                    ]);
-                } else {
-                    return response()->json([
-                        'status' => 400,
-                        'errors' => "User not found",
-                    ]);
-                }
-            } else {
-                return response()->json([
-                   'status' => 404,
-                   'errors' => "Incorrect OTP",
-                ]);
-
             }
+
+            return response()->json([
+                'status' => 200,
+                'message' => "Password reset successfully",
+            ]);
         }
     }
 
@@ -482,9 +465,11 @@ class UserController extends Controller
                     'order_date' => date('Y-m-d H:i:s')
                 ];
 
-                Mail::to($customer_details['email'])
-                ->send(new TransactionMail($title, $customer_details));
-
+                if(config('app.env') !== 'local') {
+                    Mail::to($customer_details['email'])
+                    ->send(new TransactionMail($title, $customer_details));
+                }
+                
                 //mailing sender
                 $title = '[Debit Transaction] Transfer';
                 $customer_details = [
@@ -498,8 +483,10 @@ class UserController extends Controller
                     'order_date' => date('Y-m-d H:i:s')
                 ];
 
-                Mail::to($customer_details['email'])
-                ->send(new TransactionMail($title, $customer_details));
+                if(config('app.env') !== 'local') {
+                    Mail::to($customer_details['email'])
+                    ->send(new TransactionMail($title, $customer_details));
+                }
 
                 if ($to->save() && $from->save() && $transactionTo->save() && $transactionFrom->save()) {
                     return response()->json([

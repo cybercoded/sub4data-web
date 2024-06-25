@@ -3,14 +3,14 @@ import { Route, Switch} from "react-router-dom";
 import UserLayout from "../layouts/frontend";
 import PublicLayout from "../layouts/public/PublicLayout";
 import MasterLayout from "../layouts/admin";
-import { RouteNotFound, get_local_storage_item } from "../util";
+import { RouteNotFound, getCookie, get_local_storage_item } from "../util";
 
 function AppRoutes(rest) {
     
     return(
         <>
             <Switch>
-                {get_local_storage_item('auth_token') ? (
+                {getCookie('auth_token') ? (
                     <>
                         {get_local_storage_item('auth_role') === "user" && (
                             <Route {...rest} render={(props) => <UserLayout {...props} /> } />

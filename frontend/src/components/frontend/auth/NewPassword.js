@@ -3,13 +3,13 @@ import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { get_local_storage_item } from '../../../util';
+import { get_local_storage_item, passwordValidator, url } from '../../../util';
 
 
-function NewPassword(props) {
+function NewPassword() {
 
-    const email = get_local_storage_item('reset_email') || props.match.params.email;
-    const otp = get_local_storage_item('otp') || props.match.params.otp;
+    const email = get_local_storage_item('otp_email');
+    const otp = get_local_storage_item('otp');
 
     const history=useHistory();
     const [textInput, setTextInput] = useState({
@@ -25,36 +25,6 @@ function NewPassword(props) {
 
     }
 
-    const passwordValidator = (passwordInputValue) => {
-        const uppercaseRegExp   = /(?=.*?[A-Z])/;
-        const lowercaseRegExp   = /(?=.*?[a-z])/;
-        const digitsRegExp      = /(?=.*?[0-9])/;
-        const specialCharRegExp = /(?=.*?[#?!@$%^&+_*-])/;
-        const minLengthRegExp   = /.{8,}/;
-        const passwordLength =      passwordInputValue.length;
-        const uppercasePassword =   uppercaseRegExp.test(passwordInputValue);
-        const lowercasePassword =   lowercaseRegExp.test(passwordInputValue);
-        const digitsPassword =      digitsRegExp.test(passwordInputValue);
-        const specialCharPassword = specialCharRegExp.test(passwordInputValue);
-        const minLengthPassword =   minLengthRegExp.test(passwordInputValue);
-        let errMsg = "";
-        if(passwordLength===0){
-            errMsg="Password is empty";
-        }else if(!uppercasePassword){
-            errMsg="At least one Uppercase";
-        }else if(!lowercasePassword){
-            errMsg="At least one Lowercase";
-        }else if(!digitsPassword){
-            errMsg="At least one digit";
-        }else if(!specialCharPassword){
-            errMsg="At least one Special Characters";
-        }else if(!minLengthPassword){
-            errMsg="At least minumum of 8 characters";
-        }
-
-        return errMsg;
-    }
-
     const handleSubmit= (e)=>{
         e.preventDefault();
 
@@ -68,7 +38,7 @@ function NewPassword(props) {
         }
         
         
-        axios.put(`/api/public/verify-otp-and-reset/`, textInput).then((res) => {
+        axios.put(`/api/public/set-newPassword/`, textInput).then((res) => {
             if (res?.data.status === 200) {
                 Swal.fire('Success!', `You can proceed to login`,'success').then(() => {
                     history.push('/login');
@@ -80,21 +50,6 @@ function NewPassword(props) {
         });
     }
     
-    
-    const handleResend = (e)=>{
-        e.preventDefault();        
-        
-        axios.put(`/api/public/password-reset/`, {email: email}).then((res) => {
-            if (res?.data.status === 200) {
-                Swal.fire('Success!', `OTP was successfully sent to ${email}`,'success').then(() => {
-                    history.push('/admin/dashboard');
-                });
-            }else {
-                Swal.fire('Error!', res?.data.errors, 'error');
-            }
-            
-        });
-    }
 
     return(
         <div>
@@ -103,19 +58,19 @@ function NewPassword(props) {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
+                            <img src={`${url()}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Regain your account</h4>
                         </Link>                        
                         <div className='card-body'>
                             <form onSubmit={handleSubmit}>
                                 <div className='form-group mb-3'>
                                     <label>New Password</label>
-                                    <input type='text' name="password" onChange={handleInput} value={textInput.password} className='form-control' ></input>
+                                    <input type='password' name="password" onChange={handleInput} value={textInput.password} className='form-control' ></input>
                                 </div>
 
                                 <div className='form-group mb-3'>
                                     <label>New Password (Again*)</label>
-                                    <input type='text' name="password2" onChange={handleInput} value={textInput.password2} className='form-control' ></input>
+                                    <input type='password' name="password2" onChange={handleInput} value={textInput.password2} className='form-control' ></input>
                                 </div>
                                 
                                 <div className='form-group mb-3'>
@@ -124,7 +79,7 @@ function NewPassword(props) {
                                 
                                 <div className='form-group mb-3'>
                                     <div className="text-center mb-0">
-                                        <div>Resend OTP? <Link to="" onClick={handleResend}>Login</Link> </div>
+                                        <div>Resend OTP? <Link to="/login">Login</Link> </div>
                                     </div>
                                 </div>
                             </form>

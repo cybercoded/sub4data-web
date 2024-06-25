@@ -13,11 +13,9 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'mfa' => $this->mfa,
-            // Include only non-sensitive attributes
             'balance' => $this->balance,
             'levels' => LevelResource::collection($this->levels),
-            'banks' => BankResource::collection($this->banks),
-            // You can include other related resources as needed
+            'banks' => BankResource::collection($this->banks)
         ];
     }
 }

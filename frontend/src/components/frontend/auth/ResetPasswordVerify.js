@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Swal from 'sweetalert2';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { toastifyFunction } from '../../../util';
+import { toastifyFunction, url } from '../../../util';
 
 function ResetPasswordVerify(props) {
     const email = props.match.params.email;
@@ -62,7 +62,7 @@ function ResetPasswordVerify(props) {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
+                            <img src={`${url()}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Enter OTP Sent to <span className='text-info'> {email}</span></h4>
                         </Link>                        
                         <div className='card-body'>

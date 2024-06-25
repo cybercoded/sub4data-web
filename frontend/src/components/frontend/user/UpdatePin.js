@@ -1,10 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Context } from "../../../contexts/globalContext";
 
 
 function UpdatePin(){
+    const {globalValues} = React.useContext(Context);
+
     const history = useHistory();
     const [textInput, setTextInput] = useState({
         oldPin: '',
@@ -17,10 +20,9 @@ function UpdatePin(){
     };
 
     const handleReset = (e) => {
-        
-        axios.get(`/api/reset-pin/`).then((res) => {
+        axios.put(`/api/public/send-otp/`, {email: globalValues.user?.email}).then((res) => {
             if (res?.data.status === 200) {
-                Swal.fire('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                Swal.fire('Success!',res.data.message,'success').then(() => {
                     history.push(`/user/pin-verify-otp`);
                 });
             }else {
@@ -43,7 +45,6 @@ function UpdatePin(){
             return;
         }
            
-        
         axios.get(`/api/verify-pin/${textInput.oldPin}`).then((res) => {
             if (res?.data.status === 200) {
                 
@@ -97,7 +98,7 @@ function UpdatePin(){
                         <button type='submit' className='btn btn-primary w-100'>Update PIN</button>
                     </div>
 
-                    <button type="button" className="btn btn-secondary" onClick={handleReset}>Reset PIN</button>
+                    <Link to="" type="button" onClick={handleReset}>Reset PIN</Link>
                 </form>
             </div>
         </div>

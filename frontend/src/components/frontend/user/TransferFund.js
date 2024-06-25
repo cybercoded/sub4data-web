@@ -33,17 +33,16 @@ function TransferFund(){
         axios.get(`/api/verify-email/${textInput.email}`).then((res) => {
             if (res?.data.status === 200) {                
                 Swal.fire({
-
                     title: res?.data.data.name,
                     text: `Are you sure you want to credit this user with ${textInput.amount}`,
                     icon: "warning",
                     buttons: true,
                     dangerMode: true
-                }).then((res) => {
-                    if (res.isConfirmed) {
+                }).then((confirmRes) => {
+                    if (confirmRes.isConfirmed) {
                         
                         axios.put(`/api/transfer-fund/`, {...textInput, user_id: res?.data.data.user_id}).then((res2) => {
-                            if (res2.data.status === 200) {
+                            if (res2?.data.status === 200) {
                                 Swal.fire('Success!', `${res?.data.data.name} was successfully credited`,'success').then((result) => {
                                     history.push('/user/dashboard');
                                 });

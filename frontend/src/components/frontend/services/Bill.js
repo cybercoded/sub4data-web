@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-import { purchaser, toastifyFunction } from '../../../util';
+import { purchaser, toastifyFunction, url } from '../../../util';
 
 
 function Bill(props) {
@@ -117,7 +117,7 @@ function Bill(props) {
                                     }}
                                     style={{ margin: 2 }}
                                 >
-                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} width="40" height="45" alt={item.name} />
+                                    <img src={`${url()}${item.image}`} width="40" height="45" alt={item.name} />
                                 </button>
                             );
                         })}

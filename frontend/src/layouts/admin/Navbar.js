@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Context } from '../../contexts/globalContext';
-import { logOutFunction } from '../../util';
+import { logOutFunction, url } from '../../util';
 
 
 const Navbar = () => {
@@ -26,7 +26,7 @@ const Navbar = () => {
         <nav className="sb-topnav navbar navbar-expand navbar-dark my-bg-primary">
             
             <Link className="navbar-brand ps-3" to="/admin/dashboard">
-                <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60, height: 50 }} />
+                <img src={`${url()}img/logo.png`} alt="" style={{ width: 60, height: 50 }} />
             </Link>
             <button className="btn btn-link btn-sm order-1 text-white order-lg-0 me-4 me-lg-0" onClick={handleSideBar}>
                 <i className="fas fa-bars fa-2x"></i>

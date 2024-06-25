@@ -1,14 +1,12 @@
 import React, {useState} from 'react';
 import Swal from 'sweetalert2';
-
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import CryptoJS from 'crypto-js';
-import { get_local_storage_item, split_errors, store_local_storage_item, toastifyFunction } from '../../../util';
+import { decrypt, get_local_storage_item, setCookie, split_errors, store_local_storage_item, toastifyFunction, url } from '../../../util';
 
 function RegistrationVerify(props) {
     var encryptedPassword = get_local_storage_item("registration_password");
-    var decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, 'secret_key').toString(CryptoJS.enc.Utf8);
+    var decryptedPassword = decrypt(encryptedPassword);
     const history=useHistory();
     const [textInput, setTextInput] = useState({
         email: get_local_storage_item('registration_email'),
@@ -53,12 +51,12 @@ function RegistrationVerify(props) {
         }
         
         
-        axios.put(`/api/public/verify-registration-otp`, textInput).then((res) => {
+        axios.put(`/api/public/verify-otp`, textInput).then((res) => {
             if (res?.data.status === 200) {
                 axios.post(`/api/public/register`, textInput).then(res=>{
                     if(res?.data.status===200){
                         store_local_storage_item("auth_role","user");
-                        store_local_storage_item("auth_token",res?.data.token);
+                        setCookie("auth_token", res.data.token);
                         localStorage.removeItem("registration_password");
                         localStorage.removeItem("registration_name");
                         Swal.fire("success",res?.data.message,"success").then(()=>{
@@ -85,7 +83,7 @@ function RegistrationVerify(props) {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
+                            <img src={`${url()}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Enter OTP Sent to <span className='text-info'> {textInput.email}</span></h4>
                         </Link>                        
                         <div className='card-body'>

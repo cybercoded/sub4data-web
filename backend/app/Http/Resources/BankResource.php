@@ -19,8 +19,7 @@ class BankResource extends JsonResource
             'bank_name' => $this->bank_name,
             'account_name' => $this->account_name,
             'account_number' => $this->account_number,
-            'reference' => $this->reference,
-            // Include other non-sensitive attributes
+            'reference' => $this->reference
         ];
     }
 }

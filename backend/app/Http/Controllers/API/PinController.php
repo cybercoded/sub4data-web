@@ -5,9 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Mail\PasswordUpdateMail;
 use App\Mail\VerificationMail;
+use App\Models\OTPs;
 use App\Models\TransactionPin;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Mail;
 
@@ -17,7 +19,7 @@ class PinController extends Controller
     public function verify($pin)
     {
         if(auth('sanctum')->check()) {
-            $user_id=auth('sanctum')->user()->id;
+            $user_id=Auth::id();
 
             $user_pin = User::where('id', $user_id)->first()->pin;
 
@@ -53,7 +55,7 @@ class PinController extends Controller
         }
         else
         {
-            $user_id=auth('sanctum')->user()->id;
+            $user_id=Auth::id();
             $user= User::find($user_id);
             $user->pin= $request->input('pin');
 
@@ -74,43 +76,11 @@ class PinController extends Controller
         }
     }
 
-    public function resetPin()
-    {
-        $user = User::find((auth('sanctum')->user()->id));
-        $pin_reset = new TransactionPin();
-        $otp = rand ( 10000 , 99999 );
-        $pin_reset->token = $otp;
-        $pin_reset->email = $user->email;
-
-        if ($pin_reset->save()) {
-
-            $email_title = "[Verification] PIN Reset";
-            $email_message = [
-                'name' => $user->name,
-                'otp' => $otp,
-                'title' => $email_title,
-            ];
-            Mail::to($user->email)
-            ->send(new VerificationMail($email_title, $email_message));
-
-            return response()->json([
-                'status' => 200,
-                'message' => "OTP sent successfully",
-            ]);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'errors' => "Unable to update user",
-            ]);
-        }
-
-    }
-
     public function verifyOtpAndResetPin(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'otp' => 'required',
+            'otp' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -119,7 +89,7 @@ class PinController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $password_reset = TransactionPin::where('token', $request->input('otp'))->first();
+            $password_reset = OTPs::where('token', $request->input('otp'))->first();
 
             if($password_reset) {
                 $user= User::where('email',$password_reset->email)->first();
@@ -141,9 +111,12 @@ class PinController extends Controller
                             'otp' => $request->input('otp'),
                             'title' => $email_title
                         ];
-                        Mail::to($request->input('email'))
-                        ->send(new PasswordUpdateMail($email_title, $email_message));
 
+                        if(config('app.env') !== 'local') {
+                            Mail::to($request->input('email'))
+                            ->send(new PasswordUpdateMail($email_title, $email_message));
+                        }
+                        
                         $user->pin = $request->input('pin');
                         $user->save();
                     }
@@ -185,9 +158,6 @@ class PinController extends Controller
             }
 
             if ($password_reset->email === $user->email) {
-
-
-
                 return response()->json([
                     'status' => 200,
                     'message' => "Pin reset successfully",

@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\ActivityController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\DiscountsController;
 use App\Http\Controllers\API\IPWhitelistsController;
 use App\Http\Controllers\API\MerchantAPIController;
 use App\Http\Controllers\API\PinController;
@@ -39,8 +40,8 @@ Route::prefix('public')->group( function () {
     Route::put('password-reset', [UserController::class, 'resetPassword']);
     Route::put('send-registration-otp', [AuthController::class, 'sendRegistrationOTP']);
     Route::put('verify-otp', [UserController::class, 'verifyOTP']);
-    Route::put('resend-otp', [AuthController::class, 'resendRegistrationOTP']);
-    Route::put('verify-otp-and-reset', [UserController::class, 'verifyOtpAndResetPassword']);
+    Route::put('send-otp', [AuthController::class, 'send_otp']);
+    Route::put('set-newPassword', [UserController::class, 'setNewPassword']);
     Route::put('verify-registration-otp', [UserController::class, 'verifyRegistrationOtp']);
     Route::get('verify-monnify-merchant-payment', [MonnifyController::class, 'verifyPay']);
     Route::get('verify-monnify-atm-payment', [MonnifyController::class, 'verifyAtmPayment']);
@@ -116,6 +117,13 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     Route::get('view-ip/{id}', [IPWhitelistsController::class, 'get'])->middleware('VerifyPermission:read_ips');
     Route::put('update-ip/{id}', [IPWhitelistsController::class, 'update'])->middleware('VerifyPermission:update_ips');
     Route::post('store-ips', [IPWhitelistsController::class, 'store'])->middleware('VerifyPermission:create_ips');
+
+    //Discounts
+    Route::get('get-discounts', [DiscountsController::class, 'index'])->middleware('VerifyPermission:read_discounts');
+    Route::post('view-discounts', [DiscountsController::class, 'view'])->middleware('VerifyPermission:read_discounts');
+    Route::post('verify-discount', [DiscountsController::class, 'verify'])->middleware('VerifyPermission:read_discounts');
+    Route::put('update-discount/{id}', [DiscountsController::class, 'update'])->middleware('VerifyPermission:update_discount');
+    Route::post('store-discount', [DiscountsController::class, 'store'])->middleware('VerifyPermission:create_discount');
 
     //Categories
     Route::post('store-category', [CategoryController::class, 'store'])->middleware('VerifyPermission:create_categories');
@@ -193,13 +201,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //Transaction Pins
     Route::get('verify-pin/{pin}', [PinController::class, 'verify']);
     Route::put('update-pin', [PinController::class, 'update']);
-    Route::get('reset-pin', [PinController::class, 'resetPin']);
     Route::put('verify-otp-and-reset-pin', [PinController::class, 'verifyOtpAndResetPin']);
 
     //API Verifications
     Route::post('smartcard-verification', [VerificationController::class, 'smartnumber']);
     Route::post('meternumber-verification', [VerificationController::class, 'meternumber']);
 
+    //Discount
+    Route::get('verify-discount/{code}', [DiscountsController::class, 'verify']);
 
     //User
     Route::post('logout', [AuthController::class, 'logout']);

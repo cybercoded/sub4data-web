@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { purchaser } from '../../../util';
+import { purchaser, url } from '../../../util';
 
 
 
@@ -100,7 +100,7 @@ function Data(props) {
                                     }}
                                     style={{ margin: 2 }}
                                 >
-                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} className='img-fluid' width="40" height="45" alt={item.name} />
+                                    <img src={`${url()}${item.image}`} className='img-fluid' width="40" height="45" alt={item.name} />
                                 </button>
                             );
                         })}

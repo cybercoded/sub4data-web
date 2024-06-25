@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Context } from '../../../contexts/globalContext';
-import { getPermission } from '../../../util';
+import { getPermission, url } from '../../../util';
 
 
 
@@ -234,7 +234,7 @@ function EditProduct(props) {
                                 <div className="form-group mb-3">
                                     <label>Image</label>
                                     <input type="file" onChange={handleImage} name="image" className="form-control" />
-                                    <img src={`${process.env.REACT_APP_URL}${productInput.image}`} width="50" height="50" alt="img" />
+                                    <img src={`${url()}${productInput.image}`} width="50" height="50" alt="img" />
                                     <small className="text-danger">{errorList?.image}</small>
                                 </div>
                                 <div className="form-group mb-3">

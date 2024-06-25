@@ -12,6 +12,7 @@ class IPWhitelists extends Model
     protected $table='ip_whitelists';
     protected $fillable=[
         'user_id',
+        'email',
         'ip'
     ];
 }

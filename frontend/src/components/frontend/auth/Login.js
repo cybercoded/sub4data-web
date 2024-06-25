@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { get_local_storage_item, store_local_storage_item } from '../../../util';
+import { get_local_storage_item, getCookie, setCookie, store_local_storage_item, url } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 function Login(props) {
@@ -12,10 +12,16 @@ function Login(props) {
     const { globalValues } = React.useContext(Context);
 
     const [loginInput, setLogin] = useState({
+        rememberMe: false,
         email:'',
         password:'',
         error_list:[]
     });
+
+    const handleCheckBox = (e)=>{
+        e.persist();
+        setLogin({...loginInput,[e.target.name]: e.target.checked})
+    }
     
     const [notification] = useState(
         get_local_storage_item('notification') || ''
@@ -34,7 +40,11 @@ function Login(props) {
                 axios.get('/sanctum/csrf-cookie').then(() => {
                     axios.post(`api/public/login`,{email: email, password: password, auto: 1}).then(res =>{
                         localStorage.clear();
-                        store_local_storage_item("auth_token", res?.data.token);
+                        if(loginInput.rememberMe) {
+                            setCookie("auth_token", res?.data.token, 30);
+                        } else {
+                            setCookie("auth_token", res?.data.token);
+                        }
                         store_local_storage_item("auth_role", res?.data.role);
 
                         history.push(globalValues.lastPageBeforeLogout || `/${res?.data.role}/dashboard`);
@@ -50,6 +60,7 @@ function Login(props) {
         const data={
             email: loginInput.email,
             password: loginInput.password,
+            auto: 0
         }
         
         axios.get('/sanctum/csrf-cookie').then(() => {
@@ -58,10 +69,16 @@ function Login(props) {
                     if(res.data.mfa === 1) {
                         store_local_storage_item("otp_email",loginInput.email);
                         store_local_storage_item("user_pass",loginInput.password);
-                        history.push(`/verify-otp/${encodeURIComponent('login/true')}`); 
+                        Swal.fire('Success', res.data.message, 'success').then(() => {
+                            history.push(`/verify-otp/${encodeURIComponent('login/true')}`); 
+                        });
                     } 
                     else {
-                        store_local_storage_item("auth_token",res?.data.token);
+                        if(loginInput.rememberMe === true) {
+                            setCookie("auth_token", res?.data.token, 30);
+                        } else {
+                            setCookie("auth_token", res?.data.token);
+                        }
                         store_local_storage_item("auth_role",res?.data.role);
                         if(res?.data.role==='admin'){
                             history.push(globalValues.lastPageBeforeLogout || '/admin/dashboard');
@@ -89,7 +106,7 @@ function Login(props) {
                     <div className='col-md-6 col-sm-8 col-lg-5 col-xl-4'>
                         <div className='card'>
                             <Link to="/" className='card-header text-center text-decoration-none'>                            
-                                <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
+                                <img src={`${url()}img/logo.png`} alt="" style={{ width: 60 }} />
                                 <h4>Login your account</h4>
                             </Link>                        
                             <div className='card-body'>
@@ -104,7 +121,14 @@ function Login(props) {
                                         <input type='password' name="password" onChange={handleInput} value={loginInput.password} className='form-control' required ></input>
                                         <span>{loginInput.error_list?.password}</span>
                                     </div>
-                                    
+
+                                    <div className="mb-4 p-2 bg-light d-flex align-items-center">
+                                        <span className="me-2">Stay logged in</span>
+                                        <input type="checkbox" onChange={handleCheckBox} className="me-3" name="rememberMe" id="rememberMe" />
+                                        <label htmlFor="rememberMe"></label>
+                                    </div>
+
+                                        
                                     <div className='form-group mb-3'>
                                         <button type='submit' className='btn btn-primary w-100'>Login</button>
                                     </div>

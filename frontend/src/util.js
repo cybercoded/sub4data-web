@@ -2,13 +2,24 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import React from 'react';
 import Toastify from 'toastify-js';
-import CookieConsent, { Cookies } from "react-cookie-consent";
+import CookieConsent, { Cookies, getCookieConsentValue } from "react-cookie-consent";
+const crypto = require('crypto');
+
+let algorithm = 'aes-256-cbc';
+let key = crypto.randomBytes(32);
+let iv = crypto.randomBytes(16);
 
 const get_local_storage_item = (item) => {
 
     let data = JSON.parse(localStorage.getItem(item));
 
     return data;
+}
+
+const url = () => {
+    let url = `http://${window.location.hostname}:8000/`;
+
+    return url;
 }
 
 const store_local_storage_item = (key, value) => {
@@ -27,33 +38,86 @@ const handleCopy = (value) => {
 
 }
 
+let currentToast = null;
+
 const toastifyFunction = (msg) => {
-    Toastify({
+
+    if (currentToast) {
+        currentToast.hideToast(); // Hide the current toast if it exists
+        currentToast = null; // Reset the current toast reference
+    }
+
+    currentToast = Toastify({
         text: msg,
         duration: 3000,
         className: "info",
         close: true,
         gravity: "top", // `top` or `bottom`
-        position: "center", // `left`, `center` or `right`
+        position: "right", // `left`, `center` or `right`
         stopOnFocus: true, // Prevents dismissing of toast on hover
         offset: {
             y: 50 // vertical axis - can be a number or a string indicating unity. eg: '2em'
         },
+        onClick: function() { // Callback after click
+            currentToast = null; // Reset the current toast reference on click
+        },
+        callback: function() { // Callback after dismiss
+            currentToast = null; // Reset the current toast reference after duration ends
+        }
     }).showToast();
 }
 
-const logOutFunction = () => {
-    axios.get('/sanctum/csrf-cookie').then(() => {
-        axios.post(`api/logout`).then((res) => {
-            if (res?.data.status === 200) {
-                localStorage.removeItem('auth_token');
-                store_local_storage_item('auth_role', 'public');             
-                Swal.fire({icon: 'success', title: 'Success', text: res?.data.message, timer: 2000}).then(() => {
-                    window.location.replace('/login')
-                })
-            }
-            
-        });
+const passwordValidator = (passwordInputValue) => {
+    const uppercaseRegExp   = /(?=.*?[A-Z])/;
+    const lowercaseRegExp   = /(?=.*?[a-z])/;
+    const digitsRegExp      = /(?=.*?[0-9])/;
+    const specialCharRegExp = /(?=.*?[#?!@$%^&+_*-])/;
+    const minLengthRegExp   = /.{8,}/;
+    const passwordLength =      passwordInputValue.length;
+    const uppercasePassword =   uppercaseRegExp.test(passwordInputValue);
+    const lowercasePassword =   lowercaseRegExp.test(passwordInputValue);
+    const digitsPassword =      digitsRegExp.test(passwordInputValue);
+    const specialCharPassword = specialCharRegExp.test(passwordInputValue);
+    const minLengthPassword =   minLengthRegExp.test(passwordInputValue);
+    let errMsg = "";
+    if(passwordLength===0){
+        errMsg="Password is empty";
+    }else if(!uppercasePassword){
+        errMsg="At least one Uppercase";
+    }else if(!lowercasePassword){
+        errMsg="At least one Lowercase";
+    }else if(!digitsPassword){
+        errMsg="At least one digit";
+    }else if(!specialCharPassword){
+        errMsg="At least one Special Characters";
+    }else if(!minLengthPassword){
+        errMsg="At least minumum of 8 characters";
+    }
+
+    return errMsg;
+}
+
+const logOutFunction = (redirect) => {
+    Swal.fire({
+        title: 'Logout',
+        text: `Are you sure you want to logout your account?`,
+        icon: "warning",
+        showCancelButton: true
+    }).then((res) => {
+        if (res.isConfirmed) {
+            axios.get('/sanctum/csrf-cookie').then(() => {
+                axios.post(`api/logout`).then((res) => {
+                    if (res?.data.status === 200) {
+                        deleteCookie('auth_token');
+                        store_local_storage_item('auth_role', 'public');             
+                        Swal.fire({icon: 'success', title: 'Success', text: res?.data.message, timer: 2000}).then(() => {
+                            window.location.replace(`/${redirect || 'login'}`)
+                        })
+                    }
+                    
+                });
+            });
+        }
     });
 }
 
@@ -122,7 +186,6 @@ const purchaser = async (url, data) => {
     }
 };
 
-
 const RouteNotFound = () => {
     return (
         
@@ -138,9 +201,13 @@ const RouteNotFound = () => {
   };
 
 const split_errors = (errors) => {
-    let errorMessage = '';
+
+    if(!Array.isArray(errors)) {
+        return errors;
+    }
 
     // Construct error message for each field
+    let errorMessage = '';
     for (const field in errors) {
         if (errors.hasOwnProperty(field)) {
             errorMessage += `<strong>${field}:</strong><br>`;
@@ -151,23 +218,115 @@ const split_errors = (errors) => {
     return errorMessage;
 }
 
+const setCookie = (cookieName, cookieValue, expirationDays) => {
+
+    if(expirationDays) {
+        let d = new Date();
+        d.setTime(d.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+    } else {
+        document.cookie = cookieName + "=" + cookieValue + ";path=/";
+    }
+}
+
+const deleteCookie = (cookieName) => {
+    document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+const getCookie = (cookieName) => {
+    let name = cookieName + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let cookieArray = decodedCookie.split(';');
+    
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === ' ') {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return "";
+}
+  
+ 
+const encrypt = (text) => {    
+    let cipher = crypto.createCipheriv(algorithm, key, iv);
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return encrypted;
+}
+
+const decrypt = (encrypted) => {
+    let decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+}
+
+const initializeGoogleAnalytics = () => {
+    if (getCookieConsentValue('isGoogleCookie') === 'true') {
+        const script1 = document.createElement('script');
+        script1.async = true;
+        script1.src = `https://www.googletagmanager.com/gtag/js?id=G-2NEVN43WXL`;
+
+        const script2 = document.createElement('script');
+        script2.innerHTML = `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-2NEVN43WXL');
+        `;
+
+        // Append scripts to the document head
+        document.head.appendChild(script1);
+        document.head.appendChild(script2);
+    }
+};
+
 const CustomCookieConsent = () => {
     return <CookieConsent
-        debug={true}
         location="bottom"
         buttonClasses="btn btn-primary text-white"
         buttonText="OK, Continue!"
-        cookieName="myAwesomeCookieName2"
+        cookieName="isGoogleCookie"
         style={{ background: "#333" }}
         expires={150}
-        contentStyle={{ fontSize: "18px" }}
-        enableDeclineButton
+        hideOnAccept={true}
+        enableDeclineButton={true}
+        customButtonWrapperAttributes={<button>button</button>}
+        contentStyle={{ fontSize: "16px" }}
         onDecline={() => {
-            //alert("nay!");
+            toastifyFunction("We will no longer track your experience on this app");
+        }}
+        onAccept={() => {
+            toastifyFunction("This app will use the cookies content to track your experience ");
+            initializeGoogleAnalytics();
         }}
     >
-        This website uses cookies to enhance the user experience.{" "}
+        This site uses cookies from Google to deliver its services and to analyze traffic. Your IP address and user agent are shared with Google, together with performance and security metrics, to ensure quality of service, generate usage statistics and to detect and address abuse..{" "}
     </CookieConsent>
 }
 
-export {get_local_storage_item, CustomCookieConsent, handleCopy, toastifyFunction, RouteNotFound, purchaser, logOutFunction, getPermission, store_local_storage_item, split_errors}
+export {
+    passwordValidator,
+    initializeGoogleAnalytics,
+    deleteCookie,
+    setCookie,
+    getCookie,
+    url,
+    encrypt,
+    decrypt,
+    get_local_storage_item, 
+    CustomCookieConsent, 
+    handleCopy, 
+    toastifyFunction, 
+    RouteNotFound, 
+    purchaser, 
+    logOutFunction, 
+    getPermission, 
+    store_local_storage_item, 
+    split_errors
+}

@@ -3,6 +3,7 @@ import React, {useEffect,useState} from "react";
 import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import $ from "jquery";
+import { url } from "../../../util";
 
 
 function ViewProduct(props){
@@ -56,7 +57,7 @@ function ViewProduct(props){
                                     <td><Link to={`/admin/edit-product/${item.id}`}>{item.category?.name}</Link></td>
                                     <td>{item.name}</td>
                                     <td>{item.status === 1 ? 'Shown' : 'Hidden'}</td>
-                                    <td><img src={`${process.env.REACT_APP_URL}${item.image}`} width="50" className="img-thumbnail" height="50" alt={item.name}/></td>
+                                    <td><img src={`${url()}${item.image}`} width="50" className="img-thumbnail" height="50" alt={item.name}/></td>
                                     <td>
                                         <Link to={`/admin/view-services/${item.id}`} className="btn btn-primary btn-sm">View services</Link>
                                     </td>

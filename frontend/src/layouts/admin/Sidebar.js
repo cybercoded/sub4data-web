@@ -210,6 +210,32 @@ const SideBar = () => {
                         </div>
                     )}
 
+                    {getPermission(globalValues.permissions, 'read_discounts') && (
+                        <div>
+                            <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseDiscount" aria-expanded="false" aria-controls="collapseDiscount">
+                                <div className="sb-nav-link-icon">
+                                    <i className="fa fa-arrow-up-right-from-square"></i>
+                                </div>
+                                    discount
+                                <div className="sb-sidenav-collapse-arrow">
+                                    <i className="fas fa-angle-down"></i>
+                                </div>
+                            </Link>
+                            <div className="collapse" id="collapseDiscount" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav className="sb-sidenav-menu-nested nav">
+                                    <Link className="nav-link custom-toggler" to="/admin/view-discounts">
+                                        View Discounts
+                                    </Link>
+                                    {getPermission(globalValues.permissions, 'create_discount') && (
+                                        <Link className="nav-link custom-toggler" to="/admin/add-discount">
+                                            Add Discount
+                                        </Link>
+                                    )}
+                                </nav>
+                            </div>
+                        </div>
+                    )}
+
                     {getPermission(globalValues.permissions, 'read_ips') && (
                         <div>
                             <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseips" aria-expanded="false" aria-controls="collapseips">

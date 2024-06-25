@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { getPermission, split_errors } from '../../../util';
+import { getPermission, split_errors, url } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 
@@ -197,7 +197,7 @@ function AddCategory() {
                                 <div className="form-group mb-3">
                                     <label>Image</label>
                                     <input type="file" disabled={!getPermission(globalValues.permissions, 'create_categories')} onChange={handleImage} name="image" className="form-control" />
-                                    <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} width="50" height="50" alt="Img" />
+                                    <img src={`${url()}${categoryInput.image}`} width="50" height="50" alt="Img" />
                                     <small className="text-danger">{categoryInput?.error_list.image}</small>
                                 </div>
                             </div>

@@ -3,8 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
-import { store_local_storage_item } from '../../../util';
+import { encrypt, store_local_storage_item, url } from '../../../util';
 
 
 function Register() {
@@ -70,8 +69,8 @@ function Register() {
         }        
         
         axios.get('/sanctum/csrf-cookie').then(() => {
-            axios.put(`/api/public/send-otp/`, textInput).then((res) => {
-                let  encryptedPassword = CryptoJS.AES.encrypt(textInput.password, 'secret_key').toString();
+            axios.put(`/api/public/send-registration-otp/`, textInput).then((res) => {
+                let  encryptedPassword = encrypt(textInput.password);
 
                 store_local_storage_item("registration_name",textInput.name);
                 store_local_storage_item("registration_email",textInput.email);
@@ -100,7 +99,7 @@ function Register() {
                     <div className='card'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
+                            <img src={`${url()}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Register new account</h4>
                         </Link>
                         <div className='card-body'>

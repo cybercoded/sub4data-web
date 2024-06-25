@@ -53,7 +53,7 @@ class IPWhitelistsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ip' => 'required|ip|unique',
+            'ip' => 'required|unique:ip_whitelists,ip',
             'email'=>'required|email|max:191|exists:users,email'
         ]);
 
@@ -71,11 +71,12 @@ class IPWhitelistsController extends Controller
             'ip' => $request->ip
         ]);           
 
-        if ($ipWhitelists)
+        if ($ipWhitelists) {
             return response()->json([
                 'status' => 200,
                 'message' => "IP whitelisted successfully"
             ]);
+        }
 
     }
 
@@ -93,7 +94,7 @@ class IPWhitelistsController extends Controller
                 'errors' => $validator->errors()
             ]);
         }
-        $IPWhitelists = IPWhitelists::where('id', '=', 3);
+        $IPWhitelists = IPWhitelists::where('id', $id);
 
         $updateIPWhitelists = $IPWhitelists->update([
             'ip' => $request->ip,

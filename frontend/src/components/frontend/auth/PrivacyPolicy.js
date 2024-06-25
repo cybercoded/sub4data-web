@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { url } from '../../../util';
 
 const PrivacyPolicy = () => {
     return (
@@ -7,7 +8,7 @@ const PrivacyPolicy = () => {
             <nav className="navbar navbar-expand-lg navbar-light bg-white py-0 px-2" id="header">
                 <div className="container-fluid">
                     <Link className="navbar-brand fw-bold my-text-primary" to="#">
-                        <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="logo" style={{ width: 60 }} />
+                        <img src={`${url()}img/logo.png`} alt="logo" style={{ width: 60 }} />
                     </Link>
                     <button
                         className="navbar-toggler"

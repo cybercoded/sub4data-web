@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-import { purchaser, toastifyFunction } from '../../../util';
+import { purchaser, toastifyFunction, url } from '../../../util';
 
 
 function Electricity(props) {
@@ -148,7 +148,7 @@ function Electricity(props) {
                                     }}
                                     style={{ margin: 1 }}
                                 >
-                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} className='img-fluid' width="35" height="40" alt={item.name} />
+                                    <img src={`${url()}${item.image}`} className='img-fluid' width="35" height="40" alt={item.name} />
                                 </button>
                             );
                         })}

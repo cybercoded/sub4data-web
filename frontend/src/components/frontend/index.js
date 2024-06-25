@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { url } from '../../util';
 
 function Home() {
 
@@ -68,7 +69,7 @@ function Home() {
                 <nav className="navbar navbar-expand-lg navbar-light bg-white py-0 px-2" id="header">
                     <div className="container-fluid">
                         <Link className="navbar-brand fw-bold my-text-primary" to="#">
-                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
+                            <img src={`${url()}img/logo.png`} alt="" style={{ width: 60 }} />
                         </Link>
                         <button
                             className="navbar-toggler"
@@ -121,7 +122,7 @@ function Home() {
             <div className="content">
                 <main className="">
                     <div className="position-relative">
-                        <img src={`${process.env.REACT_APP_URL}img/banner.jpg`} alt="GigNg banner" className="img-responsive img-fluid" style={{ minHeight: 250 }} />
+                        <img src={`${url()}img/banner.jpg`} alt="GigNg banner" className="img-responsive img-fluid" style={{ minHeight: 250 }} />
                         <div className="fs-4 ps-2" id="screen-page-text">
                             <div className="text-center">
                                 <div style={{maxWidth: 250}}>Browse the internet seamlessly with</div>
@@ -140,22 +141,22 @@ function Home() {
                             <div className="row">
                                 <div className="col-6 col-md-3 mt-2">
                                     <div className="px-2 px-md-3 mx-auto network-img-div">
-                                        <img src={`${process.env.REACT_APP_URL}img/mtn_circle.png`} alt="" className="img-fluid" />
+                                        <img src={`${url()}img/mtn_circle.png`} alt="" className="img-fluid" />
                                     </div>
                                 </div>
                                 <div className="col-6 col-md-3 mt-2">
                                     <div className="px-2 px-md-3 mx-auto network-img-div">
-                                        <img src={`${process.env.REACT_APP_URL}img/airtel_circle.png`} alt="" className="img-fluid" />
+                                        <img src={`${url()}img/airtel_circle.png`} alt="" className="img-fluid" />
                                     </div>
                                 </div>
                                 <div className="col-6 col-md-3 mt-2">
                                     <div className="px-2 px-md-3 mx-auto network-img-div">
-                                        <img src={`${process.env.REACT_APP_URL}img/glo_circle.png`} alt="" className="img-fluid" />
+                                        <img src={`${url()}img/glo_circle.png`} alt="" className="img-fluid" />
                                     </div>
                                 </div>
                                 <div className="col-6 col-md-3 mt-2">
                                     <div className="px-2 px-md-3 mx-auto network-img-div">
-                                        <img src={`${process.env.REACT_APP_URL}img/9mobile_circle.png`} alt="" className="img-fluid" />
+                                        <img src={`${url()}img/9mobile_circle.png`} alt="" className="img-fluid" />
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +178,7 @@ function Home() {
                                     </div>
                                 </div>
                                 <div className="col-md-6">
-                                    <img src={`${process.env.REACT_APP_URL}imgbills.png`} alt="" className="img-fluid" />
+                                    <img src={`${url()}imgbills.png`} alt="" className="img-fluid" />
                                 </div>
                             </div>
                         </div>
@@ -194,7 +195,7 @@ function Home() {
                             <div className="col-md-4 text-center mt-4 mt-md-0">
                                 <div className="px-3">
                                     <div className="circle-point mx-auto my-bg-primary">
-                                        <img src={`${process.env.REACT_APP_URL}img/security.svg`} alt="" className="img-fluid" />
+                                        <img src={`${url()}img/security.svg`} alt="" className="img-fluid" />
                                     </div>
                                     <div>
                                         {process.env.REACT_APP_NAME} 
@@ -205,7 +206,7 @@ function Home() {
                             <div className="col-md-4 text-center mt-4 mt-md-0">
                                 <div className="px-3">
                                     <div className="circle-point mx-auto my-bg-primary">
-                                        <img src={`${process.env.REACT_APP_URL}img/award.svg`} alt="" className="img-fluid" />
+                                        <img src={`${url()}img/award.svg`} alt="" className="img-fluid" />
                                     </div>
                                     <div>
                                         We offer the cheapest rates for all the Networks in Nigeria. You can also generate data pins and sell offline.
@@ -215,7 +216,7 @@ function Home() {
                             <div className="col-md-4 text-center mt-4 mt-md-0">
                                 <div className="px-3">
                                     <div className="circle-point mx-auto my-bg-primary">
-                                        <img src={`${process.env.REACT_APP_URL}img/receipt.svg`} alt="" className="img-fluid" />
+                                        <img src={`${url()}img/receipt.svg`} alt="" className="img-fluid" />
                                     </div>
                                     <div>
                                         You can always trust us to handle your Electricity Bill payments, DStv, Gotv and Startimes

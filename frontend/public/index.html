@@ -56,7 +56,7 @@
     <script type="text/javascript">
         (function () {
 
-            if (JSON.parse(localStorage.getItem('auth_role')) !== "admin") {
+            if (JSON.parse(localStorage.getItem('auth_role')) !== "admin")  {
                 var options = {
                     whatsapp: '971582546208', // WhatsApp number
                     call_to_action: 'Hi', // Call to action
@@ -78,15 +78,5 @@
         })();
     </script>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2NEVN43WXL"></script>
-    <script>        
-        (function () {
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
 
-            gtag('config', 'G-2NEVN43WXL');
-        })();
-    </script>
 </html>

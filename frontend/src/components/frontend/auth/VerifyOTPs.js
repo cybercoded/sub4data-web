@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Swal from 'sweetalert2';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { get_local_storage_item, store_local_storage_item, toastifyFunction } from '../../../util';
+import { get_local_storage_item, store_local_storage_item, toastifyFunction, url } from '../../../util';
 
 function VerifyOTPs(props) {
     const email = get_local_storage_item('otp_email') || props.match.params.email;
@@ -21,9 +21,9 @@ function VerifyOTPs(props) {
 
    const handleResend = (e)=>{                   
         
-        axios.put(`/api/public/api/resend-otp/`, {email: textInput.email}).then((res) => {
+        axios.put(`/api/public/send-otp/`, {email: textInput.email}).then((res) => {
             if (res?.data.status === 200) {
-                toastifyFunction("OTP was resent to you");
+                toastifyFunction(res.data.message);
             }else {
                 Swal.fire('Error!', res?.data.errors, 'error');
             }            
@@ -64,14 +64,14 @@ function VerifyOTPs(props) {
                     <div className='card col-md-4 col-lg-3 col-10'>
                         
                         <Link to="/" className='card-header text-center text-decoration-none'>                            
-                            <img src={`${process.env.REACT_APP_URL}img/logo.png`} alt="" style={{ width: 60 }} />
+                            <img src={`${url()}img/logo.png`} alt="" style={{ width: 60 }} />
                             <h4>Enter OTP Sent to <span className='text-info'> {email}</span></h4>
                         </Link>                        
                         <div className='card-body'>
                             <form onSubmit={handleVerify}>
                                 <div className='form-group mb-3'>
                                     <label>Enter OTP</label>
-                                    <input type='number' name="otp" onChange={handleInput} value={textInput.otp} className='form-control' ></input>
+                                    <input type='number' name="otp" onChange={handleInput} className='form-control' ></input>
                                 </div>
                                 
                                 <div className='form-group mb-3'>

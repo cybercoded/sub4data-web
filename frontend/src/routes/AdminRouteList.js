@@ -34,6 +34,8 @@ import AddIPs from '../components/admin/ips/AddIPs';
 import EditIPs from '../components/admin/ips/EditIPs';
 import ViewIPs from '../components/admin/ips/ViewIPs';
 import ViewMerchants from '../components/admin/merchants/ViewMerchants';
+import AddDiscount from '../components/admin/discounts/AddDiscount';
+import ViewDiscounts from '../components/admin/discounts/ViewDiscounts';
 
 const AdminRouteList =[
     { path: '/admin/dashboard', exact: true, name: 'Dashboard', component: Dashboard },    
@@ -48,6 +50,9 @@ const AdminRouteList =[
     { path: '/admin/add-ip', exact: true, name: 'AddIPs', component: AddIPs },
     { path: '/admin/edit-ips/:id', exact: true, name: 'EditIPs', component: EditIPs },
     { path: '/admin/view-ips', exact: true, name: 'ViewIPs', component: ViewIPs },
+
+    { path: '/admin/add-discount', exact: true, name: 'AddDiscount', component: AddDiscount },
+    { path: '/admin/view-discounts', exact: true, name: 'ViewDiscounts', component: ViewDiscounts },
 
     { path: '/admin/add-product', exact: true, name: 'AddProduct', component: AddProduct },
     { path: '/admin/view-product', exact: true, name: 'ViewProduct', component: ViewProduct },

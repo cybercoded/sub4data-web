@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { purchaser } from '../../../util';
+import { purchaser, url } from '../../../util';
 
 
 function Airtime(props) {
@@ -15,13 +15,15 @@ function Airtime(props) {
     const [textInput, setTextInput] = useState({
         product_id: '',
         phone: '',
-        amount: ''
+        percentage: 0,
+        coupon: '',
+        amount: 0,
+        total: 0
     });
 
     const handleInput = (e) => {
         e.persist();
-        setTextInput({ ...textInput, [e.target.name]: e.target.value });
-
+        setTextInput({ ...textInput, total: total_calculation(), [e.target.name]: e.target.value });
     };
 
     const handleAmount = (e) => {
@@ -45,7 +47,19 @@ function Airtime(props) {
         purchaser('/api/airtime-purchase/', textInput);
         
     };
-    
+
+    const handleCouponVerify = (e) => {
+        e.persist();
+
+        axios.get(`api/verify-discount/${textInput.coupon}`).then((res) => {
+            if (res.status === 200) {
+                setTextInput({...textInput, total: total_calculation(), percentage: res.data.percentage});
+                setErrorList({coupon: res.data.message || null})
+
+                console.log(`discount_percentage => ${textInput.percentage} amount => ${textInput.amount}`);
+            }            
+        });
+    }  
     
 
     useEffect(() => {
@@ -70,6 +84,15 @@ function Airtime(props) {
         });
     }, [props.match.params.id, history]);
 
+    const total_calculation = () => {
+
+        let originalAmount = textInput.amount;
+        let originalDiscount = originalAmount - ( (discount * textInput.amount) / 100).toFixed(2);
+        let couponDiscount = originalDiscount * textInput.percentage / 100;
+        console.log(couponDiscount)
+        return  originalDiscount - couponDiscount;
+    }
+
     return (
         <div className="container mt-5">
             <div className="text-muted mb-4 pb-4 border-bottom">
@@ -92,7 +115,7 @@ function Airtime(props) {
                                     }}
                                     style={{ margin: 2 }}
                                 >
-                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} className='img-fluid' width="40" height="45" alt={item.name} />
+                                    <img src={`${url()}${item.image}`} className='img-fluid' width="40" height="45" alt={item.name} />
                                 </button>
                             );
                         })}
@@ -110,12 +133,26 @@ function Airtime(props) {
                     </div>
 
                     <div className="form-group mb-3">
+                        <label>Discount coupon</label>
+                        <div className='row'>
+                            <div className='col-9'>
+                                <input type="text" name="coupon" value={textInput.coupon} onChange={handleInput} className="form-control"></input>
+                            </div>
+                            <div className='col-3'>
+                                <button type='button' onClick={handleCouponVerify} className='btn btn-primary w-100'>Apply</button>
+                            </div>
+                        </div>
+                        <small className="text-danger">{errorList?.coupon}</small>
+                    </div>
+
+
+                    <div className="form-group mb-3">
                         <label>Amount to be charged</label>
                         <input
                             type="number"
                             name="amount_to_charged"
                             disabled
-                            value={(textInput.amount - (discount * textInput.amount) / 100).toFixed(2)  || 0}
+                            value={textInput.total}
                             className="form-control"
                         ></input>
                         <small className="text-info fw-bold">{discount && `₦${discount} % discount on all of your airtime recharge`}</small>
@@ -133,7 +170,4 @@ function Airtime(props) {
                 </form>
             </div>
         </div>
-    );
-}
-
-export default Airtime;
+   

@@ -3,6 +3,7 @@ import React,{useState,useEffect, useContext} from "react";
 import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Context } from "../../../contexts/globalContext";
+import { url } from "../../../util";
 
 
 function EditCategory(props){
@@ -141,7 +142,7 @@ function EditCategory(props){
                             <div className="form-group mb-3">
                                 <label>Image</label>
                                 <input type="file" disabled={getPermission('update_categories')} onChange={handleImage}  name="image" className="form-control" />
-                                <img src={`${process.env.REACT_APP_URL}${categoryInput.image}`} alt={categoryInput.image} width="50" height="50" />
+                                <img src={`${url()}${categoryInput.image}`} alt={categoryInput.image} width="50" height="50" />
                                 <small className="text-danger">{error?.image}</small>
                             </div>                            
                         </div>                        

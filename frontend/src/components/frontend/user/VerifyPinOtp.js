@@ -38,7 +38,6 @@ function VerifyPinOtp(props) {
         
         axios.put(`/api/verify-otp-and-reset-pin/`, textInput).then((res) => {
             if (res?.data.status === 200) {
-                Swal.stopLoading();
                 Swal.fire('Success!', "OTP successfully verified",'success').then(() => {
                     history.push(`/user/create-pin`);
                 });

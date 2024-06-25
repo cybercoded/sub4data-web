@@ -8,7 +8,8 @@ function Profile(){
     const [checkboxes, setCheckboxes] = useState(false);
     const [textInput, setTextInput] = useState({
         name: '',
-        email: ''
+        email: '',
+        mfa: 0
     });
 
     const handleInput = (e) => {
@@ -23,9 +24,8 @@ function Profile(){
 
     const handleProfileUpdate = (e) => {        
         e.preventDefault();
-
         
-        axios.post(`api/update-user`, {name: textInput.name, mfa: checkboxes}).then((res) => {
+        axios.post(`api/update-user`, {name: textInput.name, email: textInput.email, mfa: textInput.mfa}).then((res) => {
             if (res?.data.status === 200) {
 
                 Swal.fire('Success!', 'Profile data successfully updated', 'success').then(() => {
@@ -42,10 +42,10 @@ function Profile(){
     useEffect(() => {
         axios.get(`api/user/`).then((res) => {
             if (res?.status === 200) {
-                setTextInput(res?.data.data);
-            }            
+                setTextInput(res.data.data);
+            }
         });
-    }, [textInput.mfa]);
+    }, []);  
 
 
     return (
@@ -57,8 +57,18 @@ function Profile(){
                 
 
                 <form onSubmit={handleProfileUpdate}>
-                    <div>
-                        <input type='checkbox' id='mfa' title='Select this role' name='mfa' onChange={handleCheckBox} defaultChecked={textInput.mfa === 1} />
+                    <div className="alert border-bottom d-flex align-items-center">
+                        <span>Enable Multi-factor Authentication</span>
+                        <input 
+                            type='checkbox' 
+                            id='mfa' 
+                            title='Select this role' 
+                            name='mfa'  
+                            checked={textInput.mfa === 1}
+                            onChange={e => 
+                                setTextInput({...textInput, mfa: e.target.checked ? 1 : 0})
+                            } 
+                        />
                         <label htmlFor='mfa'></label>
                     </div>
                     <div className='form-group mb-3'>

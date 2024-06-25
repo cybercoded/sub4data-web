@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import { Context } from '../../contexts/globalContext';
+import { url } from '../../util';
 
 const SideBar = () => {
 
@@ -34,7 +35,7 @@ const SideBar = () => {
                         <div className="nav-item" key={index}>
                             <Link className={`nav-link custom-toggler ${ item.slug === window.location.href.split('/')[5] && 'active' }`}to={`/user/services/${item.slug}/${item.id}`} >
                                 <div className="sb-nav-link-icon">
-                                    <img src={`${process.env.REACT_APP_URL}${item.image}`} width="20" height="20" alt={item.name}/>
+                                    <img src={`${url()}${item.image}`} width="20" height="20" alt={item.name}/>
                                 </div>
                                 {item.name}
                             </Link>

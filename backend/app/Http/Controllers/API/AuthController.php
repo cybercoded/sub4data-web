@@ -169,13 +169,13 @@ class AuthController extends Controller
         }
 
         if ($user->mfa === 1 && $request->auto === 0) {
-            $password_reset = new AuthController;
-            $password_reset->sendOTP($request->email, 'VerificationMail');
-            return response()->json([
-                'status' => 200,
-                'mfa' => $user->mfa,
-                'message' => 'Logged in successfully',
-            ]);
+            $password_reset = new AuthController();
+            $response = $password_reset->sendOTP($request->email, 'VerificationMail');
+            $data = $response->getData(true); 
+            $data['mfa'] = 1;
+            $data['otp'] = null;
+        
+            return response()->json($data);
         }
 
         // Successful login
@@ -220,11 +220,11 @@ class AuthController extends Controller
         ]);
     }
 
-    public function sendRegistrationOTP(Request $request)
+    public function send_otp(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
+            'email' => 'required|exists:otps,email',
         ]);
 
         if ($validator->fails()) {
@@ -234,23 +234,8 @@ class AuthController extends Controller
             ]);
         }
 
-        $existing_user = User::where('email',$request->email)->first();
-        if ($existing_user) {
-            return response()->json([
-                'status' => 404,
-                'errors' => "Email already registered",
-            ]);
-        }
         $password_reset = new AuthController;
-        $password_reset->sendOTP($request->email, 'VerificationMail');
-
-        if ($password_reset) {
-            return response()->json([
-                'status' => 200,
-                'errors' => "Email verification sent successfully",
-            ]);
-        }
-
+        return $password_reset->sendOTP($request->email, 'VerificationMail');
     }
 
     public function sendOTP($email, $mail_function)
@@ -286,17 +271,17 @@ class AuthController extends Controller
                 // Email sent successfully
                 return response()->json([
                     'status' => 200,
-                    'message' => "OTP sent successfully",
+                    'message' => "Verification code sent to $email",
                 ]);
             }
         } catch (\Exception $e) {
             // Handle exceptions, which could include cases like no internet connection
             Log::error('Error sending email: ' . $e->getMessage());
             return response()->json([
-                'status' => 201,
-                'errors' => "Mail could not be sent",
+                'status' => 200,
+                'message' => "Mail could not be sent, because you are on local machine, use $otp for your verification",
                 'log' => $e->getMessage(),
-                'otp' => config('app.env') === 'local' ? $otp : '',
+                'otp' => config('app.env') === 'local' ? $otp : null,
                 'local' => config('app.env') === 'local' ? true : false,
             ]);
         }
@@ -318,14 +303,7 @@ class AuthController extends Controller
         }
 
         $password_reset = new AuthController;
-        $password_reset->sendOTP($request->email, 'VerificationMail');
-
-        if ($password_reset) {
-            return response()->json([
-                'status' => 200,
-                'errors' => "Email verification sent successfully",
-            ]);
-        }
+        return $password_reset->sendOTP($request->email, 'VerificationMail');
     }
 
 

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
+import { url } from '../../../util';
 
 function MerchantPay() {
     
@@ -81,7 +82,7 @@ function MerchantPay() {
                         <div className="icon-container d-flex">
                             <i className="fa-brands fa-cc-visa fa-2x me-2" style={{ color: 'navy' }}></i>
                             <i className="fa-brands fa-cc-mastercard fa-2x me-2" style={{ color: 'red' }}></i>
-                            <img className='my-bg-primary p-1 rounded' src={`${process.env.REACT_APP_URL}img/verve-icon-512x177-byrevmwh.png`} height={30} width={45} alt='' />
+                            <img className='my-bg-primary p-1 rounded' src={`${url()}img/verve-icon-512x177-byrevmwh.png`} height={30} width={45} alt='' />
                         </div>
                     </div>
 

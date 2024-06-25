@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LevelResource extends JsonResource
+class DiscountsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,10 @@ class LevelResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'level' => $this->level
+            'user_id' => $this->user_id,
+            'status' => $this->status,
+            'percentage' => $this->percentage,
+            'code' => $this->code
         ];
     }
 }
