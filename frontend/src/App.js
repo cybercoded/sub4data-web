@@ -35,23 +35,25 @@ function App() {
             window.location.reload()
         }
 
-        axios.get(`api/view-category`).then((res) => {
-            if (res?.data.status === 200) {
-                dispatch({category: res.data.category});
-            }            
-        });
-        
-        axios.get(`api/user`).then((res) => {
-            if (res?.status === 200) {
-                dispatch({user: res.data.data});
-            }
-        });
+        if ( getCookie('auth_token')) {
+            axios.get(`api/view-category`).then((res) => {
+                if (res?.data.status === 200) {
+                    dispatch({category: res.data.category});
+                }            
+            });
+            
+            axios.get(`api/user`).then((res) => {
+                if (res?.status === 200) {
+                    dispatch({user: res.data.data});
+                }
+            });
 
-        axios.get(`api/view-transactions`).then((res) => {
-            if (res?.data.status === 200) {
-                dispatch({transactions: res.data.data});
-            }
-        });
+            axios.get(`api/view-transactions`).then((res) => {
+                if (res?.data.status === 200) {
+                    dispatch({transactions: res.data.data});
+                }
+            });
+        }
     }, [])
     
     axios.interceptors.request.use(

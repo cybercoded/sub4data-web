@@ -20,10 +20,10 @@ const UserRouteList =[
     { path: '/user/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
     { path: '/user/profile', exact: true, name: 'Profile', component: Profile },
     
-    { path: '/user/services/data/:id', exact: true, name: 'Data', component: Data },
-    { path: '/user/services/airtime/:id', exact: true, name: 'Airtime', component: Airtime },
-    { path: '/user/services/bill/:id', exact: true, name: 'Bill', component: Bill },
-    { path: '/user/services/electricity/:id', exact: true, name: 'Electricity', component: Electricity },
+    { path: '/user/services/data/:slug', exact: true, name: 'Data', component: Data },
+    { path: '/user/services/airtime/:slug', exact: true, name: 'Airtime', component: Airtime },
+    { path: '/user/services/bill/:slug', exact: true, name: 'Bill', component: Bill },
+    { path: '/user/services/electricity/:slug', exact: true, name: 'Electricity', component: Electricity },
 
     { path: '/user/create-pin', exact: true, name: 'CreatePin', component: CreatePin },
     { path: '/user/merchant-api', exact: true, name: 'MerchantAPI', component: MerchantAPI },

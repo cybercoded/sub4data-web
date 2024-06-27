@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import React from 'react';
 import Toastify from 'toastify-js';
 import CookieConsent, { Cookies, getCookieConsentValue } from "react-cookie-consent";
+import { Link } from 'react-router-dom';
 const crypto = require('crypto');
 
 let algorithm = 'aes-256-cbc';
@@ -96,6 +97,29 @@ const passwordValidator = (passwordInputValue) => {
 
     return errMsg;
 }
+
+const BreadCombs = ({ crumbs }) => {
+    // Generate breadcrumb links JSX
+    const breadcrumbLinks = crumbs.map((crumb, index) => (
+        <React.Fragment key={crumb}>
+            <span>
+                <Link to={`/${crumb}`}>
+                    {crumb.split('/')[crumb.split('/').length-1]}
+                </Link>
+            </span>
+            {index < crumbs.length - 1 && ' / '} {/* Add separator if not the last breadcrumb */}
+        </React.Fragment>
+    ));
+
+    return (
+        <div className="mb-5">
+            <div className="text-muted pb-4 border-bottom">
+                {breadcrumbLinks}
+            </div>
+        </div>
+    );
+}
+
 
 const logOutFunction = (redirect) => {
     Swal.fire({
@@ -311,6 +335,7 @@ const CustomCookieConsent = () => {
 }
 
 export {
+    BreadCombs,
     passwordValidator,
     initializeGoogleAnalytics,
     deleteCookie,

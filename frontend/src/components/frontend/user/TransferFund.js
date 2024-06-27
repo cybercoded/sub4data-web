@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
+import { BreadCombs } from "../../../util";
 
 
 function TransferFund(){
@@ -62,14 +63,9 @@ function TransferFund(){
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Transfer</b> Fund /
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                
-
-                <form onSubmit={handleDebitTransaction}>
-
+            <BreadCombs crumbs={['user/dashboard', 'user/transfer-fund']} />
+            <div className="d-flex justify-content-center">               
+                <form onSubmit={handleDebitTransaction} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
                     <div className='form-group mb-3'>
                         <label>User Email</label>
                         <input type='email' name="email" onChange={handleInput} value={textInput.email} className='form-control' ></input>

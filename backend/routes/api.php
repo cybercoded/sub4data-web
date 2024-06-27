@@ -60,7 +60,7 @@ Route::middleware('isTokenVerified')->prefix('v1')->group(function () {
     Route::post('create-automated-banks', [UserController::class, 'createAutomatedBanks']);
 
     //Products
-    Route::get('view-product/{slug}', [ProductController::class, 'viewWithSlug']);
+    Route::get('view-product/{slug}', [ProductController::class, 'view']);
     Route::get('view-product', [ProductController::class, 'index']);
 
     //Services
@@ -136,7 +136,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
     //Products
     Route::post('store-product', [ProductController::class, 'store'])->middleware('VerifyPermission:create_products');
     Route::get('view-product', [ProductController::class, 'index'])->middleware('VerifyPermission:read_products');
-    Route::get('view-product/{id}', [ProductController::class, 'view'])->middleware('VerifyPermission:read_products');
+    Route::get('view-product/{slug}', [ProductController::class, 'view'])->middleware('VerifyPermission:read_products');
     Route::post('update-product/{id}', [ProductController::class, 'update'])->middleware('VerifyPermission:update_products');
     Route::delete('delete-product/{id}', [ProductController::class, 'destory'])->middleware('VerifyPermission:delete_products');
 
@@ -192,7 +192,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('view-category', [CategoryController::class, 'index']);
 
     //Products
-    Route::get('view-product/{id}', [ProductController::class, 'view']);
+    Route::get('view-product/{slug}', [ProductController::class, 'view']);
     Route::get('view-product', [ProductController::class, 'index']);
 
     //Services

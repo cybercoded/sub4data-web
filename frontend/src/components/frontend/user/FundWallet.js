@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { handleCopy, toastifyFunction } from '../../../util';
+import { BreadCombs, handleCopy, toastifyFunction } from '../../../util';
 
 function FundWallet() {
     
@@ -17,12 +17,9 @@ function FundWallet() {
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Fund</b> Wallet |
-            </div>
-            
-            <div className="card col-md-4 bg-light" style={{height: '50vh'}}>
-                <div className='card-body'>
+            <BreadCombs crumbs={['user/dashboard', 'user/fund-wallet']} />
+            <div className="d-flex justify-content-center"> 
+                <div className='col-md-6 col-sm-8 col-lg-5 col-xl-4'>
                     <ol className="list-group list-group-numbered">                  
                         <li className="list-group-item d-flex justify-content-between align-items-start p-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <div className="ms-2 me-auto">

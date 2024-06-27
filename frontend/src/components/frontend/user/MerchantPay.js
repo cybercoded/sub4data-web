@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-import { url } from '../../../util';
+import { BreadCombs, url } from '../../../util';
 
 function MerchantPay() {
     
@@ -58,13 +58,9 @@ function MerchantPay() {
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Fund</b> Wallet |
-            </div>
-            
-            <div className="card col-md-4 bg-light">
-                
-                <form onSubmit={handlePayment} className="card-body">
+            <BreadCombs crumbs={['user/dashboard', 'user/fund-wallet', 'user/merchant-pay']} />
+            <div className="d-flex justify-content-center">                
+                <form onSubmit={handlePayment} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
                     <div className="form-group">
                         <label for="amount">Amount</label>
                         <input

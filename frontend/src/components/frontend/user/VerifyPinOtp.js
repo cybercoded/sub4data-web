@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Swal from 'sweetalert2';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { toastifyFunction } from '../../../util';
+import { BreadCombs, toastifyFunction } from '../../../util';
 
 function VerifyPinOtp(props) {
     const history=useHistory();
@@ -51,29 +51,24 @@ function VerifyPinOtp(props) {
 
     return(
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>OTP</b> Verification |
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                               
-                <div className='card-body'>
-                    <form onSubmit={handleVerify}>
-                        <div className='form-group mb-3'>
-                            <label>Enter OTP</label>
-                            <input type='number' name="otp" onChange={handleInput} value={textInput.otp} className='form-control' ></input>
+           <BreadCombs crumbs={['user/dashboard', 'user/verify-pin']} />
+           <div className="d-flex justify-content-center">
+                <form onSubmit={handleVerify} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
+                    <div className='form-group mb-3'>
+                        <label>Enter OTP</label>
+                        <input type='number' name="otp" onChange={handleInput} value={textInput.otp} className='form-control' ></input>
+                    </div>
+                    
+                    <div className='form-group mb-3'>
+                        <button type='submit' className='btn btn-primary w-100'>Proceed</button>
+                    </div>
+                    
+                    <div className='form-group mb-3'>
+                        <div className="">
+                            <Link to="#" onClick={handleResend}>Resend OTP</Link>
                         </div>
-                        
-                        <div className='form-group mb-3'>
-                            <button type='submit' className='btn btn-primary w-100'>Proceed</button>
-                        </div>
-                        
-                        <div className='form-group mb-3'>
-                            <div className="">
-                                <Link to="#" onClick={handleResend}>Resend OTP</Link>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     );

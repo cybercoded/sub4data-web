@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { handleCopy } from "../../../util";
+import { BreadCombs, handleCopy } from "../../../util";
 
 
 function MerchantAPI(){
@@ -36,25 +36,19 @@ function MerchantAPI(){
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Merchant APIs</b> 
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                <form onSubmit={handleNewKeysGeneration}>
+            <BreadCombs crumbs={['user/dashboard', 'user/merchant-api']} />
+            <div className="d-flex justify-content-center"> 
+                <form onSubmit={handleNewKeysGeneration} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
                     <div className='form-group mb-3'>
                         <label className="fw-bold">Private Key:</label>
-                        <div disabled={true} className='form-control alert' >
-                            <button className='btn btn-sm float-end btn-secondary' type="button" onClick={() => handleCopy(merchantKeys.public_key)} >Copy</button>
-                            {merchantKeys.private_key}
-                        </div>
+                        <i role="button" className='fa fa-copy ms-2 text-muted' type="button" onClick={() => handleCopy(merchantKeys.public_key)} ></i>
+                        <input value={merchantKeys.public_key} disabled={true} className="form-control" />
                     </div>
                     <hr />
                     <div className='form-group mb-3'>
                         <label className="fw-bold">Public Key:</label>
-                        <div disabled={true} className='form-control alert' >
-                            <button className='btn btn-sm float-end btn-secondary' type="button" onClick={() => handleCopy(merchantKeys.private_key)} >Copy</button>
-                            {merchantKeys.public_key}
-                        </div>
+                        <i role="button" className='fa fa-copy ms-2 text-muted' type="button" onClick={() => handleCopy(merchantKeys.private_key)} ></i>
+                        <input value={merchantKeys.private_key} disabled={true} className="form-control" />
                     </div>
                     <div className='form-group mb-3'>
                         <p className="text-danger">If you notice that your keys have been compromised.</p>

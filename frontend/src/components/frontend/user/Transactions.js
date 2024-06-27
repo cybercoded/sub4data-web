@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 import $ from 'jquery';
+import { BreadCombs } from '../../../util';
 
 
 function Transactions(props) {
@@ -12,7 +13,6 @@ function Transactions(props) {
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
 
-    
     const [textInput, setTextInput] = useState({
         limit: 10,
         user_id: user_id
@@ -40,7 +40,6 @@ function Transactions(props) {
     const handleViewTransaction = (e) => {
         e.preventDefault();
         var dataArray = e.target.dataset;
-        console.log(dataArray);
         var table = document.createElement('div');
         table.style.textAlign = 'left';
         table.innerHTML = `<table cellpadding="10" className="table align-left table-striped table-hover">
@@ -141,10 +140,8 @@ function Transactions(props) {
 
     return (
         <div className="container py-5">
+            <BreadCombs crumbs={['user/dashboard', 'user/transactions']} />
             <div className="card">                
-                <div className="card-header">
-                    <h4>Transaction records| </h4>
-                </div>
                 <div className="card-body">
                     <div className="accordion mb-5" id="accordionExample">
                         <div className="accordion-item">

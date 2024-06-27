@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-import { purchaser, toastifyFunction, url } from '../../../util';
+import { BreadCombs, purchaser, toastifyFunction, url } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
 
 
 function Electricity(props) {
+    const {globalValues} = React.useContext(Context);
     const history = useHistory();
     
     const [discount, setDiscount] = useState();
@@ -114,8 +116,8 @@ function Electricity(props) {
     };
 
     useEffect(() => {
-        const product_id = props.match.params.id;
-        axios.get(`api/view-product/${product_id}`).then((res) => {
+        const slug = props.match.params.slug;
+        axios.get(`api/view-product/${slug}`).then((res) => {
             if (res?.status === 200) {
                 setProductList(res?.data.product);
                 setCharges(res?.data.product.charges);
@@ -128,30 +130,32 @@ function Electricity(props) {
     return (
         
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Electricity</b> Payment |
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                
-                <form onSubmit={handlePurchaseElectricity} className="">
-                <div className="form-group mb-3">
-                        {productList.map((item, index) => {
-                            return (
-                                <button
-                                    type="button"
-                                    key={index}
-                                    className={`btn btn-outline-primary btn-sm ${productActive === item.id && 'active'}`}
-                                    onClick={() => {
-                                        handleProductSelection(item.id, item.id);
-                                        setCharges(item.charges);
-                                        setDiscount(item.discount);
-                                    }}
-                                    style={{ margin: 1 }}
-                                >
-                                    <img src={`${url()}${item.image}`} className='img-fluid' width="35" height="40" alt={item.name} />
-                                </button>
-                            );
-                        })}
+            <BreadCombs crumbs={['user/dashboard', 'user/services/data/data']} />
+            <div className="d-flex justify-content-center">
+                <form onSubmit={handlePurchaseElectricity} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
+                    <div className='text-center mb-5'>
+                        <img
+                            src={`${url()}${globalValues.category?.find(category => category.slug === 'data')?.image}`}
+                            alt=""
+                            style={{ width: 60 }}
+                        />
+                    </div>
+                    <div className="bg-light p-2 mb-3 d-flex flex-wrap justify-content-center">
+                        {productList.map((item, index) => (
+                            <button
+                                type="button"
+                                key={index}
+                                className={`btn btn-outline-primary btn-sm ${productActive === item.id && 'active'}`}
+                                onClick={() => {
+                                    handleProductSelection(item.id, item.id);
+                                    setCharges(item.charges);
+                                    setDiscount(item.discount);
+                                }}
+                                style={{ margin: 1 }}
+                            >
+                                <img src={`${url()}${item.image}`} className='img-fluid' width="40" height="45" alt={item.name} />
+                            </button>
+                        ))}
                     </div>
 
                     <div className="form-group mb-3">

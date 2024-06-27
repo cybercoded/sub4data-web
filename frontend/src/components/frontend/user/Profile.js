@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { BreadCombs } from "../../../util";
 
 
 function Profile(){
@@ -50,13 +51,9 @@ function Profile(){
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Profile</b> Update /
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                
-
-                <form onSubmit={handleProfileUpdate}>
+            <BreadCombs crumbs={['user/dashboard', 'user/profile']} />
+            <div className="d-flex justify-content-center">
+                <form onSubmit={handleProfileUpdate} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
                     <div className="alert border-bottom d-flex align-items-center">
                         <span>Enable Multi-factor Authentication</span>
                         <input 

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
+import { BreadCombs } from "../../../util";
 
 
 function CreatePin(){
@@ -41,13 +42,9 @@ function CreatePin(){
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Transaction</b> PIN /
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                
-
-                <form onSubmit={handleTransactionPIN}>
+            <BreadCombs crumbs={['user/dashboard', 'user/create-pin']} />
+            <div className="d-flex justify-content-center">             
+                <form onSubmit={handleTransactionPIN} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
                     <div className='form-group mb-3'>
                         <label>New PIN</label>
                         <input type='number' name="newPin" onChange={handleInput} value={textInput.newPin} className='form-control' ></input>

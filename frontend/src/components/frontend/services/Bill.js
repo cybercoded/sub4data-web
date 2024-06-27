@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-import { purchaser, toastifyFunction, url } from '../../../util';
+import { BreadCombs, purchaser, toastifyFunction, url } from '../../../util';
+import { Context } from '../../../contexts/globalContext';
 
 
 function Bill(props) {
+    const {globalValues} = React.useContext(Context);
     const history = useHistory();
     
     const [productActive, setProductActive] = useState();
@@ -88,24 +90,30 @@ function Bill(props) {
     };
 
     useEffect(() => {
-        const product_id = props.match.params.id;
-        axios.get(`api/view-product/${product_id}`).then((res) => {
+        const slug = props.match.params.slug;
+        axios.get(`api/view-product/${slug}`).then((res) => {
             if (res?.status === 200) {
                 setProductList(res?.data.product);
             }
             
         });
-    }, [props.match.params.id, history]);
+    }, [props.match.params.slug, history]);
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Bill</b> Payment |
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                
-                <form onSubmit={handlePurchaseBill} className="">
-                    <div className="form-group mb-3">
+            
+            <BreadCombs crumbs={['user/dashboard', 'user/services/bill/bill']} />
+
+            <div className="d-flex justify-content-center"> 
+                <form onSubmit={handlePurchaseBill} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
+                <div className='text-center mb-5'>
+                        <img
+                            src={`${url()}${globalValues.category?.find(category => category.slug === 'bill')?.image}`}
+                            alt=""
+                            style={{ width: 60 }}
+                        />
+                    </div>
+                    <div className="bg-light p-2 mb-3 d-flex flex-wrap justify-content-center">
                         {productList.map((item, index) => {
                             return (
                                 <button

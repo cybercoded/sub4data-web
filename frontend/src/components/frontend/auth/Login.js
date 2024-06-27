@@ -85,7 +85,11 @@ function Login(props) {
                         }
                         else{
                             Swal.fire({icon: 'success',title: 'Success',text: res?.data?.message,timer: 2000}).then(() => {
-                                notification.message && Swal.fire(notification.message)
+                                notification.message ? Swal.fire(notification.message).then(() => {
+                                    
+                                    window.location.reload()
+                                
+                                }) : window.location.reload();
                             });
                             history.push(`${globalValues.lastPageBeforeLogout || '/user/dashboard'}`); 
                         }

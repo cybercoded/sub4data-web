@@ -124,7 +124,7 @@ function Dashboard() {
                 </div>
                 <div className="row">
                     {globalValues.category?.map((item, index) => (
-                        <Link to={`services/${item.slug}/${item.id}`} key={index} className="col-md-3 col-6 text-muted text-decoration-none">
+                        <Link to={`services/${item.slug}/${item.slug}`} key={index} className="col-md-3 col-6 text-muted text-decoration-none">
                             <div className="card bg-light rd-5 mb-4">
                                 <div className="card-body text-center">
                                     <div>

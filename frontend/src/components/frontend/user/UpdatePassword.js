@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import { logOutFunction, passwordValidator } from "../../../util";
+import { BreadCombs, logOutFunction, passwordValidator } from "../../../util";
 function UpdatePassword(){
 
     const [textInput, setTextInput] = useState({
@@ -66,12 +66,9 @@ function UpdatePassword(){
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Paswword</b> update /
-            </div>
-            <div className="bg-light card card-body col-md-6">
-
-                <form onSubmit={handlePasswordChange}>
+            <BreadCombs crumbs={['user/dashboard', 'user/update-password']} />
+            <div className="d-flex justify-content-center">
+                <form onSubmit={handlePasswordChange} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
 
                     <div className='form-group mb-3'>
                         <label>Current Password</label>

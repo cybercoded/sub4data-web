@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react'
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { BreadCombs } from '../../../util';
 
 
 
@@ -52,45 +53,45 @@ function UpgradeAccount() {
 
     return (
         <div className="container mt-5">
-            <div className="text-muted mb-4 pb-4 border-bottom">
-                <b>Account</b> Upgrade /
-            </div>
-            <div className="bg-light card card-body col-md-6">
-                <ol className="list-group list-group-numbered">
-                    { levelLists.map((item, i) => (
-                        <div key={i} >
-                            <li 
-                                className={`
-                                    list-group-item d-flex justify-content-between align-items-start
-                                    ${currentLevel >= item.level && 'list-group-item-primary'} 
-                                    ${selectedLevel === item.level && 'active'} 
-                                    ${currentLevel >= item.level && 'disabled'}
-                                `}                          
-                                onClick={() => {
-                                    if (currentLevel < item.level) {
-                                        setSelectedLevel(item.level)
-                                    }
-                                }}
-                            >
-                                <div role='button' className="ms-2 me-auto">
-                                    <div className="fw-bold">{item.name}</div>
-                                    Upgrade with ₦{item.upgrade_fee} and enjoy ₦{item.percentage}% on every transactions
-                                </div>
-                            </li>
-                            <br />
-                        </div>
-                    ))}
-                </ol>
+            <BreadCombs crumbs={['user/dashboard', 'user/upgrade-account']} />
+            <div className="d-flex justify-content-center">
+                <div className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
+                    <ol className="list-group list-group-numbered">
+                        { levelLists.map((item, i) => (
+                            <div key={i} >
+                                <li 
+                                    className={`
+                                        list-group-item d-flex justify-content-between align-items-start
+                                        ${currentLevel >= item.level && 'list-group-item-primary'} 
+                                        ${selectedLevel === item.level && 'active'} 
+                                        ${currentLevel >= item.level && 'disabled'}
+                                    `}                          
+                                    onClick={() => {
+                                        if (currentLevel < item.level) {
+                                            setSelectedLevel(item.level)
+                                        }
+                                    }}
+                                >
+                                    <div role='button' className="ms-2 me-auto">
+                                        <div className="fw-bold">{item.name}</div>
+                                        Upgrade with ₦{item.upgrade_fee} and enjoy ₦{item.percentage}% on every transactions
+                                    </div>
+                                </li>
+                                <br />
+                            </div>
+                        ))}
+                    </ol>
 
-                <div className="form-group mt-4">
-                        <button
-                            disabled={!selectedLevel}
-                            className="btn btn-primary w-100"
-                            onClick={handleUpgrade}
-                        >
-                            Proceed
-                        </button>
-                    </div>
+                    <div className="form-group mt-4">
+                            <button
+                                disabled={!selectedLevel}
+                                className="btn btn-primary w-100"
+                                onClick={handleUpgrade}
+                            >
+                                Proceed
+                            </button>
+                        </div>
+                </div>
             </div>
         </div>
     );

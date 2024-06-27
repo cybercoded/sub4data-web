@@ -33,7 +33,7 @@ const SideBar = () => {
                     </div>
                     {   globalValues.category?.map((item, index) => (
                         <div className="nav-item" key={index}>
-                            <Link className={`nav-link custom-toggler ${ item.slug === window.location.href.split('/')[5] && 'active' }`}to={`/user/services/${item.slug}/${item.id}`} >
+                            <Link className={`nav-link custom-toggler ${ item.slug === window.location.href.split('/')[5] && 'active' }`}to={`/user/services/${item.slug}/${item.slug}`} >
                                 <div className="sb-nav-link-icon">
                                     <img src={`${url()}${item.image}`} width="20" height="20" alt={item.name}/>
                                 </div>
