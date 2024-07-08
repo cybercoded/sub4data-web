@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserResourceCollection;
 use App\Mail\PasswordUpdateMail;
 use App\Mail\TransactionMail;
 use App\Mail\VerificationMail;
@@ -28,10 +29,10 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::orderBy('id', 'desc')->get();
+        $users = User::orderBy('id', 'desc')->take(10)->get();
         return response()->json([
             'status' => 200,
-            'users' => new UserResource($users)
+            'users' => new UserResourceCollection($users)
         ]);
     }
 

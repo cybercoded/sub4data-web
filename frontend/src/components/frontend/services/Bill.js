@@ -3,22 +3,27 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-import { BreadCombs, purchaser, toastifyFunction, url } from '../../../util';
+import { BreadCombs, CouponDiscount, purchaser, toastifyFunction, url } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 
 function Bill(props) {
     const {globalValues} = React.useContext(Context);
-    const history = useHistory();
-    
+    const history = useHistory();    
     const [productActive, setProductActive] = useState();
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
+    const [discount, setDiscount] = useState(0);    
+    const [errorList, setErrorList] = useState({});
     const [textInput, setTextInput] = useState({
         product_id: '',
         service_id: '',
         smartcard_number: '7023687567',
-        amount: ''
+        percentage: 0,
+        price: 0,
+        coupon: '',
+        amount: 0,
+        total: 0
     });
 
     const handleInput = (e) => {
@@ -79,8 +84,9 @@ function Bill(props) {
 
     const handleServiceSelection = (e) => {
         var amount = e.target.selectedOptions[0].dataset.amount;
+        var price = e.target.selectedOptions[0].dataset.price;
         var value = e.target.value;
-        setTextInput({ ...textInput, amount: amount, service_id: value });
+        setTextInput({ ...textInput, amount: amount, price: price, service_id: value });
     };
 
     const handlePurchaseBill = async (e) => {
@@ -148,7 +154,7 @@ function Bill(props) {
                         <select name="service_id" value={textInput.service_id} onChange={handleServiceSelection} className="form-select" required>
                             <option value="">--Choose Bill Plan--</option>
                             {serviceList.map((item, index) => (
-                                <option key={index} data-amount={item.amount} value={item.id}>
+                                <option key={index} data-amount={item.amount} data-price={item.price} value={item.id}>
                                     {item.name}
                                 </option>
                             ))}
@@ -165,11 +171,20 @@ function Bill(props) {
                             className="form-control"
                         ></input>
                     </div>
-
+                    
                     <div className="form-group mb-3">
                         <label>Amount</label>
                         <input type="text" disabled value={textInput.amount} className="form-control"></input>
                     </div>
+
+                    <CouponDiscount 
+                        textInput={textInput} 
+                        errorList={errorList} 
+                        discount={discount}
+                        handleInput={handleInput}
+                        setTextInput={setTextInput} 
+                        setErrorList={setErrorList}  
+                    />
 
                     <div id="proceed-btn" className="form-group mb-3">
                         <button 

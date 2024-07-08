@@ -1,11 +1,7 @@
 import React, {useState} from 'react';
 import Swal from 'sweetalert2';
-
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-
-import Toastify from 'toastify-js';
-import $ from 'jquery';
 import { store_local_storage_item, url } from '../../../util';
 
 function Reset() {
@@ -29,9 +25,9 @@ function Reset() {
             if (res?.data.status === 200) {
                 axios.put(`/api/public/password-reset/`, textInput).then((res) => {
                     if (res?.data.status === 200) {
-                        Swal.fire('Success!', res.data.message,'success').then(() => {
+                        Swal.fire({icon: 'success', html: res.data.message, type: 'success'}).then(() => {
                             store_local_storage_item('otp_email', textInput.email)
-                            history.push(`/verify-otp/new-password`);
+                            history.push(`/verify-otp/${textInput.email}/${res.data.otp || null}/new-password`);
                         });
                     }else {
                         Swal.fire('Error!', res.data.errors, 'error');

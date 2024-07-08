@@ -11,6 +11,7 @@ const Navbar = () => {
     const handleSideBar = (e) => {
         e.persist();
         document.body.classList.toggle('sb-sidenav-toggled');
+        document.getElementById('layoutSidenav_content').classList.toggle('overlay-all');
     };
 
     const logOut = () => {

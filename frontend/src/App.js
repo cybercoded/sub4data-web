@@ -28,11 +28,11 @@ function App() {
         initializeGoogleAnalytics()
         if(!get_local_storage_item('auth_role')) {
             store_local_storage_item('auth_role', 'public');
-            window.location.reload()
+            window.location.reload();
         }
         if(get_local_storage_item('auth_role') !== "public" && !getCookie('auth_token') ) {
             store_local_storage_item('auth_role', 'public');
-            window.location.reload()
+            window.location.reload();
         }
 
         if ( getCookie('auth_token')) {
@@ -52,6 +52,29 @@ function App() {
                 if (res?.data.status === 200) {
                     dispatch({transactions: res.data.data});
                 }
+            });
+        }
+
+        if(get_local_storage_item('auth_role') === "admin" && getCookie('auth_token')) {
+            axios.get(`api/view-users`).then(res=>{
+                if(res?.status===200){
+                    dispatch({users: res?.data.users});
+                }
+                
+            });
+    
+            axios.get(`api/view-transactions-admin`).then(res=>{
+                if(res?.status===200){
+                    dispatch({admin_transactions: res?.data.data});
+                }
+                
+            });
+            
+            axios.get(`api/get-panel-value-admin`).then(res=>{
+                if(res?.status===200){
+                    dispatch({admin_panels: res?.data});
+                }
+                
             });
         }
     }, [])

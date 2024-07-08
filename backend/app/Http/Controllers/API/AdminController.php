@@ -61,8 +61,10 @@ class AdminController extends Controller
 
             $email_body['name'] = $user->name;
 
-            Mail::to($user['email'])
-            ->send(new BulkMail($request->input('title'), $email_body));
+            if(config('app.env') !== 'local') {
+                Mail::to($user['email'])
+                ->send(new BulkMail($request->input('title'), $email_body));
+            }
         }
 
         $send_message = Messages::create([

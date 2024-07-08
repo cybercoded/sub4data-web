@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
-import { BreadCombs, purchaser, toastifyFunction, url } from '../../../util';
+import { BreadCombs, CouponDiscount, purchaser, toastifyFunction, url } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 
@@ -11,12 +11,13 @@ function Electricity(props) {
     const {globalValues} = React.useContext(Context);
     const history = useHistory();
     
-    const [discount, setDiscount] = useState();
+    const [electricityDiscount, setElectricityDiscount] = useState();
     const [charges, setCharges] = useState();
     const [filteredAmount, setFilteredAmount] = useState();
     const [productActive, setProductActive] = useState();
     const [productList, setProductList] = useState([]);
     const [serviceList, setServiceList] = useState([]);
+    const [discount, setDiscount] = useState(0);
     const [errorList, setErrorList] = useState([]);
     const [textInput, setTextInput] = useState({
         product_id: '',
@@ -49,14 +50,11 @@ function Electricity(props) {
 
         setTextInput({ ...textInput, product_id: product_id, service_id: '' });
         setCharges(dataset.charges);
-        setDiscount(dataset.discount);
-
-
+        setElectricityDiscount(dataset.electricityDiscount);
         
         axios.get(`api/view-services/${product_id}`).then((res) => {
             if (res?.status === 200) {
-                setServiceList(res?.data.services);
-                
+                setServiceList(res?.data.services);                
             }
             
         });
@@ -67,7 +65,6 @@ function Electricity(props) {
         e.persist();
 
         if(textInput.meter_number !== '' && textInput.product !== '' && textInput.service_id !== '') {
-
             
             axios.post(`api/meternumber-verification`, {meter_number: textInput.meter_number, service_id: textInput.service_id}).then((res) => {
                 if (res?.data.status === 200) {
@@ -97,8 +94,8 @@ function Electricity(props) {
         if (value > 10000) {
             response = 'Amount should not be greater than 10,000';
         }
-        if (discount > 0) {
-            changed_amount = value - (Number(discount) * value) / 100;
+        if (electricityDiscount > 0) {
+            changed_amount = value - (Number(electricityDiscount) * value) / 100;
         } else if(charges > 0) {
             changed_amount = Number(charges) + Number(value)
         }
@@ -121,7 +118,7 @@ function Electricity(props) {
             if (res?.status === 200) {
                 setProductList(res?.data.product);
                 setCharges(res?.data.product.charges);
-                setDiscount(res?.data.product.discount);
+                setElectricityDiscount(res?.data.product.electricityDiscount);
             }
             
         });
@@ -149,7 +146,7 @@ function Electricity(props) {
                                 onClick={() => {
                                     handleProductSelection(item.id, item.id);
                                     setCharges(item.charges);
-                                    setDiscount(item.discount);
+                                    setElectricityDiscount(item.electricityDiscount);
                                 }}
                                 style={{ margin: 1 }}
                             >
@@ -208,9 +205,19 @@ function Electricity(props) {
                             value={filteredAmount}
                             className="form-control"
                         ></input>
-                       <small className="text-info fw-bold">{discount > 0 && `${discount} % discount on all of your Electricity payment`}</small>
+                       <small className="text-info fw-bold">{electricityDiscount > 0 && `${electricityDiscount} % Discount on all of your Electricity payment`}</small>
                        <small className="text-info fw-bold">{charges && `₦${charges} charges on all of your Electricity payment`}</small>
                     </div>
+
+                    <CouponDiscount 
+                        textInput={textInput} 
+                        errorList={errorList} 
+                        discount={discount}
+                        handleInput={handleInput}
+                        setTextInput={setTextInput} 
+                        setErrorList={setErrorList}  
+                    />                   
+
                     
                     <div id='proceed-btn' className="form-group mb-3">
                         <button 

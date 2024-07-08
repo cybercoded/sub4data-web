@@ -23,6 +23,7 @@ const SideBar = () => {
         $(this).on('click', function() {
             if ($(window).width() <= 768) {
                 document.body.classList.remove('sb-sidenav-toggled');
+                document.getElementById('layoutSidenav_content').classList.remove('overlay-all');
             }
         });
     });

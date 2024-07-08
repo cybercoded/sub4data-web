@@ -178,7 +178,7 @@ function Home() {
                                     </div>
                                 </div>
                                 <div className="col-md-6">
-                                    <img src={`${url()}imgbills.png`} alt="" className="img-fluid" />
+                                    <img src={`${url()}img/bills.png`} alt="" className="img-fluid" />
                                 </div>
                             </div>
                         </div>

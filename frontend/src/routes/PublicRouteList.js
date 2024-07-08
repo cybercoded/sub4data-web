@@ -17,10 +17,8 @@ const PublicRouteList =[
     { path: '/register', exact: true, name: 'Register', component: Register },
     { path: '/reset', exact: true, name: 'Reset', component: Reset },
     { path: '/new-password', exact: true, name: 'NewPassword', component: NewPassword },
-    { path: '/verify-otp/:redirect', exact: true, name: 'VerifyOTPs', component: VerifyOTPs },
-    //email verification link
-        { path: '/verify-otp/:email/:otp/:redirect', exact: true, name: 'VerifyOTPs', component: VerifyOTPs },
-    //
+    { path: '/verify-otp/:destination/:email/:otp', exact: true, name: 'VerifyOTPs', component: VerifyOTPs },
+
     { path: '/verify-mfa/:email', exact: true, name: 'MFAverify', component: MFAverify },
     { path: '/verify-registration', exact: true, name: 'RegistrationVerify', component: RegistrationVerify },
     { path: '/terms-and-condition', exact: true, name: 'TermsAndCondition', component: TermsAndCondition },

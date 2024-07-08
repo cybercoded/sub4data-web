@@ -1,35 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { Context } from "../../contexts/globalContext";
 
-function Dashboard(){    
-    const [userData, setUserData] = useState([]);
-    const [transactionData, setTransactionData] = useState([]);
-    const [panelData, setPanelData] = useState([]);    
-
-    useEffect(()=>{
-
-        axios.get(`api/view-users`).then(res=>{
-            if(res?.status===200){
-                setUserData(res?.data.users);
-            }
-            
-        });
-
-        axios.get(`api/view-transactions-admin`).then(res=>{
-            if(res?.status===200){
-                setTransactionData(res?.data.data);
-            }
-            
-        });
-        
-        axios.get(`api/get-panel-value-admin`).then(res=>{
-            if(res?.status===200){
-                setPanelData(res?.data);
-            }
-            
-        });
-    },[]);
+function Dashboard(){
+    const {globalValues} = React.useContext(Context);
 
     return (
         <div className="container-fluid my-5">                
@@ -40,7 +15,7 @@ function Dashboard(){
                             <div className="mb-3">
                                 <i className="fas fa-users fa-4x text-primary"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData?.users_count}</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">{globalValues?.admin_panels?.users_count}</div>
                             <small className="text-muted font-weight-bold">
                                 Registered Users
                             </small>
@@ -55,7 +30,7 @@ function Dashboard(){
                                 <i className="fas fa-list-alt fa-4x text-success"></i>
                             </div>
                             <div className="h3 text-secondary font-weight-bold mb-0">
-                                { panelData.users_balance && '₦' + new Intl.NumberFormat().format(panelData.users_balance)}
+                                { globalValues?.admin_panels?.users_balance && '₦' + new Intl.NumberFormat().format(globalValues?.admin_panels?.users_balance)}
                             </div>
                             <small className="text-muted font-weight-bold">
                                 Users Balance
@@ -70,9 +45,8 @@ function Dashboard(){
                             <div className="mb-3">
                                 <i className="fas fa-wallet fa-4x text-info"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">Click to check</div>
                             <small className="text-muted font-weight-bold">
-                                API Balance
+                                Click to check API Balance
                             </small>
                         </div>
                     </Link>
@@ -84,7 +58,7 @@ function Dashboard(){
                             <div className="mb-3">
                                 <i className="fa fa-triangle-exclamation text-danger fa-4x"></i>
                             </div>
-                            <div className="h3 text-secondary font-weight-bold mb-0">{panelData?.unsuccessful_transactions}</div>
+                            <div className="h3 text-secondary font-weight-bold mb-0">{globalValues?.admin_panels?.unsuccessful_transactions}</div>
                             <small className="text-muted font-weight-bold">
                                 Unsuccessful Transactions
                             </small>
@@ -103,7 +77,7 @@ function Dashboard(){
                             </div>
                             <table className="table">
                                 <tbody>
-                                    { userData?.map((item, index)=> (
+                                    { globalValues?.users?.map((item, index)=> (
                                             <tr key={index}>                                               
                                                 <td><span className="badge bg-info">{item.status ===1 ? 'Active' : 'Inactive'}</span></td>
                                                 <td>{item.name}</td>
@@ -127,7 +101,7 @@ function Dashboard(){
                             </div>
                             <table className="table">
                                 <tbody>
-                                    { transactionData?.map((item, index)=> (
+                                    { globalValues?.admin_transactions?.map((item, index)=> (
                                             <tr key={index}>
                                                 <td><span className="badge bg-info">{item.status}</span></td>                                            
                                                 <td>{item.user?.name}</td>

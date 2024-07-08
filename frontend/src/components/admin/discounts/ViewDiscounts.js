@@ -30,7 +30,7 @@ function ViewDiscounts() {
             if (res.isConfirmed) {
                 axios.put(`api/update-discount/${id}`).then(res => {
                     if (res?.data.status === 200) {
-                        Swal.fire("Deleted!", `The discount has been ${text === 'activate' ? 'activated' : 'deactivated'}`, "success");
+                        Swal.fire("Updated!", `The discount has been ${text === 'activate' ? 'activated' : 'deactivated'}`, "success");
                         setDiscountsList(prevList => 
                             prevList.map(item => 
                                 item.id === id ? { ...item, status: status === 1 ? 0 : 1 } : item

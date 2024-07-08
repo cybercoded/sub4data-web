@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Toastify from 'toastify-js';
 import CookieConsent, { Cookies, getCookieConsentValue } from "react-cookie-consent";
 import { Link } from 'react-router-dom';
@@ -36,7 +36,6 @@ const store_local_storage_item = (key, value) => {
 const handleCopy = (value) => {
     navigator.clipboard.writeText(value)
     toastifyFunction("Copied to your clipboard");
-
 }
 
 let currentToast = null;
@@ -119,6 +118,76 @@ const BreadCombs = ({ crumbs }) => {
         </div>
     );
 }
+
+const CouponDiscount = ({textInput, handleInput, discount, errorList, setTextInput, setErrorList}) => {
+
+    useEffect(() => {
+        setTextInput((prev) => ({ ...prev, total: totalCalculation() }));
+        console.log(textInput.price)
+    }, [textInput.price || textInput.amount, textInput.percentage, discount]);
+
+    const handleCouponVerify = () => {
+        axios.get(`/api/verify-discount/${textInput.coupon}`).then((res) => {
+            if (res.status === 200) {
+                setTextInput((prev) => ({
+                    ...prev,
+                    percentage: parseFloat(res.data.percentage || 0),
+                }));
+                setErrorList((prev) => ({
+                    ...prev,
+                    coupon: res.data.message || null,
+                }));
+            }
+        });
+    };
+
+    const totalCalculation = () => {
+        const originalAmount = parseFloat(textInput.price || textInput.amount);
+        const discountAmount = (discount * originalAmount) / 100;
+        const originalDiscount = originalAmount - discountAmount;
+        const couponDiscount = (originalDiscount * parseFloat(textInput.percentage)) / 100;
+        let total = originalDiscount - couponDiscount;
+        return total.toFixed(2);
+    };
+
+
+    return (
+        <div>
+            <div className="form-group mb-3">
+                <label>Discount coupon</label>
+                <div className='row'>
+                    <div className='col-9'>
+                        <input
+                            type="text"
+                            name="coupon"
+                            value={textInput.coupon}
+                            onChange={handleInput}
+                            className="form-control"
+                        />
+                    </div>
+                    <div className='col-3'>
+                        <button type='button' onClick={handleCouponVerify} className='btn btn-primary w-100'>Apply</button>
+                    </div>
+                </div>
+                <small className={`text-${textInput.percentage > 0 ? 'success' : 'danger'} fw-bold`}>{errorList.coupon}</small>
+            </div>
+
+            {textInput.percentage > 0 && (
+                <div className="form-group mb-3">
+                    <label>Amount to be charged</label>
+                    <input
+                        type="number"
+                        name="amount_to_charged"
+                        disabled
+                        value={textInput.total}
+                        className="form-control"
+                    />
+                </div>
+            )}
+        </div>
+    );
+
+};
 
 
 const logOutFunction = (redirect) => {
@@ -335,6 +404,7 @@ const CustomCookieConsent = () => {
 }
 
 export {
+    CouponDiscount,
     BreadCombs,
     passwordValidator,
     initializeGoogleAnalytics,

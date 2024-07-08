@@ -14,9 +14,9 @@ const MasterLayout= ()=>{
     React.useEffect(() => {
         axios.get(`api/get-permissions`).then(res=>{
             if(res?.status===200){
-                let permissions = res?.data?.permissions;
+                let permissions = res.data?.permissions;
                 let list_of_permissions = [];
-                permissions?.forEach(permission => {
+                let setPermissions = permissions?.forEach(permission => {
                     list_of_permissions.push(permission.slug);
                 });
     

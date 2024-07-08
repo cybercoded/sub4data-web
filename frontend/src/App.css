@@ -166,4 +166,8 @@ input[type="checkbox"] {
   input[type="checkbox"]:checked + label:before {
     transform: translateX(15px);
   }
+
+  .overlay-all {
+    z-index: -1;
+  }
   

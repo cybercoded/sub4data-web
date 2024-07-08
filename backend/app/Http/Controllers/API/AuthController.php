@@ -238,6 +238,7 @@ class AuthController extends Controller
         return $password_reset->sendOTP($request->email, 'VerificationMail');
     }
 
+    
     public function sendOTP($email, $mail_function)
     {
         $otp = rand ( 10000 , 99999 );
@@ -250,41 +251,12 @@ class AuthController extends Controller
         $email_message = [
             'name' => "Dear customer",
             'otp' => $otp,
-            'title' => $email_title,
+            'title' => $email_title
         ];
 
-        $function_call = "App\\Mail\\$mail_function";
+        $jsonRespMessage = "Mail could not be sent, because you are on local machine, use $otp for your verification or click <a href='".url('/') . "/verify-otp/new-password/$email/$otp/'>Verify</a> to proceed";
 
-        try {
-            // Send the email
-            Mail::to($email)->send(new $function_call($email_title, $email_message));
-            
-            // Check if the email was sent successfully
-            if(count(Mail::failures()) > 0) {
-                // Handle failure, log errors, or perform any necessary action
-                Log::error('Failed to send email to: ' . $email);
-                return response()->json([
-                    'status' => 419,
-                    'errors' => "Mail could not be sent to ". $email,
-                ]);
-            } else {
-                // Email sent successfully
-                return response()->json([
-                    'status' => 200,
-                    'message' => "Verification code sent to $email",
-                ]);
-            }
-        } catch (\Exception $e) {
-            // Handle exceptions, which could include cases like no internet connection
-            Log::error('Error sending email: ' . $e->getMessage());
-            return response()->json([
-                'status' => 200,
-                'message' => "Mail could not be sent, because you are on local machine, use $otp for your verification",
-                'log' => $e->getMessage(),
-                'otp' => config('app.env') === 'local' ? $otp : null,
-                'local' => config('app.env') === 'local' ? true : false,
-            ]);
-        }
+        return send_email($mail_function, $otp, $email, $email_title, $email_message, $jsonRespMessage);
 
     }
 
