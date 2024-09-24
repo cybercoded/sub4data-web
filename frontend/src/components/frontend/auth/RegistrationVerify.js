@@ -5,14 +5,19 @@ import axios from 'axios';
 import { decrypt, get_local_storage_item, setCookie, split_errors, store_local_storage_item, toastifyFunction, url } from '../../../util';
 
 function RegistrationVerify(props) {
-    var encryptedPassword = get_local_storage_item("registration_password");
-    var decryptedPassword = decrypt(encryptedPassword);
+    const encryptedPassword = get_local_storage_item("registration_password") || props.match.params.password;
+    const decryptedPassword = decrypt(encryptedPassword);
+    const email = props.match.params.email || get_local_storage_item('registration_email');
+    const name = props.match.params.name || get_local_storage_item('registration_name');
+    const otp = props.match.params.otp || get_local_storage_item('registration_otp');
+    const destination = props.match.params.destination;
+
     const history=useHistory();
     const [textInput, setTextInput] = useState({
-        email: get_local_storage_item('registration_email'),
-        name: get_local_storage_item('registration_name'),
+        email: email,
+        name: name,
         password: decryptedPassword,
-        otp:'',
+        otp:otp,
     });
 
     const handleInput = (e)=>{
@@ -55,12 +60,15 @@ function RegistrationVerify(props) {
             if (res?.data.status === 200) {
                 axios.post(`/api/public/register`, textInput).then(res=>{
                     if(res?.data.status===200){
+                        localStorage.clear();
                         store_local_storage_item("auth_role","user");
                         setCookie("auth_token", res.data.token);
                         localStorage.removeItem("registration_password");
                         localStorage.removeItem("registration_name");
+                        localStorage.removeItem("registration_otp");
+                        localStorage.removeItem("registration_email");
                         Swal.fire("success",res?.data.message,"success").then(()=>{
-                            history.push("/user/dashboard");
+                            history.push(`/user/${destination}`);
                         })
                     }else{
                         

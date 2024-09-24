@@ -6,14 +6,14 @@ import Swal from 'sweetalert2';
 import { Context, reducer } from './contexts/globalContext';
 import ReactjsOverlayLoader from "reactjs-overlay-loader";
 import AppRoutes from './routes';
-import { CustomCookieConsent, deleteCookie, get_local_storage_item, getCookie, initializeGoogleAnalytics, store_local_storage_item, toastifyFunction } from './util';
+import { csrfToken, CustomCookieConsent, deleteCookie, get_local_storage_item, getCookie, initializeGoogleAnalytics, store_local_storage_item, toastifyFunction, url } from './util';
 
 
 function App() {
-    let url = `http://${window.location.hostname}:8000/`;
-    axios.defaults.baseURL = url;
+    axios.defaults.baseURL = url();
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     axios.defaults.headers.post['Accept'] = 'application/json';
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
     axios.defaults.withCredentials = true;
     axios.interceptors.request.use(function (config) {
         const token = getCookie('auth_token');
@@ -132,7 +132,7 @@ function App() {
                 <ReactjsOverlayLoader 
                     isActive={stateLoading} 
                     style={{zIndex: 1}} 
-                    icon={<img alt='loader' width={50} src={`${url}img/loading.gif`}/>} />
+                    icon={<img alt='loader' width={50} src={`${url()}img/loading.gif`}/>} />
                 <CustomCookieConsent />
             </Context.Provider>
         </div>

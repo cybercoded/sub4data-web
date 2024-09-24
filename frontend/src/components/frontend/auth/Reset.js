@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Swal from 'sweetalert2';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { store_local_storage_item, url } from '../../../util';
+import { csrfToken, store_local_storage_item, url } from '../../../util';
 
 function Reset() {
 
@@ -27,7 +27,7 @@ function Reset() {
                     if (res?.data.status === 200) {
                         Swal.fire({icon: 'success', html: res.data.message, type: 'success'}).then(() => {
                             store_local_storage_item('otp_email', textInput.email)
-                            history.push(`/verify-otp/${textInput.email}/${res.data.otp || null}/new-password`);
+                            history.push(`/verify-otp/new-password/${textInput.email}/${res.data.otp || null}`);
                         });
                     }else {
                         Swal.fire('Error!', res.data.errors, 'error');
@@ -54,6 +54,7 @@ function Reset() {
                         </Link>                        
                         <div className='card-body'>
                             <form onSubmit={loginSubmit}>
+                                <input type="hidden" name="_token" value={csrfToken} />
                                 <div className='form-group mb-3'>
                                     <label>Email ID</label>
                                     <input type='email' name="email" onChange={handleInput} value={textInput.email} className='form-control' ></input>

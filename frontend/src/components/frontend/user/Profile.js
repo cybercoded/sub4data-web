@@ -5,8 +5,6 @@ import { BreadCombs } from "../../../util";
 
 
 function Profile(){
-
-    const [checkboxes, setCheckboxes] = useState(false);
     const [textInput, setTextInput] = useState({
         name: '',
         email: '',
@@ -16,11 +14,6 @@ function Profile(){
     const handleInput = (e) => {
         e.persist();
         setTextInput({ ...textInput, [e.target.name]: e.target.value });
-    };
-
-    const handleCheckBox = (e) => {
-        e.persist();
-        setCheckboxes(e.target.checked);
     };
 
     const handleProfileUpdate = (e) => {        

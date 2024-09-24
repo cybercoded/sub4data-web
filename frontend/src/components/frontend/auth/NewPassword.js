@@ -3,13 +3,13 @@ import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { get_local_storage_item, passwordValidator, url } from '../../../util';
+import { get_local_storage_item, passwordValidator, split_errors, store_local_storage_item, url } from '../../../util';
 
 
 function NewPassword() {
 
-    const email = get_local_storage_item('otp_email');
-    const otp = get_local_storage_item('otp');
+    const email = get_local_storage_item('otp_email') || '';
+    const otp = get_local_storage_item('otp') || '';
 
     const history=useHistory();
     const [textInput, setTextInput] = useState({
@@ -44,7 +44,7 @@ function NewPassword() {
                     history.push('/login');
                 });
             }else {
-                Swal.fire('Error!', res?.data.errors, 'error');
+                Swal.fire('Error!', split_errors(res?.data.errors), 'error');
             }
             
         });

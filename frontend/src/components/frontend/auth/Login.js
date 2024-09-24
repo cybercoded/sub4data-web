@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { get_local_storage_item, getCookie, setCookie, store_local_storage_item, url } from '../../../util';
+import { get_local_storage_item, setCookie, store_local_storage_item, url } from '../../../util';
 import { Context } from '../../../contexts/globalContext';
 
 function Login(props) {
@@ -66,6 +66,7 @@ function Login(props) {
         axios.get('/sanctum/csrf-cookie').then(() => {
             axios.post(`api/public/login`,data).then(res =>{
                 if(res?.data?.status === 200){
+                    localStorage.clear();
                     if(res.data.mfa === 1) {
                         store_local_storage_item("otp_email",loginInput.email);
                         store_local_storage_item("user_pass",loginInput.password);
@@ -91,7 +92,7 @@ function Login(props) {
                                 
                                 }) : window.location.reload();
                             });
-                            history.push(`${globalValues.lastPageBeforeLogout || '/user/dashboard'}`); 
+                            history.push(`${globalValues.lastPageBeforeLogout || '/user/dashboard'}`);
                         }
                     }
                 }else if(res?.data?.status === 401) {

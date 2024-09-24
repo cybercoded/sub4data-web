@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { get_local_storage_item, store_local_storage_item, toastifyFunction, url } from '../../../util';
+import { get_local_storage_item, split_errors, store_local_storage_item, toastifyFunction, url } from '../../../util';
 
 function VerifyOTPs(props) {
-    const email = get_local_storage_item('otp_email') || props.match.params.email;
-    const otp = get_local_storage_item('otp') || props.match.params.otp;
+    const email = props.match.params.email || get_local_storage_item('otp_email');
+    const otp = props.match.params.otp || get_local_storage_item('otp');
     const destination = props.match.params.destination;
     const history = useHistory();
 
@@ -46,11 +46,12 @@ function VerifyOTPs(props) {
             if (res?.data.status === 200) {
                 Swal.fire('Success!', "OTP verified", 'success')
                     .then(() => {
-                        store_local_storage_item("otp", textInput.otp);
+                        store_local_storage_item("otp", otp);
+                        store_local_storage_item("otp_email", email);
                         history.push(`/${decodeURIComponent(destination)}`);
                     });
             } else {
-                Swal.fire('Error!', res?.data.errors, 'error');
+                Swal.fire('Error!', split_errors(res?.data.errors), 'error');
             }
         });
     }

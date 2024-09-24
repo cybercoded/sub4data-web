@@ -4,11 +4,14 @@ import React, { useEffect } from 'react';
 import Toastify from 'toastify-js';
 import CookieConsent, { Cookies, getCookieConsentValue } from "react-cookie-consent";
 import { Link } from 'react-router-dom';
+import $ from "jquery";
+
 const crypto = require('crypto');
 
 let algorithm = 'aes-256-cbc';
-let key = crypto.randomBytes(32);
-let iv = crypto.randomBytes(16);
+const key = Buffer.from('12345678901234567890123456789012'); // Must be 32 bytes or use crypto.randomBytes(32);
+const iv = Buffer.from('1234567890123456'); // Must be 16 bytes or use  crypto.randomBytes(16);
+
 
 const get_local_storage_item = (item) => {
 
@@ -201,6 +204,7 @@ const logOutFunction = (redirect) => {
             axios.get('/sanctum/csrf-cookie').then(() => {
                 axios.post(`api/logout`).then((res) => {
                     if (res?.data.status === 200) {
+                        localStorage.clear();
                         deleteCookie('auth_token');
                         store_local_storage_item('auth_role', 'public');             
                         Swal.fire({icon: 'success', title: 'Success', text: res?.data.message, timer: 2000}).then(() => {
@@ -296,7 +300,7 @@ const RouteNotFound = () => {
 const split_errors = (errors) => {
 
     if(!Array.isArray(errors)) {
-        return errors;
+        // return errors; /* remove the comment tag in case errors pops in the future */
     }
 
     // Construct error message for each field
@@ -310,6 +314,8 @@ const split_errors = (errors) => {
 
     return errorMessage;
 }
+
+const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
 const setCookie = (cookieName, cookieValue, expirationDays) => {
 
@@ -404,6 +410,7 @@ const CustomCookieConsent = () => {
 }
 
 export {
+    csrfToken,
     CouponDiscount,
     BreadCombs,
     passwordValidator,

@@ -39,7 +39,7 @@ class AuthController extends Controller
 
             $api = Api::where('api_name', 'monnify')->first();
             $authorization = base64_encode($api['api_key'] . ':' . $api['api_secret']);
-            
+
             if (!config('app.env') === 'local') {
                 $response = Http::withHeaders([
                     'Authorization' => "Basic ".$authorization,
@@ -56,7 +56,7 @@ class AuthController extends Controller
             }
 
             $accessToken = $response['responseBody']['accessToken'];
-            
+
             $apiPostArray = [
                 'accountReference' => strtoupper(substr($request->name, 0, 5)).time(),
                 'accountName' => $request->name,
@@ -93,8 +93,8 @@ class AuthController extends Controller
                 'email'=>$request->email,
                 'user_ip' => $request->ip(),
                 'password'=>Hash::make($request->password)
-            ]);           
-            
+            ]);
+
             if($response['responseMessage'] == 'success' && $user){
                 if(isset($response['responseBody'])) {
                     $result = $response['responseBody'];
@@ -170,11 +170,11 @@ class AuthController extends Controller
 
         if ($user->mfa === 1 && $request->auto === 0) {
             $password_reset = new AuthController();
-            $response = $password_reset->sendOTP($request->email, 'VerificationMail');
-            $data = $response->getData(true); 
+            $response = $password_reset->sendOTP($request->email, 'VerificationMail', 'new-password');
+            $data = $response->getData(true);
             $data['mfa'] = 1;
             $data['otp'] = null;
-        
+
             return response()->json($data);
         }
 
@@ -235,13 +235,17 @@ class AuthController extends Controller
         }
 
         $password_reset = new AuthController;
-        return $password_reset->sendOTP($request->email, 'VerificationMail');
+        return $password_reset->sendOTP($request->all(), 'VerificationMail', 'new-password');
     }
 
-    
-    public function sendOTP($email, $mail_function)
+
+    public function sendOTP($data, $mail_function, $destination)
     {
         $otp = rand ( 10000 , 99999 );
+        $email = $data['email'];
+        $password = @$data['encrypted_password'];
+        $name = @$data['name'];
+
         $send_mfa_otp = OTPs::create([
             'email' => $email,
             'token' => $otp
@@ -254,17 +258,22 @@ class AuthController extends Controller
             'title' => $email_title
         ];
 
-        $jsonRespMessage = "Mail could not be sent, because you are on local machine, use $otp for your verification or click <a href='".url('/') . "/verify-otp/new-password/$email/$otp/'>Verify</a> to proceed";
+        $jsonRespMessage = ($destination == 'new-password')
+        ?
+           "Mail could not be sent, because you are on local machine, use $otp for your verification or click <a href='".config('app.react_url') . "/verify-otp/$destination/$email/$otp'>Verify</a> to proceed"
+        :
+           "Mail could not be sent, because you are on local machine, use $otp for your verification or click <a href='".config('app.react_url') . "/verify-registration/$destination/$name/$email/$otp/$password'>Verify</a> to proceed";
+
 
         return send_email($mail_function, $otp, $email, $email_title, $email_message, $jsonRespMessage);
 
     }
 
-    public function resendRegistrationOTP(Request $request)
+    public function sendRegistrationOTP(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
+            'email'=>'required|email|max:191|unique:users,email'
         ]);
 
         if ($validator->fails()) {
@@ -275,7 +284,7 @@ class AuthController extends Controller
         }
 
         $password_reset = new AuthController;
-        return $password_reset->sendOTP($request->email, 'VerificationMail');
+        return $password_reset->sendOTP($request->all(), 'VerificationMail', 'dashboard');
     }
 
 

@@ -84,7 +84,7 @@ function Airtime(props) {
                                 onClick={() => {
                                     setProductActive(item.id);
                                     setTextInput((prev) => ({ ...prev, product_id: item.id }));
-                                    setDiscount={setDiscount}(item.discount);
+                                    setDiscount(item.discount);
                                 }}
                                 style={{ margin: 2 }}
                             >

@@ -3,7 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { Link, useHistory } from 'react-router-dom';
-import { encrypt, store_local_storage_item, url } from '../../../util';
+import { encrypt, passwordValidator, split_errors, store_local_storage_item, url } from '../../../util';
 
 
 function Register() {
@@ -13,6 +13,7 @@ function Register() {
         name:'',
         email:'',
         password: '',
+        encrypted_password: '',
         checkbox: false
     });
 
@@ -20,40 +21,15 @@ function Register() {
         e.persist();
         setTextInput({...textInput,[e.target.name]: e.target.value})
     }
+
+    const handlePassword = (e)=>{
+        e.persist();
+        setTextInput({...textInput,password: e.target.value, encrypted_password: encrypt(e.target.value)})
+    }
     
     const handleCheckBox = (e)=>{
         e.persist();
         setTextInput({...textInput,[e.target.name]: e.target.checked})
-    }
-
-    const passwordValidator = (passwordInputValue) => {
-        const uppercaseRegExp   = /(?=.*?[A-Z])/;
-        const lowercaseRegExp   = /(?=.*?[a-z])/;
-        const digitsRegExp      = /(?=.*?[0-9])/;
-        const specialCharRegExp = /(?=.*?[#?!@$%^&+_*-])/;
-        const minLengthRegExp   = /.{8,}/;
-        const passwordLength =      passwordInputValue.length;
-        const uppercasePassword =   uppercaseRegExp.test(passwordInputValue);
-        const lowercasePassword =   lowercaseRegExp.test(passwordInputValue);
-        const digitsPassword =      digitsRegExp.test(passwordInputValue);
-        const specialCharPassword = specialCharRegExp.test(passwordInputValue);
-        const minLengthPassword =   minLengthRegExp.test(passwordInputValue);
-        let errMsg = "";
-        if(passwordLength===0){
-            errMsg="Password is empty";
-        }else if(!uppercasePassword){
-            errMsg="Password should at least have one Uppercase";
-        }else if(!lowercasePassword){
-            errMsg="Password should at least have one Lowercase";
-        }else if(!digitsPassword){
-            errMsg="Password should at least have one Digit";
-        }else if(!specialCharPassword){
-            errMsg="Password should at least have one Special Characters";
-        }else if(!minLengthPassword){
-            errMsg="Password should at least have minimum of 8 characters";
-        }
-
-        return errMsg;
     }
 
     const registerSubmit= (e)=>{
@@ -74,18 +50,19 @@ function Register() {
 
                 store_local_storage_item("registration_name",textInput.name);
                 store_local_storage_item("registration_email",textInput.email);
+                store_local_storage_item("registration_otp",res.data.otp || '');
                 store_local_storage_item("registration_password", encryptedPassword);
                     
                 if (res?.data.status === 200) {                    
-                    Swal.fire('Success!', `Verification code sent to ${textInput.email}`,'success').then(() => {
+                    Swal.fire('Success!', res.data.message,'success').then(() => {
                         history.push(`/verify-registration`);
                     });
                 }else if(res?.data.status === 201) {
-                    Swal.fire('Warning!', `Verification code was not sent, because you are in development mode use ${res?.data.otp} as your otp`,'warning').then(() => {
+                    Swal.fire('Warning!', `Verification code was not sent, because you are in development mode use ${res.data.otp} as your otp`,'warning').then(() => {
                         history.push(`/verify-registration`);
                     });
                 }else {
-                    Swal.fire('Error!', res?.data.errors, 'error');
+                    Swal.fire('Error!', split_errors(res?.data?.errors), 'error');
                 }
                 
             });    
@@ -116,7 +93,8 @@ function Register() {
                                 </div>
                                 <div className='form-group mb-3'>
                                     <label>Password</label>
-                                    <input type='password' name="password" onChange={handleInput} value={textInput.password} className='form-control' required ></input>
+                                    <input type='password' name="password" onChange={handlePassword} value={textInput.password} className='form-control' required ></input>
+                                    <input type='hidden' name="encrypted_password" value={textInput.encrypted_password} className='form-control' required ></input>
                                     <span>{textInput.error_list?.password}</span>
                                 </div>
                                 

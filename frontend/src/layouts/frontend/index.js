@@ -4,7 +4,6 @@ import {Route,Switch,Redirect} from 'react-router-dom';
 import Navbar from "./Navbar";
 import SideBar from "./Sidebar";
 import UserRouteList from "../../routes/UserRouteList";
-import { RouteNotFound } from "../../util";
 
 const UserLayout= ()=>{
 

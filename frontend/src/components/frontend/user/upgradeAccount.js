@@ -23,7 +23,7 @@ function UpgradeAccount() {
 
         axios.get(`api/user`).then((res) => {
             if (res?.status === 200) {
-                setCurrentLevel(res?.data.data.level);
+                setCurrentLevel(res?.data.data.levels[0].level);
             }
         });
     }, []);
@@ -59,12 +59,12 @@ function UpgradeAccount() {
                     <ol className="list-group list-group-numbered">
                         { levelLists.map((item, i) => (
                             <div key={i} >
-                                <li 
+                                <li
                                     className={`
                                         list-group-item d-flex justify-content-between align-items-start
                                         ${currentLevel >= item.level && 'list-group-item-primary'} 
-                                        ${selectedLevel === item.level && 'active'} 
-                                        ${currentLevel >= item.level && 'disabled'}
+                                        ${selectedLevel === item.level && 'active'}  
+                                        ${currentLevel >= item.level && 'disabled'} 
                                     `}                          
                                     onClick={() => {
                                         if (currentLevel < item.level) {
@@ -72,7 +72,7 @@ function UpgradeAccount() {
                                         }
                                     }}
                                 >
-                                    <div role='button' className="ms-2 me-auto">
+                                    <div role='button' className="ms-2 me-auto" style={{cursor: currentLevel >= item.level && "not-allowed" }}>
                                         <div className="fw-bold">{item.name}</div>
                                         Upgrade with ₦{item.upgrade_fee} and enjoy ₦{item.percentage}% on every transactions
                                     </div>

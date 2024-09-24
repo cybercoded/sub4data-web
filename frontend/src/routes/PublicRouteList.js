@@ -20,7 +20,7 @@ const PublicRouteList =[
     { path: '/verify-otp/:destination/:email/:otp', exact: true, name: 'VerifyOTPs', component: VerifyOTPs },
 
     { path: '/verify-mfa/:email', exact: true, name: 'MFAverify', component: MFAverify },
-    { path: '/verify-registration', exact: true, name: 'RegistrationVerify', component: RegistrationVerify },
+    { path: '/verify-registration/:destination/:name/:email/:otp/:password', exact: true, name: 'RegistrationVerify', component: RegistrationVerify },
     { path: '/terms-and-condition', exact: true, name: 'TermsAndCondition', component: TermsAndCondition },
     { path: '/privacy-policy', exact: true, name: 'PrivacyPolicy', component: PrivacyPolicy }
 

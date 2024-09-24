@@ -104,7 +104,7 @@ Route::middleware(['auth:sanctum', 'isAPIAdmin'])->group(function () {
 
     //Merchants / Developers
     Route::get('view-merchant-keys', [MerchantAPIController::class, 'index']);
-    
+
 
     //Access Control Lists
     Route::get('view-acls/{id}', [ACLsController::class, 'view'])->middleware('VerifyPermission:read_acls');

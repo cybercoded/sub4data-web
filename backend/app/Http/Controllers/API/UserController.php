@@ -39,7 +39,7 @@ class UserController extends Controller
     public function view(Request $request)
     {
         $userId = $request->user?->id ?: auth('sanctum')->user()->id;
-        $user = User::find($userId)->first(); 
+        $user = User::find($userId)->first();
 
         return response()->json([
             'status' => 200,
@@ -233,7 +233,7 @@ class UserController extends Controller
             ]);
         } else {
             $password_reset = new AuthController;
-            return $password_reset->sendOTP($request->email, 'VerificationMail');
+            return $password_reset->sendOTP($request->all(), 'VerificationMail', 'new-password');
         }
     }
 
@@ -470,7 +470,7 @@ class UserController extends Controller
                     Mail::to($customer_details['email'])
                     ->send(new TransactionMail($title, $customer_details));
                 }
-                
+
                 //mailing sender
                 $title = '[Debit Transaction] Transfer';
                 $customer_details = [

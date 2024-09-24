@@ -3,10 +3,8 @@ import Navbar from './Navbar.js';
 import SideBar from "./Sidebar.js";
 import {Route,Switch,Redirect} from 'react-router-dom';
 import AdminRouteList from "../../routes/AdminRouteList.js";
-import { logOutFunction, store_local_storage_item } from "../../util.js";
 import axios from "axios";
 import { Context } from "../../contexts/globalContext.js";
-import Swal from "sweetalert2";
 
 const MasterLayout= ()=>{
     const { setGlobalValues } = useContext(Context);
