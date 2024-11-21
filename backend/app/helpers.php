@@ -45,14 +45,14 @@ if (!function_exists('send_email')) {
      * Send a mail to user.
      *
      * @param  string  $mail_function
-     * @param  string|null  $otp
      * @param  string  $email
      * @param  string  $email_title
      * @param  array  $email_message
      * @param  string  $jsonRespMessage
-     * @return string 
+     * @param  string|null  $otp
+     * @return string
      */
-    function send_email($mail_function, $otp = null, $email, $email_title, $email_message, $jsonRespMessage) 
+    function send_email($mail_function, $email, $email_title, $email_message, $jsonRespMessage, $otp = null)
     {
         // Send the email
         $function_call = "App\\Mail\\$mail_function";
@@ -60,7 +60,7 @@ if (!function_exists('send_email')) {
         try {
             // Send the email
             Mail::to($email)->send(new $function_call($email_title, $email_message));
-            
+
             // Check if the email was sent successfully
             if(count(Mail::failures()) > 0) {
                 // Handle failure, log errors, or perform any necessary action
