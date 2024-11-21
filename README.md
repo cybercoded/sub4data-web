@@ -15,10 +15,10 @@
 
 ### Configuration 
 1.  Set your database credentials, App URL and Allowed Origins for your backend at backend/.env
-    (https://github.com/cybercoded/sub4data-web/blob/master/screenshots/backend-conf.png)
+    > https://github.com/cybercoded/sub4data-web/blob/master/screenshots/backend-conf.png
 
 1.  Update your business information at frontend/.env
-    (https://github.com/cybercoded/sub4data-web/blob/master/screenshots/fontend-conf.png)
+    > https://github.com/cybercoded/sub4data-web/blob/master/screenshots/fontend-conf.png
 
 1.  Populate the database from 
     > backend/database/database.sql
@@ -49,6 +49,8 @@ You can directly pull the docker image from the docker hub.
 ![buy-bill](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-bill.png)
 
 ![buy-electricity](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-electricity.png)
+
+![transactions](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/transactions.png)
 
 ### Help and support
 If you have any question feel free to reach out to me on my personal email: cafeat9ja@gmail.com
