@@ -65,7 +65,7 @@ function Airtime(props) {
 
     return (
         <div className="container mt-3">
-            <BreadCombs crumbs={['user/dashboard', 'user/services/data/data']} />
+            <BreadCombs crumbs={['user/dashboard', 'user/services/airtime/airtime']} />
             <div className="d-flex justify-content-center">
                 <form onSubmit={handlePurchaseAirtime} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
                     <div className='text-center mb-5'>

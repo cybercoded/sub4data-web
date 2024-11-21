@@ -18,7 +18,7 @@ return [
     'allowed_methods' => ['*'],
 
     // Set allowed origins to your React app's origin
-    'allowed_origins' => ['http://127.0.0.1:3000'],
+    'allowed_origins' => explode(',', env('ALLOWED_ORIGINS', 'http://localhost')),
 
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

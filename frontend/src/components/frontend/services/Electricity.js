@@ -127,7 +127,7 @@ function Electricity(props) {
     return (
         
         <div className="container mt-5">
-            <BreadCombs crumbs={['user/dashboard', 'user/services/data/data']} />
+            <BreadCombs crumbs={['user/dashboard', 'user/services/electricity/electricity']} />
             <div className="d-flex justify-content-center">
                 <form onSubmit={handlePurchaseElectricity} className="col-md-6 col-sm-8 col-lg-5 col-xl-4">
                     <div className='text-center mb-5'>

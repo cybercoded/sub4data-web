@@ -1,4 +1,4 @@
-![Sub4Data Website](https://github.com/kunley247/sub4data-web/blob/master/frontend/public/logo.png)
+![Sub4Data Website](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/public/logo.png)
 # A web application for vending and recharging phone bills, electricity bill, water bill, TV subscriptions in Nigeria. 
 
 
@@ -45,4 +45,8 @@
 
 1.  Start the client-side server
     > npm start
+
+
+![Sub4Data Website](https://github.com/kunley247/sub4data-web/blob/master/frontend/public/logo.png)
+
 
