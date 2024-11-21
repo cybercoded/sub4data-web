@@ -34,21 +34,21 @@ You can directly pull the docker image from the docker hub.
 > docker-compose up --build
 
 ### Screenshots
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/dashboard.png)
+![dashboard](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/dashboard.png)
 
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/admin-dashboard.png)
+![admin-dashboard](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/admin-dashboard.png)
 
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/login-page.png)
+![login-page](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/login-page.png)
 
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/register-page.png)
+![register-page](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/register-page.png)
 
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-airtime.png)
+![buy-airtime](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-airtime.png)
 
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-data.png)
+![buy-data](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-data.png)
 
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-bill.png)
+![buy-bill](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-bill.png)
 
-(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-electricity.png)
+![buy-electricity](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-electricity.png)
 
 ### Help and support
 If you have any question feel free to reach out to me on my personal email: cafeat9ja@gmail.com
