@@ -26,5 +26,8 @@ EXPOSE 8000
 # Install dependencies using Composer
 RUN composer install --no-interaction
 
+# Generate Laravel Activation Key
+RUN php artisan key:generate
+
 # Run the Laravel server using php artisan serve
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

@@ -1,106 +1,54 @@
 ![Sub4Data Logo](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/logo.jpg)
 
-# A web application for vending and recharging phone bills, electricity bill, water bill, TV subscriptions in Nigeria. 
+# Topups and Bills payments
+### A web application for vending and recharging phone bills, electricity bill, water bill, TV subscriptions in Nigeria. 
 
 
-## steps to get started
+## Steps to get started
 
-### Start the server side
+### Prerequisites 
 1.  Clone the repo and cd into it
-    > git clone https://github.com/kunley247/sub4data-web
+    > git clone https://github.com/cybercoded/sub4data-web
     
-1.  navigate into server-side folder
-    > cd /laravel
+1.  Install Docker Desktop
+    > https://www.docker.com/products/docker-desktop/ 
 
-1.  install or update composer to the environment
-    > composer install 
-    if error occurs run: 
-    > composer update
+### Configuration 
+1.  Set your database credentials, App URL and Allowed Origins for your backend at backend/.env
+    (https://github.com/cybercoded/sub4data-web/blob/master/screenshots/backend-conf.png)
 
-1.  Rename or copy .env.example file to .env
-    > cp .env.example .env
-
-1.  Set your database credentials and order relevant information as you require in your .env file
-    > https://github.com/kunley247/sub4data-web/blob/master/laravel/.env
-
-1.  Generate Application key
-    > php artisan key:generate
+1.  Update your business information at frontend/.env
+    (https://github.com/cybercoded/sub4data-web/blob/master/screenshots/fontend-conf.png)
 
 1.  Populate the database from 
-    > https://github.com/kunley247/sub4data-web/blob/master/laravel/database/database.sql
-    to your mysql admin
+    > backend/database/database.sql
 
-1.  Start the server-side server
-    > php artisan serve
+### Run the project 
 
-### Start the client side
-
-1.  Navigate into client side folder
-    > cd /react
-
-1.  Install node_modules to the environment
-    > npm install --legacy-peer-deps
-    
-    Fix any issues that may occur with dependencies
-    > npm audit fix --force
-
-1.  Start the client-side server
-    > npm start
+After docker desktop is running and up.
+> docker pull pull kunley247/sub4data:tom
 
 
-![Sub4Data Website](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/logo.png)
+### Pull Docker Image from hub 
+You can directly pull the docker image from the docker hub.
+> docker-compose up --build
 
+### Screenshots
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/dashboard.png)
 
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/admin-dashboard.png)
 
-# A web application for vending and recharging phone bills, electricity bill, water bill, TV subscriptions in Nigeria. 
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/login-page.png)
 
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/register-page.png)
 
-## steps to get started
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-airtime.png)
 
-### Start the server side
-1.  Clone the repo and cd into it
-    > git clone https://github.com/kunley247/sub4data-web
-    
-1.  navigate into server-side folder
-    > cd /laravel
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-data.png)
 
-1.  install or update composer to the environment
-    > composer install 
-    if error occurs run: 
-    > composer update
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-bill.png)
 
-1.  Rename or copy .env.example file to .env
-    > cp .env.example .env
+(https://github.com/cybercoded/sub4data-web/blob/master/screenshots/buy-electricity.png)
 
-1.  Set your database credentials and order relevant information as you require in your .env file
-    > https://github.com/kunley247/sub4data-web/blob/master/laravel/.env
-
-1.  Generate Application key
-    > php artisan key:generate
-
-1.  Populate the database from 
-    > https://github.com/kunley247/sub4data-web/blob/master/laravel/database/database.sql
-    to your mysql admin
-
-1.  Start the server-side server
-    > php artisan serve
-
-### Start the client side
-
-1.  Navigate into client side folder
-    > cd /react
-
-1.  Install node_modules to the environment
-    > npm install --legacy-peer-deps
-    
-    Fix any issues that may occur with dependencies
-    > npm audit fix --force
-
-1.  Start the client-side server
-    > npm start
-
-
-![Sub4Data Website](https://github.com/cybercoded/sub4data-web/blob/master/screenshots/logo.png)
-
-
-
+### Help and support
+If you have any question feel free to reach out to me on my personal email: cafeat9ja@gmail.com
